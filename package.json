@@ -48,7 +48,6 @@
     "@nuxt/image": "^1.10.0",
     "@pinia/nuxt": "^0.11.0",
     "@vite-pwa/nuxt": "^1.0.1",
-    "@vueuse/nuxt": "^13.2.0",
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "firebase": "^11.8.0",

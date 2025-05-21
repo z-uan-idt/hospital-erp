@@ -13,12 +13,21 @@
         closeButton
         dir="auto"
       />
+      <CommonLoading :is-loading="!mounted" />
     </NuxtLayout>
   </v-app>
 </template>
 
 <script setup lang="ts">
   const { $toast } = useNuxtApp()
+
+  const mounted = ref(false)
+
+  onMounted(() => {
+    setTimeout(() => {
+      mounted.value = true
+    }, 1000)
+  })
 
   onMounted(() => {
     if (import.meta.client) {

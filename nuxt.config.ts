@@ -1,10 +1,9 @@
-import { Icon } from '#components'
 import { ThemedColors } from './src/constants/color.constants'
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 
 export default defineNuxtConfig({
-  ssr: true,
+  ssr: false,
   srcDir: 'src/',
   nitro: {
     esbuild: {
@@ -24,7 +23,6 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@pinia/nuxt',
-    '@vueuse/nuxt',
     '@vite-pwa/nuxt',
     'vue-sonner/nuxt',
     [

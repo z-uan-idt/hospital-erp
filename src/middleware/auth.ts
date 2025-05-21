@@ -1,6 +1,4 @@
 export default defineNuxtRouteMiddleware((to) => {
-  if (import.meta.server) return
-
   const { isAuthenticated } = useAuth()
   const publicRoutes: string[] = ['login', 'register']
   const welcomeRoutes: string[] = [
