@@ -1,0 +1,66 @@
+<template>
+  <div class="pa-4 pa-lg-10">
+    <FormOrganization
+      :is-loading="isLoading"
+      :is-success="isSuccess"
+      @submit="onFormSubmit"
+    />
+  </div>
+</template>
+
+<script setup lang="ts">
+  import type { IOrganizationFormPayload } from '~/types/oranization.types'
+
+  definePageMeta({
+    layout: 'welcome',
+    middleware: ['auth'],
+  })
+
+  const { $toast } = useNuxtApp()
+  const { onCreateOrganization } = useOrganization()
+
+  const isLoading = ref(false)
+  const isSuccess = ref(false)
+
+  useHead({
+    title: 'Tạo tổ chức',
+    meta: [
+      {
+        name: 'description',
+        content: 'Tạo tổ chức mới',
+      },
+    ],
+  })
+
+  const onFormSubmit = async (formPayload: IOrganizationFormPayload) => {
+    isLoading.value = true
+    const formData = new FormData()
+
+    Object.entries(formPayload).forEach(([key, value]) => {
+      const file_keys = ['profile_picture', 'certificate_file']
+      const is_file = file_keys.includes(key)
+      if (!is_file || (is_file && value !== null)) {
+        formData.append(key, value as any)
+      }
+    })
+
+    await onCreateOrganization(
+      formData,
+      () => {
+        isSuccess.value = true
+        $toast.success('Thành công', {
+          description: 'Tạo tổ chức thành công',
+        })
+        useRouter().back()
+      },
+      (error) => {
+        isSuccess.value = false
+        $toast.error('Thất bại', {
+          description: error || 'Hệ thống gặp sự cố, vui lòng thử lại sau',
+        })
+      }
+    )
+
+    isLoading.value = false
+  }
+</script>

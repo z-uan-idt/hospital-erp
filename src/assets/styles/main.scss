@@ -1,0 +1,31 @@
+.font-playfair {
+  font-family: "Playfair", serif;
+}
+
+.font-roboto {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.select-none {
+  user-select: none !important;
+}
+
+.form-readonly {
+  pointer-events: none !important;
+}
+
+.v-navigation-drawer {
+  &__scrim {
+    position: fixed !important;
+  }
+}
+
+.min-h-screen {
+  min-height: 100vh !important;
+}

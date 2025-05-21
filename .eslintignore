@@ -1,0 +1,8 @@
+.nuxt
+node_modules
+*.log*
+.output
+dist
+.env
+package-lock.json
+public/
