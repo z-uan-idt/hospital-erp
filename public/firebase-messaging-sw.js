@@ -21,8 +21,6 @@ self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim())
 })
 
-self.addEventListener('fetch', event => {})
-
 messaging.onBackgroundMessage(payload => {
   const notificationTitle = payload.notification?.title || 'Thông báo mới'
   const notificationOptions = {
