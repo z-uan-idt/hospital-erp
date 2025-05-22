@@ -81,7 +81,7 @@ export default defineNuxtPlugin(async () => {
             const title = payload.notification.title || 'Thông báo mới'
             const options = {
               body: payload.notification.body,
-              icon: payload.notification.icon || '/pharmago.svg',
+              icon: payload.notification.icon || '/favicon.svg',
             }
             new Notification(title, options)
           }

@@ -31,7 +31,6 @@ export default defineNuxtConfig({
     '@nuxt/icon',
     '@nuxt/image',
     '@pinia/nuxt',
-    '@vite-pwa/nuxt',
     'vue-sonner/nuxt',
     [
       'vuetify-nuxt-module',
@@ -81,95 +80,6 @@ export default defineNuxtConfig({
         dir: './src/assets/icons',
       },
     ],
-  },
-  pwa: {
-    scope: '/',
-    registerWebManifestInRouteRules: true,
-    registerType: 'autoUpdate',
-    manifest: {
-      name: 'Hospital ERP',
-      short_name: 'Hospital ERP',
-      description: 'Hệ thống quản lý kho bệnh viện',
-      theme_color: '#ffffff',
-      icons: [],
-      id: 'hospital-erp',
-      start_url: '/',
-      display: 'standalone',
-    },
-    workbox: {
-      navigateFallback: '/',
-      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
-      cleanupOutdatedCaches: true,
-      runtimeCaching: [
-        {
-          urlPattern: '/',
-          handler: 'NetworkFirst',
-          options: {
-            cacheName: 'start-url',
-            expiration: {
-              maxEntries: 1,
-              maxAgeSeconds: 24 * 60 * 60, // 24 hours
-            },
-          },
-        },
-        {
-          urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'google-fonts',
-            expiration: {
-              maxEntries: 4,
-              maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
-            },
-          },
-        },
-        {
-          urlPattern: /\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i,
-          handler: 'StaleWhileRevalidate',
-          options: {
-            cacheName: 'static-font-assets',
-            expiration: {
-              maxEntries: 4,
-              maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
-            },
-          },
-        },
-        {
-          urlPattern: /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
-          handler: 'StaleWhileRevalidate',
-          options: {
-            cacheName: 'static-image-assets',
-            expiration: {
-              maxEntries: 64,
-              maxAgeSeconds: 24 * 60 * 60, // 24 hours
-            },
-          },
-        },
-        {
-          urlPattern: /\/_nuxt\/.*$/i,
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'nuxt-assets',
-            expiration: {
-              maxEntries: 32,
-              maxAgeSeconds: 24 * 60 * 60, // 24 hours
-            },
-          },
-        },
-        {
-          urlPattern: /\/api\/.*$/i,
-          handler: 'NetworkFirst',
-          options: {
-            cacheName: 'api-cache',
-            expiration: {
-              maxEntries: 32,
-              maxAgeSeconds: 5 * 60, // 5 minutes
-            },
-            networkTimeoutSeconds: 10,
-          },
-        },
-      ],
-    },
   },
   app: {
     head: {
