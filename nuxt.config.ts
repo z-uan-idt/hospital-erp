@@ -98,11 +98,16 @@ export default defineNuxtConfig({
     },
     workbox: {
       globPatterns: [
-        '**/*.{js,css,html}',
-        '**/*.{ico,png,svg,jpg,jpeg,gif,webp}',
+        '**/*.{js,css,html,ico,png,svg,jpg,jpeg,gif,webp,woff,woff2,ttf,eot}',
+        'manifest.webmanifest',
       ],
       globDirectory: '.output/public',
-      globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js'],
+      globIgnores: [
+        '**/node_modules/**/*',
+        'sw.js',
+        'workbox-*.js',
+        '**/firebase-messaging-sw.js',
+      ],
       runtimeCaching: [
         {
           urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -154,8 +159,36 @@ export default defineNuxtConfig({
             },
           },
         },
+        {
+          urlPattern: /^https:\/\/firebasestorage\.googleapis\.com\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'firebase-storage-cache',
+            expiration: {
+              maxEntries: 100,
+              maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
+            },
+            cacheableResponse: {
+              statuses: [0, 200],
+            },
+          },
+        },
+        {
+          urlPattern: ({ request }) => request.mode === 'navigate',
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'pages-cache',
+            expiration: {
+              maxEntries: 50,
+              maxAgeSeconds: 60 * 60 * 24, // 1 day
+            },
+            cacheableResponse: {
+              statuses: [0, 200],
+            },
+          },
+        },
       ],
-      navigateFallback: '/',
+      navigateFallback: null,
       cleanupOutdatedCaches: true,
       sourcemap: false,
     },
