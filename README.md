@@ -1,4 +1,4 @@
-# 🏥 Hospital ERP System
+# 🏥 Hospital ERP System | Hệ thống Quản lý Bệnh viện
 
 <div align="center">
 
@@ -9,86 +9,53 @@
 
 A modern Hospital ERP system built with Nuxt 3 and Vuetify 3, designed to streamline hospital management processes.
 
+Hệ thống quản lý bệnh viện hiện đại được xây dựng bằng Nuxt 3 và Vuetify 3, được thiết kế để tối ưu hóa quy trình quản lý bệnh viện.
+
 </div>
 
-## ✨ Features
+## ✨ Features | Tính năng
 
-- 🚀 Built with [Nuxt 3](https://nuxt.com/) - the intuitive Vue framework
-- 🎨 Beautiful UI with [Vuetify 3](https://vuetifyjs.com/)
-- 📱 PWA Support with `@vite-pwa/nuxt`
-- 🔍 SEO optimized
-- 📦 State management with [Pinia](https://pinia.vuejs.org/)
-- 🎯 TypeScript support
-- 📝 ESLint + Prettier for code formatting
-- 🎨 SCSS/SASS support
-- 🖼️ Image optimization with `@nuxt/image`
-- 🔄 API integration ready with Axios
-- 📅 Date handling with `date-fns`
-- 🎭 Icons support with `@nuxt/icon`
+### Core Technologies | Công nghệ cốt lõi
 
-## 🚀 Quick Start
+- 🚀 Nuxt 3 - Modern Vue.js Framework | Framework Vue.js hiện đại
+- 🎨 Vuetify 3 - Material Design Component Framework | Framework component Material Design
+- 🔍 TypeScript - Type-safe JavaScript | JavaScript với kiểm tra kiểu
+- 📦 Pinia - Vue.js State Management | Quản lý trạng thái cho Vue.js
 
-### Prerequisites
+### Development Features | Tính năng phát triển
+
+- 📱 PWA Support | Hỗ trợ PWA
+- 🎯 ESLint & Prettier - Code Quality Tools | Công cụ đảm bảo chất lượng code
+- 🎨 SASS/SCSS Support | Hỗ trợ SASS/SCSS
+- 🖼️ Image Optimization | Tối ưu hóa hình ảnh
+- 🔄 Axios Integration | Tích hợp Axios
+- 📅 Date-fns - Date Manipulation | Xử lý thời gian
+- 🎭 Icon Support | Hỗ trợ icon
+
+## 🚀 Quick Start | Bắt đầu nhanh
+
+### Prerequisites | Yêu cầu hệ thống
 
 - Node.js >= v16.0.0
-- One of the following package managers:
+- Package Manager (Một trong các công cụ quản lý gói sau):
   - npm >= v8.0.0
   - yarn >= v1.22.0
   - pnpm >= v8.0.0
 - Git >= v2.0.0
-- Memory >= 4GB RAM
-- Storage >= 1GB free space
+- RAM >= 4GB
+- Storage | Bộ nhớ trống >= 1GB
 
-### Package Version Validation
+### Installation | Cài đặt
 
-To ensure your environment meets the requirements, you can run these commands:
+1. Clone repository | Sao chép mã nguồn
 
-```bash
-# Check Node.js version
-node --version
-
-# Check npm version
-npm --version
-
-# Check yarn version (if using yarn)
-yarn --version
-
-# Check pnpm version (if using pnpm)
-pnpm --version
-
-# Validate package.json dependencies
-npm install -g npm-check-updates
-ncu
-
-# Check for outdated packages
-npm outdated
-
-# Check for vulnerabilities
-npm audit
-```
-
-If you encounter any version mismatches, please update your packages accordingly:
-
-```bash
-# Update npm itself
-npm install -g npm@latest
-
-# Update all dependencies to their latest versions
-npm update
-
-# Update a specific package
-npm install package-name@latest
-```
-
-### Installation
-
-1. Clone the repository
 ```bash
 git clone <repository-url>
 cd hospital-erp
 ```
 
-2. Install dependencies
+2. Install dependencies | Cài đặt các gói phụ thuộc
+
 ```bash
 # Using npm
 npm install
@@ -100,7 +67,8 @@ yarn install
 pnpm install
 ```
 
-3. Start development server
+3. Start development server | Khởi động môi trường phát triển
+
 ```bash
 # Using npm
 npm run dev
@@ -112,82 +80,56 @@ yarn dev
 pnpm dev
 ```
 
-The application will be available at `http://localhost:3000`
+## 📁 Project Structure | Cấu trúc dự án
 
-## 🛠️ Development Scripts
+````
+hospital-erp/
+├── src/                 # Source code directory | Thư mục mã nguồn
+│   ├── assets/         # Static assets | Tài nguyên tĩnh
+│   ├── components/     # Vue components | Components Vue
+│   ├── composables/    # Composable functions | Các hàm composable
+│   ├── constants/      # Constants | Hằng số
+│   ├── layouts/        # Layout components | Components bố cục
+│   ├── middleware/     # Nuxt middleware | Middleware Nuxt
+│   ├── pages/         # Application pages | Các trang
+│   ├── plugins/       # Nuxt plugins | Plugin Nuxt
+│   ├── stores/        # Pinia stores | Kho Pinia
+│   ├── types/         # TypeScript types | Kiểu TypeScript
+│   └── utils/         # Utility functions | Hàm tiện ích
+├── public/             # Public static files | File tĩnh công khai
+├── .nuxt/             # Nuxt build files | File build Nuxt
+├── dist/              # Production build | Build sản phẩm
+└── .output/           # Nuxt output | Đầu ra Nuxt
+
+## 🛠️ Development Scripts | Các lệnh phát triển
 
 ```bash
-# Start development server
+# Development | Phát triển
 npm run dev
 
-# Build for production
+# Build | Xây dựng
 npm run build
 
-# Preview production build
+# Preview | Xem trước
 npm run preview
 
-# Clean development server
-npm run dev:clean
-
-# Generate static site
+# Generate static | Tạo trang tĩnh
 npm run generate
 
-# Lint code
+# Lint code | Kiểm tra code
 npm run lint
 
-# Fix lint issues
+# Fix lint issues | Sửa lỗi lint
 npm run lint:fix
 
-# Format code
+# Format code | Định dạng code
 npm run format
+````
 
-# Run stylelint
-npm run stylelint
+## 🤝 Contributing | Đóng góp
 
-# Fix stylelint issues
-npm run stylelint:fix
-```
-
-## 🏗️ Project Structure
-
-```
-hospital-erp/
-├── src/               # Source files
-├── public/            # Static files
-├── .nuxt/            # Nuxt build directory
-├── dist/             # Production build
-├── .output/          # Nuxt output
-├── nuxt.config.ts    # Nuxt configuration
-├── tsconfig.json     # TypeScript configuration
-└── package.json      # Project dependencies
-```
-
-## 🔧 Configuration Files
-
-- `.eslintrc.json` - ESLint configuration
-- `.prettierrc.json` - Prettier configuration
-- `.stylelintrc.json` - Stylelint configuration
-- `nuxt.config.ts` - Nuxt configuration
-- `tsconfig.json` - TypeScript configuration
-
-## 📦 Key Dependencies
-
-### Core
-- `nuxt` - v3.17.3
-- `vue` - v3.5.13
-- `vuetify-nuxt-module` - v0.18.6
-- `pinia` - v3.0.2
-
-### Development
-- `typescript` - v5.8.3
-- `eslint` - v8.55.0
-- `prettier` - v3.1.1
-- `sass` - v1.89.0
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the repository | Fork kho mã nguồn
+2. Create feature branch | Tạo nhánh tính năng (`git checkout -b feature/TinhNangMoi`)
+3. Commit changes | Commit thay đổi (`git commit -m 'Thêm tính năng mới'`)
+4. Push to branch | Đẩy lên nhánh (`git push origin feature/TinhNangMoi`)
+5. Create Pull Request | Tạo Pull Request

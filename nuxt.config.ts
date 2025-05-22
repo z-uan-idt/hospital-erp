@@ -53,6 +53,14 @@ export default defineNuxtConfig({
         VBtn: {
           class: ['text-none'],
         },
+        VSelect: {
+          itemTitle: 'label',
+          itemValue: 'value',
+        },
+        VDateInput: {
+          prependIcon: null,
+          appendInnerIcon: 'mdi-calendar',
+        },
       },
       theme: {
         defaultTheme: 'light',

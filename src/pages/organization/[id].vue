@@ -8,6 +8,7 @@
       :is-create="false"
       @submit="onFormSubmit"
       @update="(v) => (isUpdate = v)"
+      @update:preview="(v) => (isPreviewImage = v)"
     >
       <template #empty>
         <div
@@ -51,6 +52,7 @@
   const isUpdate = ref(false)
   const isSuccess = ref(false)
   const isLoading = ref(false)
+  const isPreviewImage = ref(false)
 
   useHead({
     title: 'Chi tiết tổ chức',
@@ -64,9 +66,8 @@
 
   const organizationId = route.params['id'] as string
 
-  onMounted(async () => {
+  const fetchOrganization = async () => {
     try {
-      isLoading.value = true
       await hooks.onFetchOrganizationById(organizationId)
 
       useHead({
@@ -77,13 +78,17 @@
           },
         ],
       })
-    } catch (error) {
+    } catch {
       $toast.error('Thất bại', {
         description: 'Hệ thống gặp sự cố, vui lòng thử lại sau',
       })
-    } finally {
-      isLoading.value = false
     }
+  }
+
+  onMounted(async () => {
+    isLoading.value = true
+    await fetchOrganization()
+    isLoading.value = false
   })
 
   const onFormSubmit = async (formPayload: IOrganizationFormPayload) => {
@@ -94,27 +99,33 @@
     Object.entries(formPayload).forEach(([key, value]) => {
       const file_keys = ['profile_picture', 'certificate_file']
       const is_file = file_keys.includes(key)
-      if (!is_file || (is_file && value !== null)) {
-        formData.append(key, value as any)
-      }
       if (isUpdate.value && is_file && value === null) {
         deleteFileKeys.push(key)
       }
+      if (value === null && !is_file) {
+        value = ''
+      }
+      formData.append(key, value as any)
+      if (is_file && !value) {
+        formData.delete(key)
+      }
     })
 
-    if (deleteFileKeys.length > 0) {
+    if (deleteFileKeys.length > 0 && !isPreviewImage.value) {
       formData.append('delete_file_keys', deleteFileKeys.join(','))
     }
 
     try {
-      await hooks.onCreateOrganization(
+      await hooks.onUpdateOrganization(
+        Number(organizationId),
         formData,
-        () => {
+        async () => {
           isSuccess.value = true
+          await fetchOrganization()
           $toast.success('Thành công', {
             description: 'Cập nhật tổ chức thành công',
           })
-          useRouter().back()
+          isUpdate.value = false
         },
         (error) => {
           isSuccess.value = false

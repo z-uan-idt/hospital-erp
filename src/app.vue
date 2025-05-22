@@ -1,7 +1,6 @@
 <template>
   <v-app class="bg-background">
     <NuxtLayout>
-      <NuxtPwaAssets />
       <NuxtPage />
       <Toaster
         position="top-right"

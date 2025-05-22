@@ -10,7 +10,7 @@ export const formatDate = (
 }
 
 export const formatDateTime = (date: string | Date): string => {
-  return formatDate(date, 'dd/MM/yyyy HH:mm')
+  return formatDate(date, 'HH:mm dd/MM/yyyy')
 }
 
 export const calculateAge = (birthDate: string | Date): number => {

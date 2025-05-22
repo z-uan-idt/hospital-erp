@@ -4,12 +4,12 @@
     class="d-flex flex-row align-start pa-0 align-stretch"
   >
     <v-navigation-drawer
-      :model-value="!!$vuetify.display.mdAndUp"
+      :model-value="$vuetify.display.lgAndUp.value"
       :absolute="false"
-      :color="$vuetify.display.mdAndUp.value ? 'background' : 'white'"
-      :class="$vuetify.display.mdAndUp.value ? 'border-0' : ''"
-      :permanent="!$vuetify.display.mdAndUp"
-      :rail="!$vuetify.display.mdAndUp.value"
+      :color="$vuetify.display.lgAndUp.value ? 'background' : 'white'"
+      :class="$vuetify.display.lgAndUp.value ? 'border-0' : ''"
+      :permanent="!$vuetify.display.lgAndUp"
+      :rail="!$vuetify.display.lgAndUp.value"
       rail-width="257"
       width="257"
       class="pt-7"
@@ -24,14 +24,18 @@
 
       <template v-slot:append>
         <div
-          class="pa-2 pb-10 d-flex flex-column ga-3 align-center justify-center"
+          :class="[
+            'pa-2 mb-6 d-flex flex-column w-auto',
+            'ga-3 align-center justify-center',
+          ]"
         >
           <v-avatar
             size="58"
             variant="outlined"
             color="grey-lighten-1"
-            class="d-flex align-center bg-white justify-center"
-            style="user-select: none; pointer-events: none"
+            class="d-flex align-center bg-white justify-center cursor-pointer select-none"
+            style="user-select: none"
+            @click="navigateTo('/profile')"
           >
             <v-img
               v-if="userData?.avatar"
@@ -44,10 +48,12 @@
               {{ userData?.full_name.charAt(0).toUpperCase() }}
             </span>
           </v-avatar>
+
           <div class="d-flex flex-column ga-2 align-center justify-center">
             <p
-              class="text-body-1"
+              class="text-body-1 font-weight-medium text-erp-gray-800 cursor-pointer select-none"
               style="min-width: max-content"
+              @click="navigateTo('/profile')"
             >
               {{ userData?.full_name }}
             </p>

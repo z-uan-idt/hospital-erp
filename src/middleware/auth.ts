@@ -4,6 +4,7 @@ export default defineNuxtRouteMiddleware((to) => {
   const welcomeRoutes: string[] = [
     'organization-create',
     'organization-id',
+    'profile',
     'welcome',
   ]
   const organizationSelected = useCookie('selected_organization')

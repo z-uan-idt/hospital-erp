@@ -7,7 +7,7 @@
           'text-md-h3 text-h5 font-weight-bold',
         ]"
       >
-        <span>Xin chào,</span>
+        <span>Xin chào, </span>
         <span class="text-erp-brand font-weight-bold">
           {{ userData?.full_name }}
         </span>

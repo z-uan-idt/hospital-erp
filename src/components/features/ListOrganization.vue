@@ -273,6 +273,14 @@
     }
   }
 
+  defineProps<{
+    organizations: IOrganization[]
+  }>()
+
+  const listEmits = defineEmits<{
+    (e: 'update'): void
+  }>()
+
   const dialogOptions: IDialogOptions = {
     DELETE: {
       title: 'Bạn có chắc chắn muốn xóa tổ chức này?',
@@ -313,21 +321,13 @@
     },
   }
 
-  const listEmits = defineEmits<{
-    (e: 'update'): void
-  }>()
-
-  defineProps<{
-    organizations: IOrganization[]
-  }>()
-
   const { $toast } = useNuxtApp()
   const isLoading = ref<boolean>(false)
   const isShowConfirm = ref<boolean>(false)
   const confirmType = ref<IOrganizationActionRequest>(null)
   const organizationSelected = ref<IOrganization | null>(null)
 
-  const { onActionOrganization, onFetchOrganization } = useOrganization()
+  const { onActionOrganization } = useOrganization()
 
   const onConfirm = async (
     organization: IOrganization,

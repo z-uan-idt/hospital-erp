@@ -179,6 +179,7 @@
             v-model="formPayload.profile_picture"
             :preview="props.organizationData?.profile_picture"
             size="159"
+            @update:preview="(v) => formEmit('update:preview', v)"
           />
         </v-col>
 
@@ -397,6 +398,66 @@
             </v-row>
           </CommonFieldset>
         </v-col>
+
+        <template v-if="!props.isCreate && !props.isUpdate">
+          <v-col
+            cols="12"
+            sm="12"
+            md="12"
+            lg="6"
+            class="pb-0"
+          >
+            <v-card
+              variant="tonal"
+              color="erp-gray"
+              class="ps-4 pe-4 pt-3 pb-3"
+            >
+              <span class="text-caption text-black"> Tạo lúc </span>
+              <p class="text-body-1 text-black">
+                {{
+                  props.organizationData?.created_at
+                    ? formatDateTime(props.organizationData?.created_at)
+                    : 'Chưa cập nhật'
+                }}
+              </p>
+            </v-card>
+            <p
+              v-if="props.organizationData?.created_by?.full_name"
+              class="ms-4 me-4 mt-2 mb-2 text-caption text-black"
+            >
+              Bởi {{ props.organizationData?.created_by?.full_name }}
+            </p>
+          </v-col>
+
+          <v-col
+            cols="12"
+            sm="12"
+            md="12"
+            lg="6"
+            class="pb-0"
+          >
+            <v-card
+              variant="tonal"
+              color="erp-gray"
+              class="ps-4 pe-4 pt-3 pb-3"
+            >
+              <span class="text-caption text-black"> Cập nhật lúc </span>
+              <p class="text-body-1 text-black">
+                {{
+                  props.organizationData?.updated_at
+                    ? formatDateTime(props.organizationData?.updated_at)
+                    : 'Chưa cập nhật'
+                }}
+              </p>
+            </v-card>
+            <p
+              v-if="props.organizationData?.updated_by?.full_name"
+              class="ms-4 me-4 mt-2 mb-2 text-caption text-black"
+            >
+              Bởi {{ props.organizationData?.updated_by?.full_name }}
+            </p>
+          </v-col>
+        </template>
       </v-row>
       <div
         v-else-if="!props.isLoading"
@@ -484,8 +545,16 @@
     IOrganizationFormPayload,
   } from '~/types/oranization.types'
 
+  const props = withDefaults(defineProps<Props>(), {
+    isCreate: true,
+    isUpdate: false,
+    isLoading: false,
+    isSuccess: false,
+  })
+
   const formEmit = defineEmits<{
     (e: 'submit', payload: IOrganizationFormPayload): void
+    (e: 'update:preview', payload: boolean): void
     (e: 'update', payload: boolean): void
   }>()
 
@@ -496,13 +565,6 @@
     isSuccess?: boolean
     organizationData?: IOrganization
   }
-
-  const props = withDefaults(defineProps<Props>(), {
-    isCreate: true,
-    isUpdate: false,
-    isLoading: false,
-    isSuccess: false,
-  })
 
   const router = useRouter()
   const rules = useFormRules()

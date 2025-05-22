@@ -75,20 +75,22 @@
     size?: string | number
   }
 
-  const emit = defineEmits<{
-    (e: 'update:modelValue', value: File | null): void
-  }>()
-
   const props = withDefaults(defineProps<Props>(), {
     modelValue: null,
     preview: null,
     size: 250,
   })
 
+  const emit = defineEmits<{
+    (e: 'update:modelValue', value: File | null): void
+    (e: 'update:preview', value: boolean): void
+  }>()
+
   const fileInput = ref<HTMLInputElement | null>(null)
   const preview = ref<string | null>(null)
 
   watchEffect(() => {
+    emit('update:preview', !!props.preview)
     preview.value = props.preview
   })
 
@@ -115,11 +117,13 @@
       }
       emit('update:modelValue', files[0])
       reader.readAsDataURL(files[0])
+      emit('update:preview', true)
     }
   }
 
   function onRemoveImage() {
     preview.value = null
+    emit('update:preview', false)
     emit('update:modelValue', null)
   }
 

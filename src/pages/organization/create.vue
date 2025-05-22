@@ -39,8 +39,12 @@
     Object.entries(formPayload).forEach(([key, value]) => {
       const file_keys = ['profile_picture', 'certificate_file']
       const is_file = file_keys.includes(key)
-      if (!is_file || (is_file && value !== null)) {
-        formData.append(key, value as any)
+      if (value === null && !is_file) {
+        value = ''
+      }
+      formData.append(key, value as any)
+      if (is_file && !value) {
+        formData.delete(key)
       }
     })
 

@@ -133,6 +133,29 @@ export const useOrganization = () => {
     }
   }
 
+  const onUpdateOrganization = async (
+    organizationId: number,
+    formData: FormData,
+    onSuccess: (organization: IOrganization) => void,
+    onError: (error: string) => void
+  ) => {
+    const { data: response } = await fetchApi.put<IOrganization>(
+      `api/v1/organization/${organizationId}/current-user-organization-update`,
+      formData,
+      {
+        headers: {
+          'Content-Type': apiConstants.API_CONTENT_TYPE_MULTIPART_FORM_DATA,
+        },
+      }
+    )
+
+    if (response.success) {
+      onSuccess(response.data)
+    } else {
+      onError(response.message)
+    }
+  }
+
   return {
     onFetchOrganization,
     setSearch,
@@ -150,5 +173,6 @@ export const useOrganization = () => {
     onActionOrganization,
     onCreateOrganization,
     onFetchOrganizationById,
+    onUpdateOrganization,
   }
 }
