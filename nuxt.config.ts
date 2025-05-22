@@ -96,6 +96,23 @@ export default defineNuxtConfig({
       start_url: '/',
       display: 'standalone',
     },
+    workbox: {
+      navigateFallback: '/',
+      globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      runtimeCaching: [
+        {
+          urlPattern: '/',
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'start-url',
+            expiration: {
+              maxEntries: 1,
+              maxAgeSeconds: 24 * 60 * 60, // 24 hours
+            },
+          },
+        },
+      ],
+    },
   },
   app: {
     head: {
