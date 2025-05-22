@@ -99,6 +99,7 @@ export default defineNuxtConfig({
     workbox: {
       navigateFallback: '/',
       globPatterns: ['**/*.{js,css,html,png,svg,ico}'],
+      cleanupOutdatedCaches: true,
       runtimeCaching: [
         {
           urlPattern: '/',
@@ -109,6 +110,62 @@ export default defineNuxtConfig({
               maxEntries: 1,
               maxAgeSeconds: 24 * 60 * 60, // 24 hours
             },
+          },
+        },
+        {
+          urlPattern: /^https:\/\/fonts\.(?:googleapis|gstatic)\.com\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts',
+            expiration: {
+              maxEntries: 4,
+              maxAgeSeconds: 365 * 24 * 60 * 60, // 1 year
+            },
+          },
+        },
+        {
+          urlPattern: /\.(?:eot|otf|ttc|ttf|woff|woff2|font.css)$/i,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'static-font-assets',
+            expiration: {
+              maxEntries: 4,
+              maxAgeSeconds: 7 * 24 * 60 * 60, // 7 days
+            },
+          },
+        },
+        {
+          urlPattern: /\.(?:jpg|jpeg|gif|png|svg|ico|webp)$/i,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'static-image-assets',
+            expiration: {
+              maxEntries: 64,
+              maxAgeSeconds: 24 * 60 * 60, // 24 hours
+            },
+          },
+        },
+        {
+          urlPattern: /\/_nuxt\/.*$/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'nuxt-assets',
+            expiration: {
+              maxEntries: 32,
+              maxAgeSeconds: 24 * 60 * 60, // 24 hours
+            },
+          },
+        },
+        {
+          urlPattern: /\/api\/.*$/i,
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'api-cache',
+            expiration: {
+              maxEntries: 32,
+              maxAgeSeconds: 5 * 60, // 5 minutes
+            },
+            networkTimeoutSeconds: 10,
           },
         },
       ],

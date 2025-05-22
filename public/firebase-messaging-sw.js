@@ -1,6 +1,8 @@
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js')
 
+const CACHE_NAME = 'hospital-erp-v1'
+
 firebase.initializeApp({
   apiKey: 'AIzaSyD_CI5_y0TB7B-38vk4Nk7iyhWcOK_vLqs',
   authDomain: 'pharmago-de418.firebaseapp.com',
@@ -14,11 +16,42 @@ firebase.initializeApp({
 const messaging = firebase.messaging()
 
 self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll([
+        '/',
+        '/login',
+        '/favicon.ico',
+        '/pharmago.svg'
+      ])
+    })
+  )
   self.skipWaiting()
 })
 
 self.addEventListener('activate', event => {
-  event.waitUntil(self.clients.claim())
+  event.waitUntil(
+    Promise.all([
+      self.clients.claim(),
+      caches.keys().then(cacheNames => {
+        return Promise.all(
+          cacheNames
+            .filter(cacheName => cacheName !== CACHE_NAME)
+            .map(cacheName => caches.delete(cacheName))
+        )
+      })
+    ])
+  )
+})
+
+self.addEventListener('fetch', event => {
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return caches.match(event.request)
+      })
+    )
+  }
 })
 
 messaging.onBackgroundMessage(payload => {
