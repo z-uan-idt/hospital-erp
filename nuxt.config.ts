@@ -16,6 +16,14 @@ export default defineNuxtConfig({
       crawlLinks: true,
       failOnError: false,
     },
+    storage: {
+      data: { driver: 'memory' },
+      cache: { driver: 'memory' },
+    },
+    experimental: {
+      asyncContext: true,
+      typescriptBundlerResolution: true,
+    },
   },
   devtools: { enabled: isDevelopment },
   compatibilityDate: '2025-05-15',
@@ -89,12 +97,73 @@ export default defineNuxtConfig({
       display: 'standalone',
     },
     workbox: {
-      globPatterns: [],
-      runtimeCaching: [],
+      globPatterns: [
+        '**/*.{js,css,html}',
+        '**/*.{ico,png,svg,jpg,jpeg,gif,webp}',
+      ],
+      globDirectory: '.output/public',
+      globIgnores: ['**/node_modules/**/*', 'sw.js', 'workbox-*.js'],
+      runtimeCaching: [
+        {
+          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-cache',
+            expiration: {
+              maxEntries: 10,
+              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            },
+            cacheableResponse: {
+              statuses: [0, 200],
+            },
+          },
+        },
+        {
+          urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'google-fonts-cache',
+            expiration: {
+              maxEntries: 10,
+              maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
+            },
+            cacheableResponse: {
+              statuses: [0, 200],
+            },
+          },
+        },
+        {
+          urlPattern: /\/_nuxt\/.*$/i,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'nuxt-static',
+            expiration: {
+              maxEntries: 200,
+              maxAgeSeconds: 60 * 60 * 24 * 7, // 1 week
+            },
+          },
+        },
+        {
+          urlPattern: /\/api\/.*$/i,
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'api-cache',
+            expiration: {
+              maxEntries: 100,
+              maxAgeSeconds: 60 * 60 * 24, // 1 day
+            },
+          },
+        },
+      ],
       navigateFallback: '/',
+      cleanupOutdatedCaches: true,
+      sourcemap: false,
     },
-    client: {
-      installPrompt: true,
+    devOptions: {
+      enabled: true,
+      type: 'module',
+      suppressWarnings: true,
+      navigateFallbackAllowlist: [/^\/$/],
     },
   },
   app: {
@@ -167,7 +236,10 @@ export default defineNuxtConfig({
         },
       },
     },
-    build: { sourcemap: false },
+    build: {
+      sourcemap: false,
+      chunkSizeWarningLimit: 2000,
+    },
   },
   router: {
     options: {
@@ -178,7 +250,10 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
-  experimental: { typedPages: true, payloadExtraction: true },
+  experimental: {
+    typedPages: true,
+    payloadExtraction: false,
+  },
   vue: { propsDestructure: true },
   runtimeConfig: {
     public: {

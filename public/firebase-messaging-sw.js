@@ -2,13 +2,13 @@ importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js')
 importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js')
 
 firebase.initializeApp({
-  apiKey: 'AIzaSyCv-5kUCPIOO4MRvZnu-yIBkTYZRzYANPY',
-  authDomain: 'pharmago-5ec03.firebaseapp.com',
-  projectId: 'pharmago-5ec03',
-  storageBucket: 'pharmago-5ec03.firebasestorage.app',
-  messagingSenderId: '595897266511',
-  appId: '1:595897266511:web:12db6fff2ab031904e953a',
-  measurementId: 'G-NDPSDKBJ4W',
+  apiKey: 'AIzaSyD_CI5_y0TB7B-38vk4Nk7iyhWcOK_vLqs',
+  authDomain: 'pharmago-de418.firebaseapp.com',
+  projectId: 'pharmago-de418',
+  storageBucket: 'pharmago-de418.firebasestorage.app',
+  messagingSenderId: '211762754489',
+  appId: '1:211762754489:web:aa6fea179ccf54910b7c68',
+  measurementId: 'G-X5TV595GQ5',
 })
 
 const messaging = firebase.messaging()
@@ -26,9 +26,9 @@ self.addEventListener('fetch', event => {})
 messaging.onBackgroundMessage(payload => {
   const notificationTitle = payload.notification?.title || 'Thông báo mới'
   const notificationOptions = {
-    icon: payload.notification?.icon || '/assets/icons/pharmago.svg',
+    icon: payload.notification?.icon || '/pharmago.svg',
     body: payload.notification?.body || 'Bạn có thông báo mới',
-    badge: '/assets/icons/pharmago.svg',
+    badge: '/pharmago.svg',
     tag: 'notification-' + Date.now(),
     data: {
       ...payload.data,

@@ -13,42 +13,31 @@
         closeButton
         dir="auto"
       />
-      <CommonLoading :is-loading="!mounted" />
     </NuxtLayout>
   </v-app>
 </template>
 
 <script setup lang="ts">
   const { $toast } = useNuxtApp()
-
-  const mounted = ref(false)
-
-  onMounted(() => {
-    setTimeout(() => {
-      mounted.value = true
-    }, 1000)
-  })
+  const { onUpdateOrCreateDevice } = useAuth()
 
   onMounted(() => {
-    if (import.meta.client) {
-      window.addEventListener('offline', () => {
-        $toast.error('Lỗi kết nối mạng', {
-          description: 'Vui lòng kiểm tra lại kết nối mạng của bạn',
-        })
+    window.addEventListener('offline', () => {
+      $toast.error('Lỗi kết nối mạng', {
+        description: 'Vui lòng kiểm tra lại kết nối mạng của bạn',
       })
+    })
 
-      window.addEventListener('online', () => {
-        $toast.success('Kết nối mạng', {
-          description: 'Kết nối mạng đã được khôi phục',
-        })
+    window.addEventListener('online', () => {
+      $toast.success('Kết nối mạng', {
+        description: 'Kết nối mạng đã được khôi phục',
       })
-    }
+    })
+    onUpdateOrCreateDevice()
   })
 
   onUnmounted(() => {
-    if (import.meta.client) {
-      window.removeEventListener('offline', () => {})
-      window.removeEventListener('online', () => {})
-    }
+    window.removeEventListener('offline', () => {})
+    window.removeEventListener('online', () => {})
   })
 </script>

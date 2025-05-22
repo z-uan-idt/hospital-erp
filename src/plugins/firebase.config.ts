@@ -24,13 +24,13 @@ export default defineNuxtPlugin(async () => {
   const runtimeConfig = useRuntimeConfig()
 
   const firebaseConfig = {
-    apiKey: 'AIzaSyCv-5kUCPIOO4MRvZnu-yIBkTYZRzYANPY',
-    authDomain: 'pharmago-5ec03.firebaseapp.com',
-    projectId: 'pharmago-5ec03',
-    storageBucket: 'pharmago-5ec03.firebasestorage.app',
-    messagingSenderId: '595897266511',
-    appId: '1:595897266511:web:12db6fff2ab031904e953a',
-    measurementId: 'G-NDPSDKBJ4W',
+    apiKey: 'AIzaSyD_CI5_y0TB7B-38vk4Nk7iyhWcOK_vLqs',
+    authDomain: 'pharmago-de418.firebaseapp.com',
+    projectId: 'pharmago-de418',
+    storageBucket: 'pharmago-de418.firebasestorage.app',
+    messagingSenderId: '211762754489',
+    appId: '1:211762754489:web:aa6fea179ccf54910b7c68',
+    measurementId: 'G-X5TV595GQ5',
   }
 
   const app = initializeApp(firebaseConfig)
