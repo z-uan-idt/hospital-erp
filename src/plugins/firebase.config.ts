@@ -55,14 +55,23 @@ export default defineNuxtPlugin(async () => {
       let swRegistration: TokenOptions['serviceWorkerRegistration']
       try {
         const serviceWorker = navigator.serviceWorker
-        swRegistration = await serviceWorker.getRegistration(REGISTRATION_URL)
+        // Register service worker if not already registered
+        swRegistration = await serviceWorker.register(REGISTRATION_URL)
+        if (!swRegistration) {
+          swRegistration = await serviceWorker.getRegistration(REGISTRATION_URL)
+        }
       } catch (swError) {
         notifyStatus.value.error = `Lỗi đăng ký Service Worker: ${swError instanceof Error ? swError.message : String(swError)}`
       }
 
       const messaging = getMessaging(app)
+      const systemStore = useSystemStore()
 
       onMessage(messaging, (payload) => {
+        if (payload?.data?.type === 'organization_member_approved') {
+          systemStore.setReloadWelcomeData(payload)
+          systemStore.setReloadWelcome(true)
+        }
         if (
           payload.notification &&
           'Notification' in window &&

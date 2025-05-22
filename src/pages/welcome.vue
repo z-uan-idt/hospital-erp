@@ -202,8 +202,9 @@
         <v-card
           v-if="notificationData"
           rounded="xl"
+          class="pa-2"
         >
-          <v-card-text class="text-h2 pa-12 pb-10">
+          <v-card-text class="text-h2 pa-12 pb-6">
             <div class="d-flex flex-column justify-center align-center ga-2">
               <v-avatar
                 size="180"
@@ -213,8 +214,8 @@
                 style="user-select: none; pointer-events: none"
               >
                 <v-img
-                  v-if="notificationData.profile_picture"
-                  :src="notificationData.profile_picture"
+                  v-if="notificationData?.profile_picture"
+                  :src="notificationData?.profile_picture"
                   class="position-absolute top-0 left-0"
                 />
                 <span
@@ -222,11 +223,11 @@
                   class="text-blue-grey-darken-3 text-lg-h4 text-h6 font-weight-bold"
                   style="line-height: 1; margin-right: -2px"
                 >
-                  {{ notificationData.name.charAt(0).toUpperCase() }}
+                  {{ notificationData?.name.charAt(0).toUpperCase() }}
                 </span>
               </v-avatar>
               <span class="text-h6 text-md-h5 mt-4">
-                {{ notificationData.name }}
+                {{ notificationData?.name }}
               </span>
               <div
                 class="text-body-1 text-erp-brand d-flex align-center ga-1 mt-2 mb-2"
@@ -237,10 +238,12 @@
                 >
                   mdi-check-circle
                 </v-icon>
-                {{ notificationData.message }}
+                {{ notificationData?.message }}
               </div>
             </div>
+          </v-card-text>
 
+          <v-card-actions>
             <v-btn
               text="Close"
               block
@@ -249,12 +252,11 @@
               elevation="0"
               height="48"
               rounded="pill"
-              class="mt-4"
               @click="isActive.value = false"
             >
               <span class="text-body-1 font-weight-medium">Đóng</span>
             </v-btn>
-          </v-card-text>
+          </v-card-actions>
         </v-card>
       </template>
     </v-dialog>
@@ -262,8 +264,6 @@
 </template>
 
 <script setup lang="ts">
-  import { getMessaging, onMessage } from 'firebase/messaging'
-
   type INotificationData = {
     id: number
     name: string
@@ -289,7 +289,7 @@
   })
 
   const { userData } = useAuth()
-  const { $vuetify, $firebaseApp } = useNuxtApp()
+  const { $vuetify } = useNuxtApp()
   const {
     onFetchOrganization,
     organizations,
@@ -301,6 +301,7 @@
   } = useOrganization()
 
   const { $toast } = useNuxtApp()
+  const systemStore = useSystemStore()
   const isLoading = ref<boolean>(false)
   const isRequestVisible = ref<boolean>(false)
   const isNotificationVisible = ref<boolean>(false)
@@ -322,39 +323,40 @@
     await onLoadingWrapper(onFetchOrganization)
   })
 
-  onMounted(() => {
-    if (import.meta.client) {
-      const messaging = getMessaging($firebaseApp)
+  watchEffect(() => {
+    if (systemStore.isReloadWelcome) {
+      const payload = systemStore.reloadWelcomeData
 
-      onMessage(messaging, async (payload) => {
-        if (payload?.data?.type === 'organization_member_approved') {
-          const body = payload.notification?.body
+      const body = payload.notification?.body
 
-          notificationData.value = {
-            id: Number(payload.data.id),
-            name: payload.data.name as string,
-            profile_picture: payload.data.profile_picture as string,
-            message: body || 'Bạn đã được chấp thuận vào tổ chức',
+      notificationData.value = {
+        id: Number(payload.data.id),
+        name: payload.data.name as string,
+        profile_picture: payload.data.profile_picture as string,
+        message: body || 'Bạn đã được chấp thuận vào tổ chức',
+      }
+
+      isNotificationVisible.value = true
+
+      organizations.value = organizations.value.map((organization) => {
+        if (organization.id === Number(payload.data.id)) {
+          return {
+            ...organization,
+            infor: {
+              label: payload.data.role_label,
+              value: payload.data.role_value,
+            },
+            status: {
+              label: payload.data.status_label,
+              value: payload.data.status_value,
+            },
           }
-          isNotificationVisible.value = true
-          organizations.value = organizations.value.map((organization) => {
-            if (organization.id === Number(payload.data.id)) {
-              return {
-                ...organization,
-                infor: {
-                  label: payload.data.role_label,
-                  value: payload.data.role_value,
-                },
-                status: {
-                  label: payload.data.status_label,
-                  value: payload.data.status_value,
-                },
-              }
-            }
-            return organization
-          })
         }
+        return organization
       })
+
+      systemStore.setReloadWelcome(false)
+      systemStore.setReloadWelcomeData(null)
     }
   })
 

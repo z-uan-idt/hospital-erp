@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
   const { $toast } = useNuxtApp()
-  const { onUpdateOrCreateDevice } = useAuth()
+  const { onUpdateOrCreateDevice, isAuthenticated } = useAuth()
 
   onMounted(() => {
     window.addEventListener('offline', () => {
@@ -33,7 +33,10 @@
         description: 'Kết nối mạng đã được khôi phục',
       })
     })
-    onUpdateOrCreateDevice()
+
+    if (isAuthenticated.value) {
+      onUpdateOrCreateDevice()
+    }
   })
 
   onUnmounted(() => {
