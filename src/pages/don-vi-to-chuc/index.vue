@@ -274,7 +274,7 @@
     message: string
   }
 
-  const CREATE_ORGANIZATION_ROUTE = '/organization/new'
+  const CREATE_ORGANIZATION_ROUTE = '/don-vi-to-chuc/tao-moi'
 
   definePageMeta({
     layout: 'welcome',

@@ -1,9 +1,15 @@
 <script setup lang="ts">
   import type { NuxtError } from '#app'
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isSelectedOrganization } = useAuth()
 
   watchEffect(() => {
-    setPageLayout(isAuthenticated.value ? 'welcome' : 'empty')
+    setPageLayout(
+      isAuthenticated.value
+        ? isSelectedOrganization.value
+          ? 'default'
+          : 'welcome'
+        : 'empty'
+    )
   })
 
   defineProps({
@@ -18,7 +24,7 @@
       'h-100 w-100 position-relative',
     ]"
   >
-    <div class="d-flex flex-column align-center justify-center h-full">
+    <div class="d-flex flex-column align-center justify-center h-100">
       <h1 class="text-blue-grey-darken-1 font-weight-black">
         {{ error?.statusCode ?? 500 }}
       </h1>

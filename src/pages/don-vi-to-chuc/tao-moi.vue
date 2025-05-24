@@ -56,7 +56,7 @@
         $toast.success('Thành công', {
           description: 'Tạo tổ chức thành công',
         })
-        router.replace(`/organization/${organization.id}`)
+        router.replace(`/don-vi-to-chuc/${organization.id}`)
       },
       (error) => {
         isSuccess.value = false

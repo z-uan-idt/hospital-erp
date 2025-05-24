@@ -1,6 +1,6 @@
 <template>
-  <div class="erp-home pa-4">
-    <h1>Tổng quan</h1>
+  <div class="erp-phieu-kiem-kho pa-4">
+    <h1>Phiếu kiểm kho</h1>
   </div>
 </template>
 
