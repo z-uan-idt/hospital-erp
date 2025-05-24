@@ -51,7 +51,7 @@
       :headers="headers"
       class="mt-3"
       fixed-header
-      style="max-height: calc(100vh - 240px)"
+      style="max-height: calc(100dvh - 240px)"
     >
       <template
         v-for="header in ['staff_count', 'warehouse_count', 'created_at']"
