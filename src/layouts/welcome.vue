@@ -37,7 +37,7 @@
             color="grey-lighten-1"
             class="d-flex align-center bg-white justify-center cursor-pointer select-none"
             style="user-select: none"
-            @click="navigateTo('/thong-tin-ca-nhan')"
+            @click="navigateTo(ROUTE_THONG_TIN_CA_NHAN.path)"
           >
             <v-img
               v-if="userData?.avatar"
@@ -59,7 +59,7 @@
                 min-width: max-content;
                 text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
               "
-              @click="navigateTo('/thong-tin-ca-nhan')"
+              @click="navigateTo(ROUTE_THONG_TIN_CA_NHAN.path)"
             >
               {{ userData?.full_name }}
             </p>
@@ -109,6 +109,8 @@
 </template>
 
 <script setup lang="ts">
+  import { ROUTE_THONG_TIN_CA_NHAN } from '~/constants/route.constants'
+
   const { $vuetify } = useNuxtApp()
   const { userData, onLogout } = useAuth()
   const sessionCookie = useCookie('session_id')

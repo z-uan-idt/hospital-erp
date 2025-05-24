@@ -91,7 +91,7 @@
               color="erp-gray"
               size="32"
               nuxt
-              :to="`/don-vi-to-chuc/${organization.id}`"
+              :to="ROUTE_DON_VI_TO_CHUC.DETAIL.path(organization.id)"
               @click.stop
             >
               <Icon
@@ -258,6 +258,7 @@
 </template>
 
 <script setup lang="ts">
+  import { ROUTE_DON_VI_TO_CHUC } from '~/constants/route.constants'
   import type {
     IOrganization,
     IOrganizationActionRequest,

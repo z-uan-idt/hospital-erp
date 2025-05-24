@@ -9,6 +9,7 @@
 </template>
 
 <script setup lang="ts">
+  import { ROUTE_DON_VI_TO_CHUC } from '~/constants/route.constants'
   import type { IOrganizationFormPayload } from '~/types/oranization.types'
 
   definePageMeta({
@@ -56,7 +57,7 @@
         $toast.success('Thành công', {
           description: 'Tạo tổ chức thành công',
         })
-        router.replace(`/don-vi-to-chuc/${organization.id}`)
+        router.replace(ROUTE_DON_VI_TO_CHUC.DETAIL.path(organization.id))
       },
       (error) => {
         isSuccess.value = false

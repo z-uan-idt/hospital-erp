@@ -41,6 +41,7 @@
   import type { IOrganizationFormPayload } from '~/types/oranization.types'
 
   definePageMeta({
+    keepalive: true,
     layout: 'welcome',
     middleware: ['auth'],
   })

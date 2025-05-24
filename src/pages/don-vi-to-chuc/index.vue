@@ -71,7 +71,7 @@
           elevation="0"
           height="48"
           rounded="pill"
-          @click="navigateTo(CREATE_ORGANIZATION_ROUTE)"
+          @click="navigateTo(ROUTE_DON_VI_TO_CHUC.CREATE.path)"
         >
           <template #prepend>
             <v-icon
@@ -140,7 +140,7 @@
               elevation="0"
               height="48"
               rounded="pill"
-              @click="navigateTo(CREATE_ORGANIZATION_ROUTE)"
+              @click="navigateTo(ROUTE_DON_VI_TO_CHUC.CREATE.path)"
             >
               <template #prepend>
                 <v-icon
@@ -267,6 +267,8 @@
 </template>
 
 <script setup lang="ts">
+  import { ROUTE_DON_VI_TO_CHUC } from '~/constants/route.constants'
+
   type INotificationData = {
     id: number
     name: string
@@ -274,9 +276,8 @@
     message: string
   }
 
-  const CREATE_ORGANIZATION_ROUTE = '/don-vi-to-chuc/tao-moi'
-
   definePageMeta({
+    keepalive: true,
     layout: 'welcome',
     middleware: ['auth'],
   })

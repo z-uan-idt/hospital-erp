@@ -8,7 +8,7 @@
       :absolute="false"
       expand-on-hover
       color="white"
-      :class="[mdAndUp ? 'border-0 4' : '', !isRailOpen ? 'elevation-5' : '']"
+      :class="[mdAndUp ? 'border-0 4' : '', !isRailOpen ? 'elevation-1' : '']"
       :permanent="mdAndUp"
       :rail="mdAndUp"
       :rail-width="80"
@@ -18,7 +18,7 @@
       @update:rail="isRailOpen = $event"
     >
       <template v-slot:prepend>
-        <div class="d-flex flex-column align-center justify-center mb-4">
+        <div class="d-flex flex-column align-center justify-center">
           <NuxtLink to="/">
             <Icon
               name="custom:logo"
@@ -46,7 +46,10 @@
             :width="isRailOpen && mdAndUp ? 40 : '100%'"
             :height="40"
             class="select-none"
-            :class="[isRailOpen && mdAndUp ? 'border border-opacity-25' : '']"
+            :class="{
+              'border border-opacity-25': isRailOpen && mdAndUp,
+              'border-success': item.path === $route.path,
+            }"
             variant="elevated"
             color="erp-brand"
             active-class="erp-brand"
@@ -90,7 +93,7 @@
             color="grey-lighten-1"
             class="d-flex align-center bg-white justify-center cursor-pointer select-none"
             style="user-select: none"
-            @click="navigateTo('/thong-tin-ca-nhan')"
+            @click="navigateTo(ROUTE_THONG_TIN_CA_NHAN.path)"
           >
             <v-img
               v-if="userData?.avatar"
@@ -112,7 +115,7 @@
               :style="{
                 width: isRailOpen && mdAndUp ? '30% !important' : '',
               }"
-              @click="navigateTo('/thong-tin-ca-nhan')"
+              @click="navigateTo(ROUTE_THONG_TIN_CA_NHAN.path)"
             >
               {{ userData?.full_name }}
             </div>
@@ -168,32 +171,49 @@
       <div class="d-flex align-center justify-end ga-3 w-100">
         <slot name="app-bar-right" />
 
-        <v-sheet
-          class="position-relative ps-6 d-flex align-center justify-between select-none border"
-          color="erp-brand-100"
-          rounded="pill"
+        <v-list-item
+          class="position-relative d-flex align-center justify-between select-none border pe-0 bg-erp-brand-100"
+          :class="[!mdAndUp ? 'ps-0' : '']"
+          elevation="0"
+          rounded="lg"
           height="40"
+          density="compact"
+          exact
         >
-          <div
-            class="me-4 text-body-2 font-weight-medium"
-            style="margin-top: 1px"
-          >
-            {{ organizationSelected?.name }}
-          </div>
-          <v-btn
-            icon
-            color="erp-brand-600"
-            variant="elevated"
-            elevation="0"
-            height="40"
-            width="48"
-            class="rounded-e-pill"
-            to="/don-vi-to-chuc"
-            nuxt
-          >
-            <v-icon size="18">custom-right-from-line</v-icon>
-          </v-btn>
-        </v-sheet>
+          <template #prepend>
+            <v-icon
+              v-if="mdAndUp"
+              class="me-n6"
+              size="20"
+            >
+              mdi-home-outline
+            </v-icon>
+          </template>
+          <template #title>
+            <div
+              v-if="mdAndUp"
+              class="me-4 text-body-2 font-weight-medium"
+              style="margin-top: 1px"
+            >
+              <span>{{ organizationSelected?.name }}</span>
+            </div>
+          </template>
+          <template #append>
+            <v-btn
+              icon
+              color="erp-brand-600"
+              variant="elevated"
+              elevation="0"
+              height="40"
+              width="48"
+              :class="[mdAndUp ? 'rounded-e-lg rounded-s-0' : 'rounded-lg']"
+              :to="ROUTE_DON_VI_TO_CHUC.path"
+              nuxt
+            >
+              <v-icon size="18">custom-right-from-line</v-icon>
+            </v-btn>
+          </template>
+        </v-list-item>
       </div>
     </v-app-bar>
 
@@ -202,7 +222,8 @@
         class="pa-4 h-100 overflow-y-auto erp-scrollbar ps-md-4 ps-0 pe-md-4 pe-0"
       >
         <div
-          class="bg-white rounded-lg position-relative"
+          class="bg-white position-relative"
+          :class="[mdAndUp ? 'rounded-lg' : 'rounded-0']"
           style="min-height: 100%"
         >
           <slot />
@@ -213,6 +234,22 @@
 </template>
 
 <script setup lang="ts">
+  import {
+    ROUTE_DANH_SACH_THUOC,
+    ROUTE_DON_THUOC,
+    ROUTE_DON_VI_TO_CHUC,
+    ROUTE_KHO_TRUC_THUOC,
+    ROUTE_LO_HANG,
+    ROUTE_NHAN_VIEN,
+    ROUTE_PHIEU_CHUYEN_HANG,
+    ROUTE_PHIEU_KIEM_KHO,
+    ROUTE_PHIEU_LINH,
+    ROUTE_PHIEU_NHAP_KHO,
+    ROUTE_PHIEU_XUAT_KHO,
+    ROUTE_THONG_TIN_CA_NHAN,
+    ROUTE_DON_VI_TINH,
+  } from '~/constants/route.constants'
+
   const { $vuetify } = useNuxtApp()
   const { userData, onLogout, organizationSelected } = useAuth()
   const sessionCookie = useCookie('session_id')
@@ -234,77 +271,77 @@
       iconSize: 18,
       icon: 'custom-list-timeline',
       name: 'Đơn thuốc',
-      path: '/don-thuoc',
+      path: ROUTE_DON_THUOC.path,
     },
     {
       iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
       iconSize: 22,
       icon: 'custom-box-circle-check',
       name: 'Phiếu lĩnh',
-      path: '/phieu-linh',
+      path: ROUTE_PHIEU_LINH.path,
     },
     {
       iconStyle: 'margin-top: 1px !important; margin-left: 0px !important',
       iconSize: 23,
       icon: 'custom-box-open',
       name: 'Lô hàng',
-      path: '/lo-hang',
+      path: ROUTE_LO_HANG.path,
     },
     {
       iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
       iconSize: 22,
       icon: 'custom-capsules',
       name: 'Danh sách thuốc',
-      path: '/danh-sach-thuoc',
+      path: ROUTE_DANH_SACH_THUOC.path,
     },
     {
       iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
       iconSize: 18,
       icon: 'custom-bars',
       name: 'Đơn vị tính',
-      path: '/don-vi-tinh',
+      path: ROUTE_DON_VI_TINH.path,
     },
     {
       iconStyle: 'margin-left: 0px !important; margin-top: -1px !important',
       iconSize: 22,
       icon: 'custom-circle-arrow-down-right',
       name: 'Phiếu nhập kho',
-      path: '/phieu-nhap-kho',
+      path: ROUTE_PHIEU_NHAP_KHO.path,
     },
     {
       iconStyle: 'margin-left: 0px !important; margin-top: 0px !important',
       iconSize: 22,
       icon: 'custom-circle-arrow-up-left',
       name: 'Phiếu xuất kho',
-      path: '/phieu-xuat-kho',
+      path: ROUTE_PHIEU_XUAT_KHO.path,
     },
     {
       iconStyle: 'margin-left: 2px !important',
       iconSize: 19,
       icon: 'custom-arrow-right-arrow-left',
       name: 'Phiếu chuyển hàng',
-      path: '/phieu-chuyen-hang',
+      path: ROUTE_PHIEU_CHUYEN_HANG.path,
     },
     {
       iconStyle: 'margin-left: 2px !important;',
       iconSize: 20,
       icon: 'custom-shield-check',
       name: 'Phiếu kiểm kho',
-      path: '/phieu-kiem-kho',
+      path: ROUTE_PHIEU_KIEM_KHO.path,
     },
     {
       iconStyle: 'margin-top: -3px; margin-left: 2px !important',
       iconSize: 20,
       icon: 'custom-warehouse-full',
       name: 'Kho trực thuộc',
-      path: '/kho-truc-thuoc',
+      path: ROUTE_KHO_TRUC_THUOC.path,
     },
     {
       iconStyle: 'margin-top: -3px; margin-left: 2px !important',
       iconSize: 18,
       icon: 'custom-user',
       name: 'Nhân viên',
-      path: '/nhan-vien',
+      path: ROUTE_NHAN_VIEN.path,
     },
   ]
 

@@ -1,11 +1,31 @@
+import {
+  ROUTE_DON_VI_TO_CHUC,
+  ROUTE_FORGOT_PASSWORD,
+  ROUTE_LOGIN,
+  ROUTE_REGISTER,
+  ROUTE_RESET_PASSWORD,
+  ROUTE_THONG_TIN_CA_NHAN,
+  ROUTE_VERIFY_EMAIL,
+  ROUTE_VERIFY_OTP,
+  ROUTE_VERIFY_PHONE,
+} from '~/constants/route.constants'
+
 export default defineNuxtRouteMiddleware((to) => {
   const { isAuthenticated, isSelectedOrganization } = useAuth()
-  const publicRoutes: string[] = ['dang-nhap', 'dang-ky']
+  const publicRoutes: string[] = [
+    ROUTE_LOGIN.name,
+    ROUTE_REGISTER.name,
+    ROUTE_FORGOT_PASSWORD.name,
+    ROUTE_RESET_PASSWORD.name,
+    ROUTE_VERIFY_EMAIL.name,
+    ROUTE_VERIFY_PHONE.name,
+    ROUTE_VERIFY_OTP.name,
+  ]
   const welcomeRoutes: string[] = [
-    'don-vi-to-chuc-org_id',
-    'don-vi-to-chuc-tao-moi',
-    'thong-tin-ca-nhan',
-    'don-vi-to-chuc',
+    ROUTE_DON_VI_TO_CHUC.name,
+    ROUTE_DON_VI_TO_CHUC.CREATE.name,
+    ROUTE_DON_VI_TO_CHUC.DETAIL.name,
+    ROUTE_THONG_TIN_CA_NHAN.name,
     'error',
   ]
 
@@ -14,8 +34,8 @@ export default defineNuxtRouteMiddleware((to) => {
     !isSelectedOrganization.value &&
     isAuthenticated.value
   ) {
-    return navigateTo('/don-vi-to-chuc')
+    return navigateTo(ROUTE_DON_VI_TO_CHUC.path)
   } else if (!publicRoutes.includes(to.name) && !isAuthenticated.value) {
-    return navigateTo('/dang-nhap')
+    return navigateTo(ROUTE_LOGIN.path)
   }
 })

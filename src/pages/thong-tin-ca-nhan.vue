@@ -463,6 +463,7 @@ c
   import type { IAccount } from '~/types/account.types'
 
   definePageMeta({
+    keepalive: true,
     layout: 'welcome',
     middleware: ['auth'],
   })

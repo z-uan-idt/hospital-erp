@@ -1,21 +1,21 @@
 <template>
-  <v-app class="erp-background">
-    <NuxtLayout>
-      <KeepAlive>
+  <KeepAlive>
+    <v-app class="erp-background">
+      <NuxtLayout>
         <NuxtPage />
-      </KeepAlive>
-      <Toaster
-        position="top-right"
-        expand
-        :gap="8"
-        offset="10px"
-        :visibleToasts="5"
-        richColors
-        closeButton
-        dir="auto"
-      />
-    </NuxtLayout>
-  </v-app>
+        <Toaster
+          position="top-right"
+          expand
+          :gap="8"
+          offset="10px"
+          :visibleToasts="5"
+          richColors
+          closeButton
+          dir="auto"
+        />
+      </NuxtLayout>
+    </v-app>
+  </KeepAlive>
 </template>
 
 <script setup lang="ts">

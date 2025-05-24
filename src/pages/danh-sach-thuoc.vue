@@ -8,7 +8,7 @@
         density="compact"
         hide-details
         color="erp-brand-600"
-        rounded="pill"
+        rounded="lg"
         :items="['Khoa kiểm soát nhiễm trùng', 'Khoa nội', 'Khoa ngoại']"
       />
     </template>
