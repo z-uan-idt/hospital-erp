@@ -5,6 +5,10 @@
   defineProps({
     error: Object as () => NuxtError,
   })
+
+  useHead({
+    title: 'Trang bạn đang tìm kiếm không tồn tại',
+  })
 </script>
 
 <template>

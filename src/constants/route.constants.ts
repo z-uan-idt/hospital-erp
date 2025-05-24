@@ -178,3 +178,16 @@ export const ROUTE_PHIEU_CHUYEN_HANG = {
     path: (pk: number | string) => `/phieu-chuyen-hang/${pk}`,
   },
 }
+
+export const ROUTE_DANH_SACH_KHOA = {
+  name: 'danh-sach-khoa',
+  path: '/danh-sach-khoa',
+  CREATE: {
+    name: 'danh-sach-khoa-tao-moi',
+    path: '/danh-sach-khoa/tao-moi',
+  },
+  DETAIL: {
+    name: 'danh-sach-khoa-department_id',
+    path: (pk: number | string) => `/danh-sach-khoa/${pk}`,
+  },
+}

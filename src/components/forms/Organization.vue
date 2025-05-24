@@ -70,7 +70,11 @@
             rounded="pill"
             elevation="0"
             type="submit"
-            class="flex-grow-1 flex-md-grow-0"
+            class="flex-grow-1 flex-md-grow-0 border"
+            :class="{
+              'border-success': hasChanged,
+            }"
+            :disabled="!hasChanged"
           >
             <template #prepend>
               <v-icon

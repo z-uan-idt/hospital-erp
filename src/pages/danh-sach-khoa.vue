@@ -1,5 +1,5 @@
 <template>
-  <div class="erp-phieu-linh pa-6">
+  <div class="erp-danh-sach-khoa pa-6">
     <div
       :class="[
         'd-flex align-center flex-md-row',
@@ -20,8 +20,51 @@
             'text-blue-grey-darken-3',
           ]"
         >
-          Phiếu lĩnh
+          Danh sách khoa
         </h1>
+      </div>
+
+      <div class="action-buttons d-flex align-center ga-2">
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
+        >
+          <v-icon
+            size="16"
+            class="text-erp-gray-800"
+          >
+            custom-upload
+          </v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
+        >
+          <v-icon
+            size="18"
+            class="me-n1 text-erp-gray-800"
+          >
+            custom-file-export
+          </v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
+          class="text-body-1"
+        >
+          <v-icon
+            size="20"
+            class="text-erp-gray-800"
+          >
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </div>
     </div>
 
@@ -111,7 +154,7 @@
   })
 
   useHead({
-    title: 'Phiếu lĩnh',
+    title: 'Danh sách khoa',
   })
 
   const headers = ref([

@@ -172,7 +172,7 @@
         <slot name="app-bar-right" />
 
         <v-list-item
-          class="position-relative d-flex align-center justify-between select-none border pe-0 bg-erp-brand-100"
+          class="position-relative d-flex align-center justify-between select-none border pe-0 bg-erp-brand-50"
           :class="[!mdAndUp ? 'ps-0' : '']"
           elevation="0"
           rounded="lg"
@@ -186,13 +186,13 @@
               class="me-n6"
               size="20"
             >
-              mdi-home-outline
+              custom-house
             </v-icon>
           </template>
           <template #title>
             <div
               v-if="mdAndUp"
-              class="me-4 text-body-2 font-weight-medium"
+              class="me-4 text-body-2 font-weight-medium text-truncate"
               style="margin-top: 1px"
             >
               <span>{{ organizationSelected?.name }}</span>
@@ -219,7 +219,7 @@
 
     <v-main class="h-screen pt-17">
       <div
-        class="pa-4 h-100 overflow-y-auto erp-scrollbar ps-md-4 ps-0 pe-md-4 pe-0"
+        class="pa-4 h-100 overflow-y-auto erp-scrollbar ps-md-4 ps-0 pe-md-4 pe-0 pb-0"
       >
         <div
           class="bg-white position-relative"
@@ -248,6 +248,7 @@
     ROUTE_PHIEU_XUAT_KHO,
     ROUTE_THONG_TIN_CA_NHAN,
     ROUTE_DON_VI_TINH,
+    ROUTE_DANH_SACH_KHOA,
   } from '~/constants/route.constants'
 
   const { $vuetify } = useNuxtApp()
@@ -328,6 +329,13 @@
       icon: 'custom-shield-check',
       name: 'Phiếu kiểm kho',
       path: ROUTE_PHIEU_KIEM_KHO.path,
+    },
+    {
+      iconStyle: 'margin-top: -2px; margin-left: 1px !important',
+      iconSize: 20,
+      icon: 'custom-house-medical',
+      name: 'Danh sách khoa',
+      path: ROUTE_DANH_SACH_KHOA.path,
     },
     {
       iconStyle: 'margin-top: -3px; margin-left: 2px !important',

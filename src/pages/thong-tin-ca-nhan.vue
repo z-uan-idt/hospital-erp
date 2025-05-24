@@ -468,6 +468,10 @@ c
     middleware: ['auth'],
   })
 
+  useHead({
+    title: 'Thông tin cá nhân',
+  })
+
   const router = useRouter()
   const { $toast } = useNuxtApp()
   const formRules = useFormRules()
