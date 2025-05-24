@@ -13,11 +13,11 @@
       :class="{ 'erp-upload-image-label flex-column': preview }"
     >
       <v-icon
-        size="24"
+        size="22"
         :class="{ 'me-3 ': !preview }"
         :color="preview ? 'white' : 'black'"
       >
-        custom-download
+        custom-upload
       </v-icon>
 
       <div
@@ -34,18 +34,18 @@
         size="small"
         color="erp-error"
         class="mt-2"
+        variant="flat"
         style="z-index: 3"
         @click.stop="onRemoveImage"
       >
         <template #prepend>
           <v-icon
-            class="me-n1"
-            size="18"
+            class="me-n2"
+            size="24"
           >
             mdi-close
           </v-icon>
         </template>
-        <span>Hủy bỏ</span>
       </v-btn>
     </div>
 

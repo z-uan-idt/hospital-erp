@@ -1,25 +1,27 @@
 <template>
   <v-container
-    fluid
     class="d-flex flex-row align-start pa-0 align-stretch"
+    fluid
   >
     <v-navigation-drawer
-      :model-value="$vuetify.display.lgAndUp.value"
+      v-model="isDrawerOpen"
       :absolute="false"
-      :color="$vuetify.display.lgAndUp.value ? 'background' : 'white'"
-      :class="$vuetify.display.lgAndUp.value ? 'border-0' : ''"
-      :permanent="!$vuetify.display.lgAndUp"
-      :rail="!$vuetify.display.lgAndUp.value"
-      rail-width="257"
-      width="257"
+      :color="$vuetify.display.mdAndUp.value ? 'transparent' : 'white'"
+      :class="$vuetify.display.mdAndUp.value ? 'border-0' : ''"
+      :permanent="$vuetify.display.mdAndUp.value"
+      :rail="!$vuetify.display.mdAndUp.value"
+      rail-width="264"
+      width="264"
       class="pt-7"
     >
       <div class="d-flex flex-column align-center justify-center">
-        <Icon
-          name="custom:logo"
-          size="159"
-          class="mb-12"
-        />
+        <NuxtLink to="/">
+          <Icon
+            name="custom:logo"
+            size="159"
+            class="mb-12"
+          />
+        </NuxtLink>
       </div>
 
       <template v-slot:append>
@@ -43,7 +45,8 @@
               class="position-absolute top-0 left-0"
             />
             <span
-              class="text-blue-grey-darken-3 text-lg-h4 text-h6 font-weight-bold"
+              class="text-blue-grey-darken-3 text-lg-h5 text-h6 font-weight-bold"
+              style="margin-bottom: -2px"
             >
               {{ userData?.full_name.charAt(0).toUpperCase() }}
             </span>
@@ -52,7 +55,10 @@
           <div class="d-flex flex-column ga-2 align-center justify-center">
             <p
               class="text-body-1 font-weight-medium text-erp-gray-800 cursor-pointer select-none"
-              style="min-width: max-content"
+              style="
+                min-width: max-content;
+                text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+              "
               @click="navigateTo('/profile')"
             >
               {{ userData?.full_name }}
@@ -60,7 +66,7 @@
             <v-btn
               variant="outlined"
               color="grey-darken-1"
-              class="rounded-xl pe-4 text-body-1 bg-white"
+              class="rounded-xl pe-4 text-body-1 bg-white mt-1"
               @click="onLogout"
             >
               <template #prepend>
@@ -76,16 +82,27 @@
         </div>
       </template>
     </v-navigation-drawer>
-    <v-main class="min-h-screen pt-md-6">
+
+    <v-app-bar
+      :model-value="!$vuetify.display.mdAndUp.value"
+      color="transparent"
+      elevation="0"
+      height="48"
+    >
+      <v-app-bar-nav-icon
+        @click.stop="isDrawerOpen = !isDrawerOpen"
+        variant="text"
+      />
+    </v-app-bar>
+
+    <v-main class="h-screen pt-md-6">
       <div
-        :class="[
-          'bg-white h-100',
-          {
-            'rounded-ts-xl border-s border-t': $vuetify.display.mdAndUp.value,
-          },
-        ]"
+        class="bg-white h-100 border-s border-t"
+        :class="$vuetify.display.mdAndUp.value ? 'rounded-ts-xl' : ''"
       >
-        <slot />
+        <div class="h-100 overflow-y-auto erp-scrollbar">
+          <slot />
+        </div>
       </div>
     </v-main>
   </v-container>
@@ -95,6 +112,12 @@
   const { $vuetify } = useNuxtApp()
   const { userData, onLogout } = useAuth()
   const sessionCookie = useCookie('session_id')
+
+  const isDrawerOpen = ref(false)
+
+  watchEffect(() => {
+    isDrawerOpen.value = $vuetify.display.mdAndUp.value
+  })
 
   useHead({
     titleTemplate(title?: string) {

@@ -4,13 +4,13 @@
       <v-list-item
         v-for="organization in organizations"
         :key="organization.id"
-        ripple
-        rounded="lg"
         variant="outlined"
-        class="mb-4 pt-3 pb-3 ps-6 pe-6"
         base-color="grey-lighten-1"
+        class="mb-4 pt-3 pb-3 ps-3 pe-6"
+        :ripple="organization.infor?.value !== 'PENDING'"
+        :rounded="!$vuetify.display.lgAndUp ? 'xl' : 'pill'"
         :disabled="organizationSelected?.id === organization.id"
-        @click.prevent
+        @click.prevent="onSelectOrganizationModule(organization)"
       >
         <template #prepend>
           <v-avatar
@@ -36,30 +36,24 @@
         </template>
         <div
           :class="[
-            'd-flex flex-md-row flex-column align-start',
-            'align-md-center justify-space-between w-100 ga-2',
+            'd-flex flex-lg-row flex-column align-start',
+            'align-lg-center justify-space-between w-100 ga-2',
           ]"
         >
-          <div class="d-flex flex-md-row flex-column ga-1">
-            <div
-              :class="[
-                'text-h6 text-md-h5 font-weight-bold',
-                'text-black mb-1 mb-md-0',
-              ]"
-            >
+          <div class="d-flex flex-lg-row flex-column ga-1">
+            <div class="text-h6 font-weight-bold text-black mb-1 mb-lg-0">
               {{ organization.name }}
               <v-icon
                 v-if="organization.is_verified"
-                color="green-darken-1"
-                :size="!$vuetify.display.mdAndUp ? 20 : 26"
-                class="mt-auto mt-md-n1"
-                style="margin-top: -1px !important"
+                color="blue-darken-1"
+                :size="!$vuetify.display.mdAndUp ? 20 : 24"
+                class="mt-n1"
               >
                 mdi-check-circle
               </v-icon>
             </div>
 
-            <div class="d-flex align-center ga-2 select-none ms-md-4 flex-wrap">
+            <div class="d-flex align-center ga-2 select-none ms-lg-4 flex-wrap">
               <v-chip
                 size="small"
                 :color="
@@ -90,7 +84,7 @@
             </div>
           </div>
 
-          <div class="d-flex ga-2 ms-md-auto">
+          <div class="d-flex ga-2 ms-lg-auto">
             <v-btn
               icon
               variant="outlined"
@@ -207,7 +201,10 @@
           </v-icon>
         </template>
         <template #title>
-          <p class="text-body-1 font-weight-regular">
+          <p
+            class="font-weight-regular text-wrap"
+            :class="[$vuetify.display.mdAndUp ? 'text-body-1' : 'text-body-2']"
+          >
             {{ dialogOptions[confirmType].title }}
           </p>
         </template>
@@ -252,6 +249,11 @@
         </div>
       </v-card>
     </v-dialog>
+
+    <FeatureOrganizationSelectedModule
+      :organization="organizationSelectedModule"
+      @close="organizationSelectedModule = null"
+    />
   </div>
 </template>
 
@@ -326,8 +328,14 @@
   const isShowConfirm = ref<boolean>(false)
   const confirmType = ref<IOrganizationActionRequest>(null)
   const organizationSelected = ref<IOrganization | null>(null)
+  const organizationSelectedModule = ref<IOrganization | null>(null)
 
   const { onActionOrganization } = useOrganization()
+
+  const onSelectOrganizationModule = (organization: IOrganization) => {
+    if (organization.infor?.value === 'PENDING') return
+    organizationSelectedModule.value = organization
+  }
 
   const onConfirm = async (
     organization: IOrganization,

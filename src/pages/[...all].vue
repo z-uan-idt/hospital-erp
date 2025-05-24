@@ -1,5 +1,10 @@
 <script setup lang="ts">
   import type { NuxtError } from '#app'
+  const { isAuthenticated } = useAuth()
+
+  watchEffect(() => {
+    setPageLayout(isAuthenticated.value ? 'welcome' : 'empty')
+  })
 
   defineProps({
     error: Object as () => NuxtError,
@@ -8,7 +13,10 @@
 
 <template>
   <div
-    class="h-screen w-100 position-relative d-flex align-center justify-center"
+    :class="[
+      'd-flex align-center justify-center',
+      'h-100 w-100 position-relative',
+    ]"
   >
     <div class="d-flex flex-column align-center justify-center h-full">
       <h1 class="text-blue-grey-darken-1 font-weight-black">
@@ -18,11 +26,16 @@
         Trang bạn đang tìm kiếm không tồn tại.
       </p>
       <v-btn
-        variant="plain"
+        variant="outlined"
         color="blue-grey-darken-2"
         class="text-none mt-4"
+        rounded="pill"
         @click="navigateTo('/')"
-        >Quay về trang chủ
+      >
+        <template #prepend>
+          <v-icon class="me-n1">mdi-arrow-left</v-icon>
+        </template>
+        Quay lại
       </v-btn>
     </div>
   </div>

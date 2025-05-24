@@ -80,7 +80,7 @@
               variant="outlined"
               rounded="xl"
               color="erp-gray-600"
-              class="ps-2 pt-4 pb-4 pe-6"
+              class="bg-white ps-2 pt-4 pb-4 pe-6"
               max-width="fit-content"
               height="fit-content"
               @click="isDialog = true"

@@ -8,7 +8,10 @@
       validate-on="submit"
       @submit.prevent="onFormSubmit"
     >
-      <v-card class="pb-2 pe-2 pt-2">
+      <v-card
+        class="pb-2 pe-2 pt-2"
+        rounded="xl"
+      >
         <template v-slot:title>
           <div class="d-flex align-center justify-space-between">
             Gửi duyệt truy cập tổ chức
@@ -112,13 +115,14 @@
           </Transition>
         </div>
 
-        <div class="d-flex justify-end pe-6 pb-4 ga-3">
+        <div class="d-flex justify-end pe-6 ps-6 pb-4 ga-3">
           <v-btn
             color="pmg-gray-700"
             elevation="0"
             variant="outlined"
             rounded="pill"
             size="large"
+            class="flex-grow-1 flex-md-grow-0"
             @click="requestEmit('close')"
           >
             <template #prepend>
@@ -141,6 +145,7 @@
             :disabled="
               !organization || organization?.infor?.value !== 'Unknown'
             "
+            class="flex-grow-1 flex-md-grow-0"
             :loading="isLoading"
           >
             <template #prepend>
@@ -236,5 +241,5 @@
     }
     isHandleSearch.value = !!searchValue
     isSearchLoading.value = false
-  }, 500)
+  }, 1000)
 </script>

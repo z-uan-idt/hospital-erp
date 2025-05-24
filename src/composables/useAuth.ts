@@ -2,11 +2,12 @@ import type { IAccount } from '~/types/account.types'
 import type { ILoginPayload } from '~/types/auth.types'
 
 import * as apiConstants from '~/constants/api.constants'
+import type { IOrganization } from '~/types/oranization.types'
 
 export const useAuth = () => {
-  const fetchPrivateApi = usePrivateApi()
   const fetchApi = usePublicApi()
   const { $toast } = useNuxtApp()
+  const fetchPrivateApi = usePrivateApi()
   const userCookie = useCookie('user', {
     maxAge: 60 * 60 * 24 * 30, // 30 days
   })
@@ -15,6 +16,25 @@ export const useAuth = () => {
   })
   const refreshTokenCookie = useCookie('refresh_token', {
     maxAge: 60 * 60 * 24 * 30, // 30 days
+  })
+  const isEmptyOrganization = useCookie('is_empty_organization')
+  const selectedOrganization = useCookie('selected_organization')
+
+  const isSelectedOrganization = computed(() => {
+    return !!selectedOrganization.value
+  })
+
+  const setSelectedOrganization = (organizationCode: string | null) => {
+    selectedOrganization.value = organizationCode
+  }
+
+  const organizationSelected: Ref<IOrganization | null> = computed(() => {
+    if (!selectedOrganization.value) return null
+    try {
+      return JSON.parse(selectedOrganization.value)
+    } catch (error) {
+      return selectedOrganization.value || null
+    }
   })
 
   const isAuthenticated = computed(() => {
@@ -39,6 +59,8 @@ export const useAuth = () => {
       token: refreshTokenCookie.value,
     })
 
+    selectedOrganization.value = null
+    isEmptyOrganization.value = null
     refreshTokenCookie.value = null
     accessTokenCookie.value = null
     userCookie.value = null
@@ -134,5 +156,8 @@ export const useAuth = () => {
     setUserData,
     onFetchCurrentUser,
     onUpdateCurrentUser,
+    isSelectedOrganization,
+    setSelectedOrganization,
+    organizationSelected,
   }
 }

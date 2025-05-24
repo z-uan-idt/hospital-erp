@@ -1,6 +1,7 @@
 <template>
   <div class="erp-organization-form">
     <v-form
+      ref="formRef"
       :readonly="!props.isCreate && !props.isUpdate"
       @submit.prevent="onFormSubmit"
     >
@@ -69,6 +70,7 @@
             rounded="pill"
             elevation="0"
             type="submit"
+            class="flex-grow-1 flex-md-grow-0"
           >
             <template #prepend>
               <v-icon
@@ -88,7 +90,7 @@
             size="large"
             rounded="pill"
             elevation="0"
-            class="ps-6"
+            class="ps-6 flex-grow-1 flex-md-grow-0"
             @click="formEmit('update', true)"
           >
             <template #prepend>
@@ -121,40 +123,46 @@
             v-if="!props.isCreate && !props.isUpdate"
             class="d-flex align-center justify-center flex-column"
           >
-            <v-avatar
-              size="159"
-              variant="outlined"
-              color="grey-lighten-1"
-              class="mb-6"
-              style="user-select: none; pointer-events: none"
-            >
-              <v-img
-                v-if="props.organizationData?.profile_picture"
-                :src="props.organizationData?.profile_picture"
-              />
-              <span
-                v-else
-                class="text-blue-grey-darken-3 text-h1 font-weight-bold"
+            <div class="position-relative">
+              <v-avatar
+                size="159"
+                variant="outlined"
+                color="grey-lighten-1"
+                class="mb-6"
+                style="user-select: none; pointer-events: none"
               >
-                {{ formPayload.name.charAt(0).toUpperCase() }}
-              </span>
-            </v-avatar>
-
+                <v-img
+                  v-if="props.organizationData?.profile_picture"
+                  :src="props.organizationData?.profile_picture"
+                />
+                <span
+                  v-else
+                  class="text-blue-grey-darken-3 text-h1 font-weight-bold"
+                >
+                  {{ formPayload.name.charAt(0).toUpperCase() }}
+                </span>
+              </v-avatar>
+              <v-icon
+                v-if="props.organizationData?.is_verified"
+                color="blue-darken-1"
+                class="mt-n1 position-absolute bg-white rounded-circle"
+                style="
+                  bottom: 8px;
+                  left: 50%;
+                  transform: translateX(calc(-50% + 3px));
+                "
+                size="35"
+              >
+                mdi-check-circle
+              </v-icon>
+            </div>
             <div
               :class="[
-                'mb-4 text-lg-h3 text-h5',
+                'mb-4 text-lg-h5 text-h6',
                 'font-weight-bold text-uppercase text-center',
               ]"
             >
               {{ props.organizationData ? formPayload.name : 'Unnamed' }}
-              <v-icon
-                v-if="props.organizationData?.is_verified"
-                color="green-darken-1"
-                class="mt-n1"
-                :size="!$vuetify.display.mdAndUp ? 26 : 36"
-              >
-                mdi-check-circle
-              </v-icon>
             </div>
 
             <template v-if="props.organizationData">
@@ -184,19 +192,15 @@
         </v-col>
 
         <v-col
-          cols="12"
-          md="12"
-          :class="{ 'form-readonly': !props.isCreate && !props.isUpdate }"
+          :class="{
+            'form-readonly': !props.isCreate && !props.isUpdate,
+            'mb-2': true,
+          }"
+          v-bind="colProps.full"
         >
           <CommonFieldset title="Thông tin tổ chức">
             <v-row>
-              <v-col
-                cols="12"
-                sm="12"
-                md="6"
-                lg="4"
-                class="pb-0"
-              >
+              <v-col v-bind="colProps['6/4']">
                 <v-text-field
                   v-model="formPayload.name"
                   dense
@@ -215,13 +219,7 @@
                 </v-text-field>
               </v-col>
 
-              <v-col
-                cols="12"
-                sm="12"
-                md="6"
-                lg="4"
-                class="pb-0"
-              >
+              <v-col v-bind="colProps['6/4']">
                 <v-text-field
                   v-model="formPayload.code"
                   dense
@@ -240,13 +238,7 @@
                 </v-text-field>
               </v-col>
 
-              <v-col
-                cols="12"
-                sm="12"
-                md="6"
-                lg="4"
-                class="pb-0"
-              >
+              <v-col v-bind="colProps['6/4']">
                 <v-text-field
                   v-model="formPayload.tax_number"
                   dense
@@ -258,13 +250,7 @@
                 </v-text-field>
               </v-col>
 
-              <v-col
-                cols="12"
-                sm="12"
-                md="6"
-                lg="4"
-                class="pb-0"
-              >
+              <v-col v-bind="colProps['6/4']">
                 <v-text-field
                   v-model="formPayload.representative"
                   dense
@@ -276,13 +262,7 @@
                 </v-text-field>
               </v-col>
 
-              <v-col
-                cols="12"
-                sm="12"
-                md="6"
-                lg="4"
-                class="pb-0"
-              >
+              <v-col v-bind="colProps['6/4']">
                 <v-text-field
                   v-model="formPayload.phone_number"
                   dense
@@ -294,13 +274,7 @@
                 </v-text-field>
               </v-col>
 
-              <v-col
-                cols="12"
-                sm="12"
-                md="6"
-                lg="4"
-                class="pb-0"
-              >
+              <v-col v-bind="colProps['6/4']">
                 <v-text-field
                   v-model="formPayload.emergency_phone_number"
                   dense
@@ -312,13 +286,7 @@
                 </v-text-field>
               </v-col>
 
-              <v-col
-                cols="12"
-                sm="12"
-                md="6"
-                lg="6"
-                class="pb-0"
-              >
+              <v-col v-bind="colProps['6/6']">
                 <v-text-field
                   v-model="formPayload.email"
                   dense
@@ -330,13 +298,7 @@
                 </v-text-field>
               </v-col>
 
-              <v-col
-                cols="12"
-                sm="12"
-                md="6"
-                lg="6"
-                class="pb-0"
-              >
+              <v-col v-bind="colProps['6/6']">
                 <v-text-field
                   v-model="formPayload.website"
                   dense
@@ -348,12 +310,7 @@
                 </v-text-field>
               </v-col>
 
-              <v-col
-                cols="12"
-                sm="12"
-                md="12"
-                lg="12"
-              >
+              <v-col v-bind="colProps.full">
                 <v-textarea
                   v-model="formPayload.description"
                   dense
@@ -372,12 +329,7 @@
             class="mt-8"
           >
             <v-row>
-              <v-col
-                cols="12"
-                sm="12"
-                md="12"
-                lg="12"
-              >
+              <v-col v-bind="colProps.full">
                 <v-text-field
                   v-model="formPayload.address"
                   dense
@@ -400,13 +352,7 @@
         </v-col>
 
         <template v-if="!props.isCreate && !props.isUpdate">
-          <v-col
-            cols="12"
-            sm="12"
-            md="12"
-            lg="6"
-            class="pb-0"
-          >
+          <v-col v-bind="colProps['6/6']">
             <v-card
               variant="tonal"
               color="erp-gray"
@@ -425,17 +371,14 @@
               v-if="props.organizationData?.created_by?.full_name"
               class="ms-4 me-4 mt-2 mb-2 text-caption text-black"
             >
-              Bởi {{ props.organizationData?.created_by?.full_name }}
+              Bởi
+              <strong class="font-weight-medium">
+                {{ props.organizationData?.created_by?.full_name }}
+              </strong>
             </p>
           </v-col>
 
-          <v-col
-            cols="12"
-            sm="12"
-            md="12"
-            lg="6"
-            class="pb-0"
-          >
+          <v-col v-bind="colProps['6/6']">
             <v-card
               variant="tonal"
               color="erp-gray"
@@ -454,11 +397,15 @@
               v-if="props.organizationData?.updated_by?.full_name"
               class="ms-4 me-4 mt-2 mb-2 text-caption text-black"
             >
-              Bởi {{ props.organizationData?.updated_by?.full_name }}
+              Bởi
+              <strong class="font-weight-medium">
+                {{ props.organizationData?.updated_by?.full_name }}
+              </strong>
             </p>
           </v-col>
         </template>
       </v-row>
+
       <div
         v-else-if="!props.isLoading"
         class="mt-10"
@@ -540,6 +487,7 @@
 
 <script setup lang="ts">
   import type { SubmitEventPromise } from 'vuetify'
+  import type { VForm } from 'vuetify/components/VForm'
   import type {
     IOrganization,
     IOrganizationFormPayload,
@@ -570,7 +518,48 @@
   const rules = useFormRules()
   const hooks = useOrganization()
   const { $toast } = useNuxtApp()
+  const formRef = ref<InstanceType<typeof VForm> | null>(null)
   const isOwner = computed(() => props.organizationData?.is_owner)
+
+  const colProps = {
+    '6/4': {
+      cols: '12',
+      sm: '12',
+      md: '6',
+      lg: '4',
+      class: 'pb-0',
+    },
+    '6/6': {
+      cols: '12',
+      sm: '12',
+      md: '6',
+      lg: '6',
+      class: 'pb-0',
+    },
+    full: {
+      cols: '12',
+      sm: '12',
+      md: '12',
+      lg: '12',
+      class: 'pb-0',
+    },
+  }
+
+  const initialFormPayload = {
+    profile_picture: null,
+    name: '',
+    code: '',
+    representative: '',
+    tax_number: '',
+    phone_number: '',
+    emergency_phone_number: '',
+    email: '',
+    address: '',
+    website: '',
+    description: '',
+  }
+
+  const formPayload = ref<IOrganizationFormPayload>(initialFormPayload)
 
   const isUpdateOrCreate = computed(() => {
     return props.isCreate || props.isUpdate
@@ -623,20 +612,6 @@
     }
   }
 
-  const formPayload = ref<IOrganizationFormPayload>({
-    profile_picture: null,
-    name: '',
-    code: '',
-    representative: '',
-    tax_number: '',
-    phone_number: '',
-    emergency_phone_number: '',
-    email: '',
-    address: '',
-    website: '',
-    description: '',
-  })
-
   const formPayloadJSON = ref(JSON.stringify(formPayload.value))
   const isShowConfirm = ref(false)
   const hasChanged = ref(false)
@@ -672,11 +647,12 @@
     const results = await formEvent
     if (results.valid) {
       formEmit('submit', formPayload.value)
+      formRef.value?.reset()
     }
   }
 
   onBeforeRouteLeave((to, from, next) => {
-    if (hasChanged.value && !props.isSuccess && props.isLoading) {
+    if (hasChanged.value && (props.isCreate || props.isUpdate)) {
       const confirm = window.confirm(
         'Bạn có thay đổi chưa lưu. Bạn có chắc chắn muốn rời khỏi trang này không?'
       )

@@ -16,6 +16,7 @@
     middleware: ['auth'],
   })
 
+  const router = useRouter()
   const { $toast } = useNuxtApp()
   const { onCreateOrganization } = useOrganization()
 
@@ -50,12 +51,12 @@
 
     await onCreateOrganization(
       formData,
-      () => {
+      (organization) => {
         isSuccess.value = true
         $toast.success('Thành công', {
           description: 'Tạo tổ chức thành công',
         })
-        useRouter().back()
+        router.replace(`/organization/${organization.id}`)
       },
       (error) => {
         isSuccess.value = false

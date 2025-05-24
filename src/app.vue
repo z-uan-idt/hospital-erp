@@ -1,7 +1,9 @@
 <template>
-  <v-app class="bg-background">
+  <v-app class="erp-background">
     <NuxtLayout>
-      <NuxtPage />
+      <KeepAlive>
+        <NuxtPage />
+      </KeepAlive>
       <Toaster
         position="top-right"
         expand
@@ -17,8 +19,8 @@
 </template>
 
 <script setup lang="ts">
-  const { $toast } = useNuxtApp()
-  const { onUpdateOrCreateDevice, isAuthenticated } = useAuth()
+  const { $toast, $deviceId } = useNuxtApp()
+  const { onUpdateOrCreateDevice, isAuthenticated, userData } = useAuth()
 
   onMounted(() => {
     window.addEventListener('offline', () => {
@@ -33,7 +35,10 @@
       })
     })
 
-    if (isAuthenticated.value) {
+    if (
+      isAuthenticated.value &&
+      !(userData.value?.devices || []).includes($deviceId.value)
+    ) {
       onUpdateOrCreateDevice()
     }
   })

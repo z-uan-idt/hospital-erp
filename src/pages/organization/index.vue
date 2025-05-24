@@ -20,8 +20,8 @@
       >
         Mời bạn chọn Tổ chức để làm việc
       </p>
-
       <div
+        v-if="!isEmptyOrganization"
         :class="[
           'd-flex justify-space-between align-center',
           'mb-8 gap-4 flex-column flex-md-row',
@@ -48,43 +48,41 @@
           }"
           @update:model-value="onHandleSearch"
         />
-        <template v-if="!isLoading && organizations.length > 0">
-          <v-btn
-            class="ms-auto w-md-auto w-100 w-md-auto order-md-2 order-first mt-3 mt-md-0 ps-5"
-            color="erp-gray-700"
-            elevation="0"
-            height="48"
-            variant="outlined"
-            rounded="pill"
-            @click="isRequestVisible = true"
-          >
-            <template #prepend>
-              <Icon
-                name="custom:paper-plane"
-                size="18"
-              />
-            </template>
-            <span class="text-body-1 font-weight-medium">Gửi duyệt</span>
-          </v-btn>
-          <v-btn
-            class="ms-md-3 w-100 w-md-auto order-md-last order-2 mt-3 mt-md-0"
-            color="erp-brand"
-            elevation="0"
-            height="48"
-            rounded="pill"
-            @click="navigateTo(CREATE_ORGANIZATION_ROUTE)"
-          >
-            <template #prepend>
-              <v-icon
-                size="26"
-                class="me-n2"
-              >
-                mdi-plus
-              </v-icon>
-            </template>
-            <span class="text-body-1 font-weight-medium me-1">Tạo mới</span>
-          </v-btn>
-        </template>
+        <v-btn
+          class="ms-auto w-md-auto w-100 w-md-auto order-md-2 order-first mt-3 mt-md-0 ps-5"
+          color="erp-gray-700"
+          elevation="0"
+          height="48"
+          variant="outlined"
+          rounded="pill"
+          @click="isRequestVisible = true"
+        >
+          <template #prepend>
+            <Icon
+              name="custom:paper-plane"
+              size="18"
+            />
+          </template>
+          <span class="text-body-1 font-weight-medium">Gửi duyệt</span>
+        </v-btn>
+        <v-btn
+          class="ms-md-3 w-100 w-md-auto order-md-last order-2 mt-3 mt-md-0"
+          color="erp-brand"
+          elevation="0"
+          height="48"
+          rounded="pill"
+          @click="navigateTo(CREATE_ORGANIZATION_ROUTE)"
+        >
+          <template #prepend>
+            <v-icon
+              size="26"
+              class="me-n2"
+            >
+              mdi-plus
+            </v-icon>
+          </template>
+          <span class="text-body-1 font-weight-medium me-1">Tạo mới</span>
+        </v-btn>
       </div>
       <template v-if="!isLoading">
         <div
@@ -105,12 +103,17 @@
           <p
             class="text-md-h3 text-h4 mt-4 mb-4 font-playfair text-erp-gray-800"
           >
-            Chưa có Tổ chức
+            {{
+              !isEmptyOrganization
+                ? 'Không tìm thấy tổ chức'
+                : 'Chưa có Tổ chức'
+            }}
           </p>
 
           <div
+            v-if="isEmptyOrganization"
             :class="[
-              'w-100 d-flex flex-column flex-md-row',
+              'w-100 d-flex flex-column flex-md-row mt-6',
               'align-center justify-center gap-4',
             ]"
           >
@@ -271,7 +274,7 @@
     message: string
   }
 
-  const CREATE_ORGANIZATION_ROUTE = '/organization/create'
+  const CREATE_ORGANIZATION_ROUTE = '/organization/new'
 
   definePageMeta({
     layout: 'welcome',
@@ -288,7 +291,7 @@
     ],
   })
 
-  const { userData } = useAuth()
+  const { userData, setSelectedOrganization } = useAuth()
   const { $vuetify } = useNuxtApp()
   const {
     onFetchOrganization,
@@ -298,6 +301,7 @@
     setPage,
     search,
     setSearch,
+    isEmptyOrganization,
   } = useOrganization()
 
   const { $toast } = useNuxtApp()
@@ -307,15 +311,20 @@
   const isNotificationVisible = ref<boolean>(false)
   const notificationData = ref<INotificationData | null>(null)
 
+  onActivated(() => {
+    setSelectedOrganization(null)
+  })
+
   const onLoadingWrapper = async (fn: () => Promise<void>) => {
+    isLoading.value = true
     try {
-      isLoading.value = true
       await fn()
-      isLoading.value = false
     } catch {
       $toast.error('Thất bại', {
         description: 'Hệ thống gặp sự cố, vui lòng thử lại sau',
       })
+    } finally {
+      isLoading.value = false
     }
   }
 

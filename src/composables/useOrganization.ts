@@ -8,6 +8,7 @@ import * as apiConstants from '~/constants/api.constants'
 
 type IMetadata = {
   pagination: IPagination
+  nested_count: number
 }
 
 export const useOrganization = () => {
@@ -18,6 +19,7 @@ export const useOrganization = () => {
   const numPages = ref<number>(0)
   const organizations = ref<IOrganization[]>([])
   const organization = ref<IOrganization | null>(null)
+  const emptyOrganizationCookie = useCookie('is_empty_organization')
 
   const fetchApi = usePrivateApi()
 
@@ -46,15 +48,26 @@ export const useOrganization = () => {
       params
     )
     if (response.success) {
+      const metadata = response.metadata
       organizations.value = response.data
-      count.value = response.metadata.pagination.count ?? 0
-      numPages.value = response.metadata.pagination.num_pages ?? 0
+      count.value = metadata.pagination.count ?? 0
+      numPages.value = metadata.pagination.num_pages ?? 0
+      emptyOrganizationCookie.value = metadata?.nested_count === 0 ? '1' : '0'
     }
   }
 
   const onFetchOrganizationById = async (organizationId: string | number) => {
     const { data: response } = await fetchApi.get<IOrganization>(
       `api/v1/organization/${organizationId}/current-user-organization-retrieve`
+    )
+    if (response.success) {
+      organization.value = response.data
+    }
+  }
+
+  const onFetchOrganizationByCode = async (organizationCode: string) => {
+    const { data: response } = await fetchApi.get<IOrganization>(
+      `api/v1/organization/current-user-organization-retrieve-by-code?code=${organizationCode}`
     )
     if (response.success) {
       organization.value = response.data
@@ -156,6 +169,10 @@ export const useOrganization = () => {
     }
   }
 
+  const isEmptyOrganization = computed(() => {
+    return emptyOrganizationCookie.value?.toString() === '1'
+  })
+
   return {
     onFetchOrganization,
     setSearch,
@@ -174,5 +191,7 @@ export const useOrganization = () => {
     onCreateOrganization,
     onFetchOrganizationById,
     onUpdateOrganization,
+    isEmptyOrganization,
+    onFetchOrganizationByCode,
   }
 }

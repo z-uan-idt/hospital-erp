@@ -64,7 +64,7 @@
     ],
   })
 
-  const organizationId = route.params['id'] as string
+  const organizationId = route.params['org_id'] as string
 
   const fetchOrganization = async () => {
     try {

@@ -1,20 +1,20 @@
 export default defineNuxtRouteMiddleware((to) => {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, isSelectedOrganization } = useAuth()
   const publicRoutes: string[] = ['login', 'register']
   const welcomeRoutes: string[] = [
-    'organization-create',
-    'organization-id',
+    'organization-org_id',
+    'organization-new',
+    'organization',
     'profile',
-    'welcome',
+    'error',
   ]
-  const organizationSelected = useCookie('selected_organization')
 
   if (
     !welcomeRoutes.includes(to.name) &&
-    !organizationSelected.value &&
+    !isSelectedOrganization.value &&
     isAuthenticated.value
   ) {
-    return navigateTo('/welcome')
+    return navigateTo('/organization')
   } else if (!publicRoutes.includes(to.name) && !isAuthenticated.value) {
     return navigateTo('/login')
   }

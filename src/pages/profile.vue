@@ -1,3 +1,4 @@
+c
 <template>
   <div class="erp-profile">
     <div class="pa-4 pa-md-10 pt-7 pt-md-10">
@@ -164,6 +165,21 @@
               >
                 {{ userData?.full_name }}
               </div>
+
+              <v-chip
+                v-if="userData?.is_active"
+                size="small"
+                color="green-darken-1"
+              >
+                Đang hoạt động
+              </v-chip>
+              <v-chip
+                v-else
+                size="small"
+                color="red-darken-1"
+              >
+                Bị khóa
+              </v-chip>
             </div>
             <CommonImageUpload
               v-else
@@ -181,13 +197,7 @@
           >
             <CommonFieldset title="Thông tin tài khoản">
               <v-row>
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="4"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/4']">
                   <v-text-field
                     v-model="formPayload.full_name"
                     dense
@@ -206,13 +216,7 @@
                   </v-text-field>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="4"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/4']">
                   <v-text-field
                     v-model="formPayload.username"
                     dense
@@ -231,13 +235,7 @@
                   </v-text-field>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="4"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/4']">
                   <v-text-field
                     v-model="formPayload.nickname"
                     dense
@@ -256,13 +254,7 @@
                   </v-text-field>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="3"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/3']">
                   <v-select
                     v-model="formPayload.gender"
                     :items="GENDER_OPTIONS"
@@ -276,13 +268,7 @@
                   </v-select>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="3"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/3']">
                   <v-text-field
                     v-model="formPayload.email"
                     dense
@@ -294,13 +280,7 @@
                   </v-text-field>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="3"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/3']">
                   <v-text-field
                     v-model="formPayload.CCCD_number"
                     dense
@@ -312,13 +292,7 @@
                   </v-text-field>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="3"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/3']">
                   <v-date-input
                     v-model="formPayload.date_of_birth"
                     dense
@@ -332,13 +306,7 @@
                   </v-date-input>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="3"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/3']">
                   <v-text-field
                     v-model="formPayload.BHYT_code"
                     dense
@@ -350,13 +318,7 @@
                   </v-text-field>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="3"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/3']">
                   <v-text-field
                     v-model="formPayload.phone_number"
                     dense
@@ -375,13 +337,7 @@
                   </v-text-field>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="3"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/3']">
                   <v-text-field
                     v-model="formPayload.primary_contact_number"
                     dense
@@ -393,13 +349,7 @@
                   </v-text-field>
                 </v-col>
 
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="6"
-                  lg="3"
-                  class="pb-0"
-                >
+                <v-col v-bind="colProps['6/3']">
                   <v-text-field
                     v-model="formPayload.secondary_contact_number"
                     dense
@@ -418,12 +368,7 @@
               class="mt-8"
             >
               <v-row>
-                <v-col
-                  cols="12"
-                  sm="12"
-                  md="12"
-                  lg="12"
-                >
+                <v-col v-bind="colProps.full">
                   <v-text-field
                     v-model="formPayload.address"
                     dense
@@ -444,6 +389,57 @@
               </v-row>
             </CommonFieldset>
           </v-col>
+
+          <template v-if="!isUpdate">
+            <v-col v-bind="colProps['6/6']">
+              <v-card
+                variant="tonal"
+                color="erp-gray"
+                class="ps-4 pe-4 pt-3 pb-3"
+              >
+                <span class="text-caption text-black"> Tạo lúc </span>
+                <p class="text-body-1 text-black">
+                  {{
+                    userData?.created_at
+                      ? formatDateTime(userData?.created_at)
+                      : 'Chưa cập nhật'
+                  }}
+                </p>
+              </v-card>
+              <p class="ms-4 me-4 mt-2 mb-2 text-caption text-black">
+                Bởi
+                <strong class="font-weight-medium">
+                  {{ userData?.created_by?.full_name || 'Hệ thống' }}
+                </strong>
+              </p>
+            </v-col>
+
+            <v-col v-bind="colProps['6/6']">
+              <v-card
+                variant="tonal"
+                color="erp-gray"
+                class="ps-4 pe-4 pt-3 pb-3"
+              >
+                <span class="text-caption text-black"> Cập nhật lúc </span>
+                <p class="text-body-1 text-black">
+                  {{
+                    userData?.updated_at
+                      ? formatDateTime(userData?.updated_at)
+                      : 'Chưa cập nhật'
+                  }}
+                </p>
+              </v-card>
+              <p
+                v-if="userData?.updated_by?.full_name"
+                class="ms-4 me-4 mt-2 mb-2 text-caption text-black"
+              >
+                Bởi
+                <strong class="font-weight-medium">
+                  {{ userData?.updated_by?.full_name }}
+                </strong>
+              </p>
+            </v-col>
+          </template>
         </v-row>
       </v-form>
     </div>
@@ -511,6 +507,36 @@
   const isUpdate = ref(false)
   const isLoading = ref(false)
   const isPreviewImage = ref(false)
+  const colProps = {
+    '6/4': {
+      cols: 12,
+      sm: 12,
+      md: 6,
+      lg: 4,
+      class: 'pb-0',
+    },
+    '6/3': {
+      cols: 12,
+      sm: 12,
+      md: 6,
+      lg: 3,
+      class: 'pb-0',
+    },
+    '6/6': {
+      cols: 12,
+      sm: 12,
+      md: 6,
+      lg: 6,
+      class: 'pb-0',
+    },
+    full: {
+      cols: 12,
+      sm: 12,
+      md: 12,
+      lg: 12,
+      class: 'pb-0',
+    },
+  }
 
   const updateFormPayload = () => {
     Object.keys(formPayload.value).forEach((key) => {
@@ -522,12 +548,6 @@
     if (userData.value) {
       updateFormPayload()
     }
-  })
-
-  onMounted(async () => {
-    isLoading.value = true
-    await hooks.onFetchCurrentUser()
-    isLoading.value = false
   })
 
   const onCloseUpdate = () => {
