@@ -37,7 +37,7 @@
             color="grey-lighten-1"
             class="d-flex align-center bg-white justify-center cursor-pointer select-none"
             style="user-select: none"
-            @click="navigateTo('/profile')"
+            @click="navigateTo('/thong-tin-ca-nhan')"
           >
             <v-img
               v-if="userData?.avatar"
@@ -59,7 +59,7 @@
                 min-width: max-content;
                 text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
               "
-              @click="navigateTo('/profile')"
+              @click="navigateTo('/thong-tin-ca-nhan')"
             >
               {{ userData?.full_name }}
             </p>
@@ -85,9 +85,9 @@
 
     <v-app-bar
       :model-value="!$vuetify.display.mdAndUp.value"
-      color="transparent"
+      color="white"
       elevation="0"
-      height="48"
+      height="72"
     >
       <v-app-bar-nav-icon
         @click.stop="isDrawerOpen = !isDrawerOpen"

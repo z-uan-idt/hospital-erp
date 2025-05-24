@@ -91,7 +91,7 @@
               color="erp-gray"
               size="32"
               nuxt
-              :to="`/organization/${organization.id}`"
+              :to="`/don-vi-to-chuc/${organization.id}`"
               @click.stop
             >
               <Icon

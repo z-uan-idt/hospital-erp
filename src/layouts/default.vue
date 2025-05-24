@@ -11,65 +11,71 @@
       :class="[mdAndUp ? 'border-0 4' : '', !isRailOpen ? 'elevation-5' : '']"
       :permanent="mdAndUp"
       :rail="mdAndUp"
-      :rail-width="104"
+      :rail-width="80"
       :width="264"
-      class="pt-4 erp-scrollbar"
+      class="pt-2 erp-scrollbar"
       style="transition: all 0.25s ease-in-out"
       @update:rail="isRailOpen = $event"
     >
       <template v-slot:prepend>
-        <div class="d-flex flex-column align-center justify-center mb-2">
+        <div class="d-flex flex-column align-center justify-center mb-4">
           <NuxtLink to="/">
             <Icon
               name="custom:logo"
-              :size="!isRailOpen || !mdAndUp ? 100 : 80"
+              :size="60"
               style="transition: all 0.15s ease-in-out"
             />
           </NuxtLink>
         </div>
       </template>
 
-      <v-list
-        density="comfortable"
-        nav
-        :class="{
-          'd-flex flex-column ga-2 mt-3': isRailOpen && mdAndUp,
-          'align-center justify-center': isRailOpen && mdAndUp,
-        }"
-      >
-        <v-list-item
-          v-for="item in moduleItems"
-          :value="item.name"
-          :rounded="isRailOpen && mdAndUp ? 'pill' : 'lg'"
-          :variant="isRailOpen && mdAndUp ? 'elevated' : 'elevated'"
-          :width="isRailOpen && mdAndUp ? 45 : '100%'"
-          :height="isRailOpen && mdAndUp ? 45 : 'auto'"
-          class="select-none"
-          :class="[isRailOpen && mdAndUp ? 'border border-opacity-25' : '']"
-          color="erp-brand-600"
-          active-class="erp-brand-700"
-          elevation="0"
+      <div class="overflow-y-auto">
+        <v-list
+          density="compact"
+          nav
+          :class="{
+            'h-100': true,
+            'd-flex flex-column ga-2': true,
+            'align-center justify-start pb-0 pt-0': true,
+          }"
         >
-          <template #prepend="{ isActive }">
-            <v-icon
-              :size="isRailOpen && mdAndUp ? item.iconSize : 22"
-              :class="[
-                isRailOpen && mdAndUp ? 'ms-1' : 'me-n4 ms-6',
-                isActive ? 'text-white' : 'text-black',
-              ]"
-              :style="isRailOpen && mdAndUp ? item.iconStyle : ''"
-            >
-              {{ item.icon }}
-            </v-icon>
-          </template>
-          <v-list-item-title
-            class="text-body-2"
-            style="margin-top: 1px"
+          <v-list-item
+            v-for="item in moduleItems"
+            :value="item.name"
+            :rounded="isRailOpen && mdAndUp ? 'pill' : 'xl'"
+            :width="isRailOpen && mdAndUp ? 40 : '100%'"
+            :height="40"
+            class="select-none"
+            :class="[isRailOpen && mdAndUp ? 'border border-opacity-25' : '']"
+            variant="elevated"
+            color="erp-brand"
+            active-class="erp-brand"
+            elevation="0"
+            :active="item.path === $route.path"
+            :to="item.path"
+            nuxt
           >
-            {{ item.name }}
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
+            <template #prepend="{ isActive }">
+              <v-icon
+                :size="isRailOpen && mdAndUp ? item.iconSize : 20"
+                :class="[
+                  isRailOpen && mdAndUp ? 'ms-1' : 'me-n4 ms-6',
+                  isActive ? 'text-white' : 'text-black',
+                ]"
+                :style="isRailOpen && mdAndUp ? item.iconStyle : ''"
+              >
+                {{ item.icon }}
+              </v-icon>
+            </template>
+            <v-list-item-title
+              class="text-body-2"
+              style="margin-top: 1px"
+            >
+              {{ item.name }}
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </div>
 
       <template v-slot:append>
         <div
@@ -79,12 +85,12 @@
           ]"
         >
           <v-avatar
-            size="58"
+            size="48"
             variant="outlined"
             color="grey-lighten-1"
             class="d-flex align-center bg-white justify-center cursor-pointer select-none"
             style="user-select: none"
-            @click="navigateTo('/profile')"
+            @click="navigateTo('/thong-tin-ca-nhan')"
           >
             <v-img
               v-if="userData?.avatar"
@@ -100,17 +106,16 @@
           </v-avatar>
 
           <div class="d-flex flex-column ga-2 align-center justify-center">
-            <p
-              v-if="!isRailOpen || !mdAndUp"
-              class="text-body-1 font-weight-medium text-erp-gray-800 cursor-pointer select-none"
-              style="
-                min-width: max-content;
-                text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-              "
-              @click="navigateTo('/profile')"
+            <div
+              class="text-body-1 font-weight-medium text-erp-gray-800 cursor-pointer select-none text-truncate"
+              style="text-shadow: 0 0 8px rgba(0, 0, 0, 0.3)"
+              :style="{
+                width: isRailOpen && mdAndUp ? '30% !important' : '',
+              }"
+              @click="navigateTo('/thong-tin-ca-nhan')"
             >
               {{ userData?.full_name }}
-            </p>
+            </div>
 
             <v-btn
               :icon="isRailOpen && mdAndUp"
@@ -150,6 +155,7 @@
       color="white"
       elevation="0"
       height="72"
+      class="pe-4"
     >
       <v-app-bar-nav-icon
         v-if="!mdAndUp"
@@ -157,14 +163,48 @@
         @click.stop="isDrawerOpen = !isDrawerOpen"
       />
 
-      <v-app-bar-title>
-        {{ organizationSelected?.name }}
-      </v-app-bar-title>
+      <v-spacer />
+
+      <div class="d-flex align-center justify-end ga-3 w-100">
+        <slot name="app-bar-right" />
+
+        <v-sheet
+          class="position-relative ps-6 d-flex align-center justify-between select-none border"
+          color="erp-brand-100"
+          rounded="pill"
+          height="40"
+        >
+          <div
+            class="me-4 text-body-2 font-weight-medium"
+            style="margin-top: 1px"
+          >
+            {{ organizationSelected?.name }}
+          </div>
+          <v-btn
+            icon
+            color="erp-brand-600"
+            variant="elevated"
+            elevation="0"
+            height="40"
+            width="48"
+            class="rounded-e-pill"
+            to="/don-vi-to-chuc"
+            nuxt
+          >
+            <v-icon size="18">custom-right-from-line</v-icon>
+          </v-btn>
+        </v-sheet>
+      </div>
     </v-app-bar>
 
     <v-main class="h-screen pt-17">
-      <div class="pa-4 h-100 overflow-y-auto erp-scrollbar">
-        <div class="bg-white rounded-lg">
+      <div
+        class="pa-4 h-100 overflow-y-auto erp-scrollbar ps-md-4 ps-0 pe-md-4 pe-0"
+      >
+        <div
+          class="bg-white rounded-lg position-relative"
+          style="min-height: 100%"
+        >
           <slot />
         </div>
       </div>
@@ -183,76 +223,88 @@
 
   const moduleItems = [
     {
-      iconStyle: 'margin-left: 4px !important',
-      iconSize: 19,
+      iconStyle: 'margin-left: 2px !important',
+      iconSize: 18,
       icon: 'custom-chart-simple',
       name: 'Tổng quan',
+      path: '/',
     },
     {
-      iconStyle: 'margin-left: 5px !important',
+      iconStyle: 'margin-left: 3px !important',
       iconSize: 18,
       icon: 'custom-list-timeline',
       name: 'Đơn thuốc',
-    },
-    {
-      iconStyle: 'margin-top: 1px !important; margin-left: 3px !important',
-      iconSize: 23,
-      icon: 'custom-box-circle-check',
-      name: 'Phiếu lĩnh',
-    },
-    {
-      iconStyle: 'margin-top: 1.5px !important; margin-left: 1px !important',
-      iconSize: 25,
-      icon: 'custom-box-open',
-      name: 'Lô hàng',
+      path: '/don-thuoc',
     },
     {
       iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
-      iconSize: 25,
+      iconSize: 22,
+      icon: 'custom-box-circle-check',
+      name: 'Phiếu lĩnh',
+      path: '/phieu-linh',
+    },
+    {
+      iconStyle: 'margin-top: 1px !important; margin-left: 0px !important',
+      iconSize: 23,
+      icon: 'custom-box-open',
+      name: 'Lô hàng',
+      path: '/lo-hang',
+    },
+    {
+      iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
+      iconSize: 22,
       icon: 'custom-capsules',
       name: 'Danh sách thuốc',
+      path: '/danh-sach-thuoc',
     },
     {
-      iconStyle: 'margin-top: 1px !important; margin-left: 3px !important',
-      iconSize: 20,
+      iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
+      iconSize: 18,
       icon: 'custom-bars',
       name: 'Đơn vị tính',
+      path: '/don-vi-tinh',
     },
     {
-      iconStyle: 'margin-left: 2px !important; margin-top: -1px !important',
-      iconSize: 24,
+      iconStyle: 'margin-left: 0px !important; margin-top: -1px !important',
+      iconSize: 22,
       icon: 'custom-circle-arrow-down-right',
       name: 'Phiếu nhập kho',
+      path: '/phieu-nhap-kho',
     },
     {
-      iconStyle: 'margin-left: 2px !important; margin-top: 0px !important',
-      iconSize: 24,
+      iconStyle: 'margin-left: 0px !important; margin-top: 0px !important',
+      iconSize: 22,
       icon: 'custom-circle-arrow-up-left',
       name: 'Phiếu xuất kho',
+      path: '/phieu-xuat-kho',
     },
     {
-      iconStyle: '',
+      iconStyle: 'margin-left: 2px !important',
       iconSize: 19,
       icon: 'custom-arrow-right-arrow-left',
       name: 'Phiếu chuyển hàng',
+      path: '/phieu-chuyen-hang',
     },
     {
       iconStyle: 'margin-left: 2px !important;',
-      iconSize: 23,
+      iconSize: 20,
       icon: 'custom-shield-check',
       name: 'Phiếu kiểm kho',
+      path: '/phieu-kiem-kho',
     },
     {
       iconStyle: 'margin-top: -3px; margin-left: 2px !important',
-      iconSize: 23,
+      iconSize: 20,
       icon: 'custom-warehouse-full',
       name: 'Kho trực thuộc',
+      path: '/kho-truc-thuoc',
     },
     {
-      iconStyle: 'margin-top: -3px; margin-left: 4px !important',
-      iconSize: 21,
+      iconStyle: 'margin-top: -3px; margin-left: 2px !important',
+      iconSize: 18,
       icon: 'custom-user',
       name: 'Nhân viên',
+      path: '/nhan-vien',
     },
   ]
 

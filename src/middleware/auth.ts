@@ -1,11 +1,11 @@
 export default defineNuxtRouteMiddleware((to) => {
   const { isAuthenticated, isSelectedOrganization } = useAuth()
-  const publicRoutes: string[] = ['login', 'register']
+  const publicRoutes: string[] = ['dang-nhap', 'dang-ky']
   const welcomeRoutes: string[] = [
-    'organization-org_id',
-    'organization-new',
-    'organization',
-    'profile',
+    'don-vi-to-chuc-org_id',
+    'don-vi-to-chuc-tao-moi',
+    'thong-tin-ca-nhan',
+    'don-vi-to-chuc',
     'error',
   ]
 
@@ -14,8 +14,8 @@ export default defineNuxtRouteMiddleware((to) => {
     !isSelectedOrganization.value &&
     isAuthenticated.value
   ) {
-    return navigateTo('/organization')
+    return navigateTo('/don-vi-to-chuc')
   } else if (!publicRoutes.includes(to.name) && !isAuthenticated.value) {
-    return navigateTo('/login')
+    return navigateTo('/dang-nhap')
   }
 })
