@@ -2,7 +2,7 @@ import type { IAccount } from '~/types/account.types'
 import type { ILoginPayload } from '~/types/auth.types'
 
 import * as apiConstants from '~/constants/api.constants'
-import { ROUTE_LOGIN } from '~/constants/route.constants'
+import { ROUTE_DANG_NHAP } from '~/constants/route.constants'
 
 import type { IOrganization } from '~/types/oranization.types'
 
@@ -67,7 +67,7 @@ export const useAuth = () => {
     accessTokenCookie.value = null
     userCookie.value = null
 
-    await navigateTo(ROUTE_LOGIN.path)
+    await navigateTo(ROUTE_DANG_NHAP.path)
     $toast.success('Thành công', {
       description: 'Đăng xuất thành công',
       duration: 5000,

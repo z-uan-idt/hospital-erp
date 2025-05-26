@@ -1,165 +1,191 @@
 <template>
-  <NuxtLayout name="default">
-    <template #app-bar-right>
-      <v-select
-        v-model="warehouseSelected"
-        max-width="270"
-        variant="outlined"
-        density="compact"
-        hide-details
-        color="erp-brand-600"
-        rounded="lg"
-        :items="['Khoa kiểm soát nhiễm trùng', 'Khoa nội', 'Khoa ngoại']"
-      />
-    </template>
-    <div class="erp-kho-truc-thuoc pa-6">
-      <div
-        :class="[
-          'd-flex align-center flex-md-row',
-          'flex-column justify-space-between ga-4',
-        ]"
-      >
-        <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
-          <v-btn
-            icon="mdi-chevron-left"
-            variant="outlined"
-            color="erp-gray-700"
-            class="text-body-1 font-weight-medium"
-            size="x-small"
-          />
-          <h1
-            :class="[
-              'text-lg-h5 text-h6 font-weight-medium',
-              'text-blue-grey-darken-3',
-            ]"
-          >
-            Kho trực thuộc
-          </h1>
-        </div>
+  <div class="erp-kho-truc-thuoc pa-6">
+    <div class="d-flex align-center flex-row justify-space-between ga-4">
+      <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
+        <v-btn
+          icon="mdi-chevron-left"
+          variant="outlined"
+          color="erp-gray-700"
+          class="text-body-1 font-weight-medium"
+          size="x-small"
+        />
+        <h1
+          :class="[
+            'text-lg-h5 text-h6 font-weight-medium',
+            'text-blue-grey-darken-3',
+          ]"
+        >
+          Kho trực thuộc
+        </h1>
       </div>
 
-      <v-text-field
-        prepend-inner-icon="mdi-magnify"
-        label="Tìm kiếm"
-        variant="outlined"
-        single-line
-        placeholder="Nhập từ khóa"
-        rounded="pill"
-        bg-color="grey-lighten-5"
-        hide-details
-        density="compact"
-        class="mt-5"
-        :style="{
-          maxWidth: $vuetify.display.smAndDown
-            ? '100%'
-            : $vuetify.display.mdAndDown
-              ? '300px'
-              : '400px',
-        }"
-      />
-
-      <v-data-table
-        :items="departments"
-        item-value="name"
-        :headers="headers"
-        class="mt-3"
-        fixed-header
-        style="max-height: calc(100vh - 240px)"
-      >
-        <template
-          v-for="header in ['staff_count', 'warehouse_count', 'created_at']"
-          v-slot:[`header.${header}`]="{ column }"
+      <div class="action-buttons d-flex align-center ga-2">
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
         >
-          <div
-            v-if="header"
-            class="d-flex align-center ga-2 cursor-pointer"
-            :key="header"
-            @click="sortBy(column)"
+          <v-icon
+            size="16"
+            class="text-erp-gray-800"
           >
-            <span>{{ column.title }}</span>
-            <v-icon
-              size="16"
-              class="text-erp-gray-800"
-            >
-              {{
-                !column?.['sort_by']
-                  ? 'fa-solid-sort'
-                  : column?.['sort_by'] === 1
-                    ? 'fa-solid-sort-up'
-                    : 'fa-solid-sort-down'
-              }}
-            </v-icon>
-          </div>
-        </template>
-
-        <template v-slot:item.created_at="{ item }">
-          {{ formatDate(item.created_at, 'HH:mm:ss dd/MM/yyyy') }}
-        </template>
-
-        <template v-slot:bottom>
-          <div class="d-flex align-center w-100 pa-2">
-            <v-spacer />
-            <v-pagination
-              :model-value="1"
-              :length="10"
-              rounded="circle"
-              variant="elevated"
-              elevation="0"
-              size="x-small"
-              :total-visible="$vuetify.display.smAndDown ? 3 : 7"
-              active-color="erp-brand"
-              border="sm"
-            />
-          </div>
-        </template>
-      </v-data-table>
+            custom-upload
+          </v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
+        >
+          <v-icon
+            size="18"
+            class="me-n1 text-erp-gray-800"
+          >
+            custom-file-export
+          </v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
+          class="text-body-1"
+        >
+          <v-icon
+            size="20"
+            class="text-erp-gray-800"
+          >
+            mdi-plus
+          </v-icon>
+        </v-btn>
+      </div>
     </div>
-  </NuxtLayout>
+
+    <v-text-field
+      prepend-inner-icon="mdi-magnify"
+      label="Tìm kiếm"
+      variant="outlined"
+      single-line
+      placeholder="Nhập từ khóa"
+      rounded="pill"
+      bg-color="grey-lighten-5"
+      hide-details
+      density="compact"
+      class="mt-5"
+      :style="{
+        maxWidth: $vuetify.display.smAndDown
+          ? '100%'
+          : $vuetify.display.mdAndDown
+            ? '300px'
+            : '400px',
+      }"
+    />
+
+    <v-data-table
+      :items="departments"
+      item-value="name"
+      :headers="headers"
+      class="mt-3"
+      fixed-header
+      hover
+      disable-sort
+      style="max-height: calc(100dvh - 240px)"
+    >
+      <template
+        v-for="header in ['staff_count', 'warehouse_count', 'created_at']"
+        v-slot:[`header.${header}`]="{ column }"
+      >
+        <div
+          v-if="header"
+          class="d-flex align-center ga-2 cursor-pointer"
+          :key="header"
+          @click="sortBy(column)"
+        >
+          <span>{{ column.title }}</span>
+          <v-icon
+            size="16"
+            class="text-erp-gray-800"
+          >
+            {{
+              !column?.['sort_by']
+                ? 'fa-solid-sort'
+                : column?.['sort_by'] === 1
+                  ? 'fa-solid-sort-up'
+                  : 'fa-solid-sort-down'
+            }}
+          </v-icon>
+        </div>
+      </template>
+
+      <template v-slot:item.created_at="{ item }">
+        {{ formatDate(item.created_at, 'HH:mm:ss dd/MM/yyyy') }}
+      </template>
+
+      <template v-slot:bottom>
+        <div class="d-flex align-center w-100 pa-2">
+          <v-spacer />
+          <v-pagination
+            :model-value="1"
+            :length="10"
+            rounded="circle"
+            variant="elevated"
+            elevation="0"
+            size="small"
+            :total-visible="$vuetify.display.smAndDown ? 3 : 7"
+            active-color="erp-brand"
+            border="sm"
+          />
+        </div>
+      </template>
+    </v-data-table>
+  </div>
 </template>
 
 <script setup lang="ts">
+  import type { DataTableHeader } from 'vuetify'
+
   definePageMeta({
-    layout: false,
+    layout: 'default',
     middleware: ['auth'],
     keepalive: true,
   })
 
   useHead({
-    title: 'Kho trực thuộc',
+    title: 'Danh sách khoa',
   })
 
-  const warehouseSelected = ref('Khoa kiểm soát nhiễm trùng')
-
-  const headers = ref([
+  const headers = ref<DataTableHeader[]>([
     {
       title: 'Mã khoa',
       key: 'code',
-      sortable: false,
+      minWidth: '100px',
     },
     {
       title: 'Tên khoa',
       key: 'name',
-      sortable: false,
+      minWidth: '100px',
     },
     {
       title: 'Trưởng khoa',
       key: 'dean',
-      sortable: false,
+      minWidth: '120px',
     },
     {
       title: 'Số lượng nhân viên',
       key: 'staff_count',
-      sortable: false,
+      minWidth: '180px',
     },
     {
       title: 'Số lượng kho',
       key: 'warehouse_count',
-      sortable: false,
+      minWidth: '160px',
     },
     {
       title: 'Ngày tạo',
       key: 'created_at',
-      sortable: false,
+      minWidth: '180px',
     },
   ])
 

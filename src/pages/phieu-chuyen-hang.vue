@@ -1,11 +1,6 @@
 <template>
   <div class="erp-phieu-chuyen-hang pa-6">
-    <div
-      :class="[
-        'd-flex align-center flex-md-row',
-        'flex-column justify-space-between ga-4',
-      ]"
-    >
+    <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
         <v-btn
           icon="mdi-chevron-left"
@@ -22,6 +17,49 @@
         >
           Phiếu chuyển hàng
         </h1>
+      </div>
+
+      <div class="action-buttons d-flex align-center ga-2">
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
+        >
+          <v-icon
+            size="16"
+            class="text-erp-gray-800"
+          >
+            custom-upload
+          </v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
+        >
+          <v-icon
+            size="18"
+            class="me-n1 text-erp-gray-800"
+          >
+            custom-file-export
+          </v-icon>
+        </v-btn>
+        <v-btn
+          icon
+          variant="outlined"
+          color="erp-gray"
+          size="x-small"
+          class="text-body-1"
+        >
+          <v-icon
+            size="20"
+            class="text-erp-gray-800"
+          >
+            mdi-plus
+          </v-icon>
+        </v-btn>
       </div>
     </div>
 
@@ -51,7 +89,9 @@
       :headers="headers"
       class="mt-3"
       fixed-header
-      style="max-height: calc(100vh - 240px)"
+      hover
+      disable-sort
+      style="max-height: calc(100dvh - 240px)"
     >
       <template
         v-for="header in ['staff_count', 'warehouse_count', 'created_at']"
@@ -92,7 +132,7 @@
             rounded="circle"
             variant="elevated"
             elevation="0"
-            size="x-small"
+            size="small"
             :total-visible="$vuetify.display.smAndDown ? 3 : 7"
             active-color="erp-brand"
             border="sm"
@@ -104,6 +144,8 @@
 </template>
 
 <script setup lang="ts">
+  import type { DataTableHeader } from 'vuetify'
+
   definePageMeta({
     layout: 'default',
     middleware: ['auth'],
@@ -111,39 +153,39 @@
   })
 
   useHead({
-    title: 'Phiếu chuyển hàng',
+    title: 'Danh sách khoa',
   })
 
-  const headers = ref([
+  const headers = ref<DataTableHeader[]>([
     {
       title: 'Mã khoa',
       key: 'code',
-      sortable: false,
+      minWidth: '100px',
     },
     {
       title: 'Tên khoa',
       key: 'name',
-      sortable: false,
+      minWidth: '100px',
     },
     {
       title: 'Trưởng khoa',
       key: 'dean',
-      sortable: false,
+      minWidth: '120px',
     },
     {
       title: 'Số lượng nhân viên',
       key: 'staff_count',
-      sortable: false,
+      minWidth: '180px',
     },
     {
       title: 'Số lượng kho',
       key: 'warehouse_count',
-      sortable: false,
+      minWidth: '160px',
     },
     {
       title: 'Ngày tạo',
       key: 'created_at',
-      sortable: false,
+      minWidth: '180px',
     },
   ])
 

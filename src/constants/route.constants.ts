@@ -1,34 +1,6 @@
-export const ROUTE_LOGIN = {
+export const ROUTE_DANG_NHAP = {
   path: '/dang-nhap',
   name: 'dang-nhap',
-}
-export const ROUTE_REGISTER = {
-  path: '/dang-ky',
-  name: 'dang-ky',
-}
-export const ROUTE_FORGOT_PASSWORD = {
-  path: '/quen-mat-khau',
-  name: 'quen-mat-khau',
-}
-export const ROUTE_RESET_PASSWORD = {
-  path: '/doi-mat-khau',
-  name: 'doi-mat-khau',
-}
-export const ROUTE_VERIFY_EMAIL = {
-  path: '/xac-thuc-email',
-  name: 'xac-thuc-email',
-}
-export const ROUTE_VERIFY_PHONE = {
-  path: '/xac-thuc-sdt',
-  name: 'xac-thuc-sdt',
-}
-export const ROUTE_VERIFY_OTP = {
-  path: '/xac-thuc-otp',
-  name: 'xac-thuc-otp',
-}
-export const ROUTE_DASHBOARD = {
-  path: '/trang-chu',
-  name: 'trang-chu',
 }
 export const ROUTE_DANH_SACH_THUOC = {
   path: '/danh-sach-thuoc',
