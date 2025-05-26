@@ -84,39 +84,43 @@
     />
 
     <v-data-table
+      v-model:page="page"
+      v-model:items-per-page="itemsPerPage"
       :items="departments"
       item-value="name"
       :headers="headers"
       class="mt-3"
       fixed-header
       hover
+      :loading="isLoading"
+      :items-length="departments.length"
       disable-sort
-      style="max-height: calc(100dvh - 240px)"
+      style="height: calc(100dvh - 240px)"
+      @update:options="onLoadTable"
     >
-      <template
-        v-for="header in ['staff_count', 'warehouse_count', 'created_at']"
-        v-slot:[`header.${header}`]="{ column }"
-      >
-        <div
-          v-if="header"
-          class="d-flex align-center ga-2 cursor-pointer"
-          :key="header"
-          @click="sortBy(column)"
-        >
-          <span>{{ column.title }}</span>
-          <v-icon
-            size="16"
-            class="text-erp-gray-800"
+      <template v-slot:headers="{ columns }">
+        <tr>
+          <th
+            v-for="column in columns"
+            :key="column.key"
+            @click="sortableColumns.includes(column.key) && sortBy(column)"
           >
-            {{
-              !column?.['sort_by']
-                ? 'fa-solid-sort'
-                : column?.['sort_by'] === 1
-                  ? 'fa-solid-sort-up'
-                  : 'fa-solid-sort-down'
-            }}
-          </v-icon>
-        </div>
+            <span>{{ column.title }}</span>
+            <v-icon
+              v-if="sortableColumns.includes(column.key)"
+              size="16"
+              class="text-erp-gray-800"
+            >
+              {{
+                !column?.['sort_by']
+                  ? 'fa-solid-sort'
+                  : column?.['sort_by'] === 1
+                    ? 'fa-solid-sort-up'
+                    : 'fa-solid-sort-down'
+              }}
+            </v-icon>
+          </th>
+        </tr>
       </template>
 
       <template v-slot:item.created_at="{ item }">
@@ -124,11 +128,26 @@
       </template>
 
       <template v-slot:bottom>
-        <div class="d-flex align-center w-100 pa-2">
+        <div class="d-flex align-center w-100 pa-2 ga-2">
+          <span>Số dòng trên 1 trang</span>
+          <v-select
+            v-model="itemsPerPage"
+            :items="[10, 20, 50, 100]"
+            variant="outlined"
+            rounded="lg"
+            max-width="100px"
+            class="text-body-1"
+            size="small"
+            hide-details
+            density="compact"
+          />
+          <span>
+            Trong tổng số: <strong>{{ departments.length }}</strong> bản ghi
+          </span>
           <v-spacer />
           <v-pagination
-            :model-value="1"
-            :length="10"
+            v-model="page"
+            :length="Math.ceil(departments.length / itemsPerPage)"
             rounded="circle"
             variant="elevated"
             elevation="0"
@@ -155,6 +174,11 @@
   useHead({
     title: 'Danh sách khoa',
   })
+
+  const page = ref(1)
+  const isLoading = ref(false)
+  const itemsPerPage = ref(100)
+  const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
 
   const headers = ref<DataTableHeader[]>([
     {
@@ -190,7 +214,7 @@
   ])
 
   const departments = ref(
-    Array.from({ length: 100 }, (_, index) => ({
+    Array.from({ length: 1000 }, (_, index) => ({
       code: `KHOA_${index + 1}`,
       name: `Khoa ${index + 1}`,
       dean: `Nguyễn Văn ${index + 1}`,
@@ -212,8 +236,14 @@
     } else {
       column.sort_by = 0
     }
+    isLoading.value = true
+    setTimeout(() => {
+      isLoading.value = false
+    }, 1000)
+  }
 
-    console.log(column)
+  function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {
+    console.log(page, itemsPerPage, sortBy, args)
   }
 </script>
 
