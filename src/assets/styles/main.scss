@@ -95,3 +95,11 @@ input:-webkit-autofill:active {
     }
   }
 }
+
+fieldset {
+  min-inline-size: inherit;
+}
+
+.v-data-table-headers--mobile {
+  display: none;
+}

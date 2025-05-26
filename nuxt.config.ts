@@ -71,6 +71,9 @@ export default defineNuxtConfig({
         VDialog: {
           opacity: 0.6,
         },
+        VDataTable: {
+          mobileBreakpoint: 'sm',
+        },
       },
       theme: {
         defaultTheme: 'light',

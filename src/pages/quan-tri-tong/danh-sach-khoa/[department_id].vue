@@ -196,45 +196,11 @@
         </v-row>
       </CommonFieldset>
 
-      <v-tabs
-        v-if="$vuetify.display.smAndDown"
-        v-model="currentTab"
-        density="compact"
-        class="mt-6"
-      >
-        <v-tab
-          :ripple="false"
-          variant="elevated"
-          value="staff"
-          text="Nhân viên trực thuộc"
-          class="rounded-t-lg me-1 text-body-2 font-weight-regular border border-opacity-0"
-          elevation="0"
-          color="white"
-          base-color="erp-gray-300 border-opacity-25"
-          selected-class="erp-gray-300 border-opacity-25 border-b-0"
-        />
-        <v-tab
-          variant="elevated"
-          value="warehouse"
-          text="Kho trực thuộc"
-          class="rounded-t-lg text-body-2 font-weight-regular border border-opacity-0"
-          elevation="0"
-          color="white"
-          base-color="erp-gray-300 border-opacity-25"
-          selected-class="erp-gray-300 border-opacity-25 border-b-0"
-        />
-      </v-tabs>
-
       <CommonFieldset
-        :class="!$vuetify.display.smAndDown ? 'mt-6' : 'rounded-t-0 pa-0'"
-        :style="!$vuetify.display.smAndDown ? '' : 'margin-top: -1px'"
-        :no-title="$vuetify.display.smAndDown"
+        class="mt-6"
         center
       >
-        <template
-          v-if="!$vuetify.display.smAndDown"
-          #title
-        >
+        <template #title>
           <v-tabs
             v-model="currentTab"
             density="compact"
@@ -264,52 +230,19 @@
           </v-tabs>
         </template>
 
-        <v-tabs-window v-model="currentTab">
-          <v-tabs-window-item
-            value="staff"
-            :transition="false"
-          >
-            <v-container fluid>
-              <div class="d-flex flex-column align-center justify-center w-100 pa-4">
-                <Icon
-                  name="custom:organization-empty"
-                  :size="
-                    $vuetify.display.smAndDown
-                      ? '45vw'
-                      : $vuetify.display.mdAndDown
-                        ? '30vw'
-                        : '20vw'
-                  "
-                />
+        <div
+          v-show="currentTab === 'staff'"
+          class="w-100 pa-4 pt-0 pb-0"
+        >
+          <FeatureListDirectStaff :departments="department.direct_staffs" />
+        </div>
 
-                <p class="text-md-h3 text-h4 mt-4 mb-4 font-playfair text-erp-gray-800">
-                  Chưa có nhân viên
-                </p>
-              </div>
-            </v-container>
-          </v-tabs-window-item>
-
-          <v-tabs-window-item value="warehouse">
-            <v-container fluid>
-              <div class="d-flex flex-column align-center justify-center w-100 pa-4">
-                <Icon
-                  name="custom:organization-empty"
-                  :size="
-                    $vuetify.display.smAndDown
-                      ? '45vw'
-                      : $vuetify.display.mdAndDown
-                        ? '30vw'
-                        : '20vw'
-                  "
-                />
-
-                <p class="text-md-h3 text-h4 mt-4 mb-4 font-playfair text-erp-gray-800">
-                  Chưa có kho trực thuộc
-                </p>
-              </div>
-            </v-container>
-          </v-tabs-window-item>
-        </v-tabs-window>
+        <div
+          v-show="currentTab === 'warehouse'"
+          class="pt-n1 w-100 pt-0 pb-0"
+        >
+          <FeatureListDirectWarehouse :warehouses="department.direct_warehouses" />
+        </div>
       </CommonFieldset>
     </v-form>
 
@@ -454,6 +387,12 @@
   import type { SubmitEventPromise } from 'vuetify'
   import type { VForm } from 'vuetify/components/VForm'
   import type { IDepartment } from '~/types/department.types'
+
+  definePageMeta({
+    layout: 'default',
+    middleware: ['auth'],
+    keepalive: true,
+  })
 
   const route = useRoute()
   const router = useRouter()

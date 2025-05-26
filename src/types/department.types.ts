@@ -1,4 +1,4 @@
-import type { IBasicAccount } from './account.types'
+import type { IAccount, IBasicAccount } from './account.types'
 
 export type IDepartmentCreatePayload = {
   code: string
@@ -19,4 +19,6 @@ export interface IDepartment {
   created_by?: IBasicAccount | null
   staff_count?: number | null
   warehouse_count?: number | null
+  direct_staffs?: IAccount[] | null
+  direct_warehouses?: any[] | null
 }

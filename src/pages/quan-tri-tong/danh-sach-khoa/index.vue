@@ -89,6 +89,7 @@
       :loading="isLoading"
       :items-length="departments.length"
       disable-sort
+      :sort-by="[]"
       style="height: calc(100dvh - 240px)"
       @click:row="onRowClick"
       @update:options="onLoadTable"
