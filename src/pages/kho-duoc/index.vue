@@ -1,5 +1,8 @@
 <template>
-  <div class="erp-kho-duoc pa-6"></div>
+  <v-container
+    fluid
+    class="erp-kho-duoc pa-6"
+  ></v-container>
 </template>
 
 <script setup lang="ts">

@@ -1,440 +1,440 @@
-c
 <template>
-  <div class="erp-profile">
-    <div class="pa-4 pa-md-10 pt-7 pt-md-10">
-      <v-form
-        :readonly="!isUpdate"
-        @submit.prevent="onFormSubmit"
-      >
-        <div :class="['d-flex align-center flex-md-row', 'flex-column justify-space-between ga-4']">
-          <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
-            <v-btn
-              icon="mdi-chevron-left"
-              variant="outlined"
-              color="erp-gray-700"
-              class="text-body-1 font-weight-medium"
-              size="x-small"
-              @click="isUpdate ? onCloseUpdate() : router.back()"
-            />
-            <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
-              {{ isUpdate ? 'Chỉnh sửa thông tin cá nhân' : 'Thông tin cá nhân' }}
-            </h1>
-          </div>
-
-          <div
-            :class="[
-              'd-flex align-center justify-end ga-2 flex-wrap',
-              !$vuetify.display.mdAndUp
-                ? 'w-100 position-fixed pa-4 bg-white bottom-0 right-0 left-0 elevation-4'
-                : '',
-            ]"
-            style="z-index: 1000"
-          >
-            <template v-if="!isUpdate">
-              <v-btn
-                color="erp-gray"
-                size="large"
-                variant="outlined"
-                rounded="pill"
-                elevation="0"
-                class="ps-6 flex-grow-1"
-              >
-                <template #prepend>
-                  <Icon
-                    name="custom-lock"
-                    class="text-black"
-                    size="18"
-                  />
-                </template>
-                <span class="text-body-1 text-black"> Lấy lại mật khẩu </span>
-              </v-btn>
-              <v-btn
-                color="erp-brand"
-                size="large"
-                rounded="pill"
-                elevation="0"
-                class="flex-grow-1 ps-6"
-                @click="isUpdate = true"
-              >
-                <template #prepend>
-                  <Icon
-                    :name="isUpdate ? 'mdi-check' : 'custom-edit-box'"
-                    class="me-n1"
-                    size="20"
-                  />
-                </template>
-                <span
-                  class="text-body-1"
-                  style="margin-bottom: -1px"
-                >
-                  {{ isUpdate ? 'Lưu lại' : 'Chỉnh sửa' }}
-                </span>
-              </v-btn>
-            </template>
-            <template v-else>
-              <v-btn
-                color="erp-gray"
-                size="large"
-                variant="outlined"
-                rounded="pill"
-                elevation="0"
-                class="ps-6 flex-grow-1"
-                @click="onCloseUpdate"
-              >
-                <template #prepend>
-                  <Icon
-                    name="mdi-close"
-                    class="text-black me-n1"
-                    size="18"
-                  />
-                </template>
-                <span class="text-body-1 text-black"> Hủy bỏ </span>
-              </v-btn>
-              <v-btn
-                color="erp-brand"
-                size="large"
-                rounded="pill"
-                elevation="0"
-                type="submit"
-                class="flex-grow-1 ps-5"
-              >
-                <template #prepend>
-                  <Icon
-                    :name="isUpdate ? 'mdi-check' : 'custom-edit-box'"
-                    class="me-n1"
-                    size="20"
-                  />
-                </template>
-                <span
-                  class="text-body-1"
-                  style="margin-bottom: -1px"
-                >
-                  {{ isUpdate ? 'Lưu lại' : 'Chỉnh sửa' }}
-                </span>
-              </v-btn>
-            </template>
-          </div>
+  <v-container
+    fluid
+    class="pa-4 pa-md-10 pt-7 pt-md-10"
+  >
+    <v-form
+      :readonly="!isUpdate"
+      @submit.prevent="onFormSubmit"
+    >
+      <div :class="['d-flex align-center flex-md-row', 'flex-column justify-space-between ga-4']">
+        <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
+          <v-btn
+            icon="mdi-chevron-left"
+            variant="outlined"
+            color="erp-gray-700"
+            class="text-body-1 font-weight-medium"
+            size="x-small"
+            @click="isUpdate ? onCloseUpdate() : router.back()"
+          />
+          <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
+            {{ isUpdate ? 'Chỉnh sửa thông tin cá nhân' : 'Thông tin cá nhân' }}
+          </h1>
         </div>
 
-        <v-row class="mt-4 mb-md-8 mb-15 pb-6 pb-md-0">
-          <v-col
-            cols="12"
-            md="12"
-            class="d-flex align-center justify-center"
-          >
-            <div
-              v-if="!isUpdate"
-              class="d-flex align-center justify-center flex-column"
-            >
-              <v-avatar
-                size="159"
-                variant="outlined"
-                color="grey-lighten-1"
-                class="mb-6"
-                style="user-select: none; pointer-events: none"
-              >
-                <v-img
-                  v-if="userData?.avatar"
-                  :src="userData?.avatar"
-                />
-                <span
-                  v-else
-                  class="text-blue-grey-darken-3 text-h1 font-weight-bold"
-                >
-                  {{ userData?.full_name.charAt(0).toUpperCase() }}
-                </span>
-              </v-avatar>
-
-              <div
-                :class="['mb-4 text-lg-h5 text-h6', 'font-weight-bold text-uppercase text-center']"
-              >
-                {{ userData?.full_name }}
-              </div>
-
-              <v-chip
-                v-if="userData?.is_active"
-                size="small"
-                color="green-darken-1"
-              >
-                Đang hoạt động
-              </v-chip>
-              <v-chip
-                v-else
-                size="small"
-                color="red-darken-1"
-              >
-                Bị khóa
-              </v-chip>
-            </div>
-            <CommonImageUpload
-              v-else
-              v-model="formPayload.avatar_file"
-              :preview="userData?.avatar"
-              size="159"
-              @update:preview="(v) => (isPreviewImage = v)"
-            />
-          </v-col>
-
-          <v-col
-            cols="12"
-            md="12"
-            class="mb-2"
-            :class="{ 'form-readonly': !isUpdate }"
-          >
-            <CommonFieldset title="Thông tin tài khoản">
-              <v-row>
-                <v-col v-bind="colProps['6/4']">
-                  <v-text-field
-                    v-model="formPayload.full_name"
-                    dense
-                    placeholder="Nhập họ và tên"
-                    :rules="[formRules.required]"
-                  >
-                    <template v-slot:label>
-                      <span> Họ và tên </span>
-                      <span
-                        v-if="isUpdate"
-                        class="text-red"
-                      >
-                        *
-                      </span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col v-bind="colProps['6/4']">
-                  <v-text-field
-                    v-model="formPayload.username"
-                    dense
-                    placeholder="Nhập tên đăng nhập"
-                    :rules="[formRules.required]"
-                  >
-                    <template v-slot:label>
-                      <span> Tên đăng nhập</span>
-                      <span
-                        v-if="isUpdate"
-                        class="text-red"
-                      >
-                        *
-                      </span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col v-bind="colProps['6/4']">
-                  <v-text-field
-                    v-model="formPayload.nickname"
-                    dense
-                    placeholder="Nhập biệt danh"
-                    :rules="[formRules.required]"
-                  >
-                    <template v-slot:label>
-                      <span> Biệt danh </span>
-                      <span
-                        v-if="isUpdate"
-                        class="text-red"
-                      >
-                        *
-                      </span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col v-bind="colProps['6/3']">
-                  <v-select
-                    v-model="formPayload.gender"
-                    :items="GENDER_OPTIONS"
-                    dense
-                    placeholder="Chọn giới tính"
-                    :menu-icon="isUpdate ? 'mdi-chevron-down' : ''"
-                  >
-                    <template v-slot:label>
-                      <span> Giới tính </span>
-                    </template>
-                  </v-select>
-                </v-col>
-
-                <v-col v-bind="colProps['6/3']">
-                  <v-text-field
-                    v-model="formPayload.email"
-                    dense
-                    placeholder="Nhập email"
-                  >
-                    <template v-slot:label>
-                      <span> Email </span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col v-bind="colProps['6/3']">
-                  <v-text-field
-                    v-model="formPayload.CCCD_number"
-                    dense
-                    placeholder="Nhập số CMND/CCCD"
-                  >
-                    <template v-slot:label>
-                      <span> Số CMND/CCCD</span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col v-bind="colProps['6/3']">
-                  <v-date-input
-                    v-model="formPayload.date_of_birth"
-                    dense
-                    placeholder="Chọn ngày sinh"
-                    :append-inner-icon="isUpdate ? 'mdi-calendar-outline' : ''"
-                    input-format="DD/MM/YYYY"
-                  >
-                    <template v-slot:label>
-                      <span> Ngày sinh </span>
-                    </template>
-                  </v-date-input>
-                </v-col>
-
-                <v-col v-bind="colProps['6/3']">
-                  <v-text-field
-                    v-model="formPayload.BHYT_code"
-                    dense
-                    placeholder="Nhập số BHYT"
-                  >
-                    <template v-slot:label>
-                      <span> Số BHYT </span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col v-bind="colProps['6/3']">
-                  <v-text-field
-                    v-model="formPayload.phone_number"
-                    dense
-                    placeholder="Nhập số điện thoại"
-                    :rules="[formRules.required]"
-                  >
-                    <template v-slot:label>
-                      <span> Số điện thoại </span>
-                      <span
-                        v-if="isUpdate"
-                        class="text-red"
-                      >
-                        *
-                      </span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col v-bind="colProps['6/3']">
-                  <v-text-field
-                    v-model="formPayload.primary_contact_number"
-                    dense
-                    placeholder="Nhập số điện thoại liên hệ 1"
-                  >
-                    <template v-slot:label>
-                      <span> Số điện thoại liên hệ 1</span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-
-                <v-col v-bind="colProps['6/3']">
-                  <v-text-field
-                    v-model="formPayload.secondary_contact_number"
-                    dense
-                    placeholder="Nhập số điện thoại liên hệ 2"
-                  >
-                    <template v-slot:label>
-                      <span> Số điện thoại liên hệ 2</span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-              </v-row>
-            </CommonFieldset>
-
-            <CommonFieldset
-              title="Địa chỉ"
-              class="mt-8"
-            >
-              <v-row>
-                <v-col v-bind="colProps.full">
-                  <v-text-field
-                    v-model="formPayload.address"
-                    dense
-                    placeholder="Nhập địa chỉ chi tiết"
-                    :rules="[formRules.required]"
-                  >
-                    <template v-slot:label>
-                      <span>Địa chỉ chi tiết</span>
-                      <span
-                        v-if="isUpdate"
-                        class="text-red"
-                      >
-                        *
-                      </span>
-                    </template>
-                  </v-text-field>
-                </v-col>
-              </v-row>
-            </CommonFieldset>
-          </v-col>
-
+        <div
+          :class="[
+            'd-flex align-center justify-end ga-2 flex-wrap',
+            !$vuetify.display.mdAndUp
+              ? 'w-100 position-fixed pa-4 bg-white bottom-0 right-0 left-0 elevation-4'
+              : '',
+          ]"
+          style="z-index: 1000"
+        >
           <template v-if="!isUpdate">
-            <v-col v-bind="colProps['6/6']">
-              <v-text-field
-                :model-value="
-                  userData?.created_at ? formatDateTime(userData?.created_at) : 'Chưa cập nhật'
-                "
-                placeholder="Chưa cập nhật"
-                label="Tạo lúc"
-                readonly
+            <v-btn
+              color="erp-gray"
+              size="large"
+              variant="outlined"
+              rounded="pill"
+              elevation="0"
+              class="ps-6 flex-grow-1"
+            >
+              <template #prepend>
+                <Icon
+                  name="custom-lock"
+                  class="text-black"
+                  size="18"
+                />
+              </template>
+              <span class="text-body-1 text-black"> Lấy lại mật khẩu </span>
+            </v-btn>
+            <v-btn
+              color="erp-brand"
+              size="large"
+              rounded="pill"
+              elevation="0"
+              class="flex-grow-1 ps-6"
+              @click="isUpdate = true"
+            >
+              <template #prepend>
+                <Icon
+                  :name="isUpdate ? 'mdi-check' : 'custom-edit-box'"
+                  class="me-n1"
+                  size="20"
+                />
+              </template>
+              <span
+                class="text-body-1"
+                style="margin-bottom: -1px"
               >
-                <template v-slot:details>
-                  <p class="text-caption text-black w-100">
-                    Bởi
-                    <strong class="font-weight-medium">
-                      {{ userData?.created_by?.full_name || 'Hệ thống' }}
-                    </strong>
-                  </p>
-                </template>
-              </v-text-field>
-            </v-col>
-
-            <v-col v-bind="colProps['6/6']">
-              <v-text-field
-                :model-value="
-                  userData?.updated_at ? formatDateTime(userData?.updated_at) : 'Chưa cập nhật'
-                "
-                placeholder="Chưa cập nhật"
-                label="Cập nhật lúc"
-                readonly
-              >
-                <template
-                  v-if="userData?.updated_by?.full_name"
-                  v-slot:details
-                >
-                  <p class="text-caption text-black w-100">
-                    Bởi
-                    <strong class="font-weight-medium">
-                      {{ userData?.updated_by?.full_name }}
-                    </strong>
-                  </p>
-                </template>
-              </v-text-field>
-            </v-col>
+                {{ isUpdate ? 'Lưu lại' : 'Chỉnh sửa' }}
+              </span>
+            </v-btn>
           </template>
-        </v-row>
-      </v-form>
-    </div>
+          <template v-else>
+            <v-btn
+              color="erp-gray"
+              size="large"
+              variant="outlined"
+              rounded="pill"
+              elevation="0"
+              class="ps-6 flex-grow-1"
+              @click="onCloseUpdate"
+            >
+              <template #prepend>
+                <Icon
+                  name="mdi-close"
+                  class="text-black me-n1"
+                  size="18"
+                />
+              </template>
+              <span class="text-body-1 text-black"> Hủy bỏ </span>
+            </v-btn>
+            <v-btn
+              color="erp-brand"
+              size="large"
+              rounded="pill"
+              elevation="0"
+              type="submit"
+              class="flex-grow-1 ps-5"
+            >
+              <template #prepend>
+                <Icon
+                  :name="isUpdate ? 'mdi-check' : 'custom-edit-box'"
+                  class="me-n1"
+                  size="20"
+                />
+              </template>
+              <span
+                class="text-body-1"
+                style="margin-bottom: -1px"
+              >
+                {{ isUpdate ? 'Lưu lại' : 'Chỉnh sửa' }}
+              </span>
+            </v-btn>
+          </template>
+        </div>
+      </div>
 
-    <v-overlay
-      :model-value="isLoading"
-      class="d-flex justify-center align-center"
-      persistent
-    >
-      <v-progress-circular
-        indeterminate
-        size="80"
-      />
-    </v-overlay>
-  </div>
+      <v-row class="mt-4 mb-md-8 mb-15 pb-6 pb-md-0">
+        <v-col
+          cols="12"
+          md="12"
+          class="d-flex align-center justify-center"
+        >
+          <div
+            v-if="!isUpdate"
+            class="d-flex align-center justify-center flex-column"
+          >
+            <v-avatar
+              size="159"
+              variant="outlined"
+              color="grey-lighten-1"
+              class="mb-6"
+              style="user-select: none; pointer-events: none"
+            >
+              <v-img
+                v-if="userData?.avatar"
+                :src="userData?.avatar"
+              />
+              <span
+                v-else
+                class="text-blue-grey-darken-3 text-h1 font-weight-bold"
+              >
+                {{ userData?.full_name.charAt(0).toUpperCase() }}
+              </span>
+            </v-avatar>
+
+            <div
+              :class="['mb-4 text-lg-h5 text-h6', 'font-weight-bold text-uppercase text-center']"
+            >
+              {{ userData?.full_name }}
+            </div>
+
+            <v-chip
+              v-if="userData?.is_active"
+              size="small"
+              color="green-darken-1"
+            >
+              Đang hoạt động
+            </v-chip>
+            <v-chip
+              v-else
+              size="small"
+              color="red-darken-1"
+            >
+              Bị khóa
+            </v-chip>
+          </div>
+          <CommonImageUpload
+            v-else
+            v-model="formPayload.avatar_file"
+            :preview="userData?.avatar"
+            size="159"
+            @update:preview="(v) => (isPreviewImage = v)"
+          />
+        </v-col>
+
+        <v-col
+          cols="12"
+          md="12"
+          class="mb-2"
+          :class="{ 'form-readonly': !isUpdate }"
+        >
+          <CommonFieldset title="Thông tin tài khoản">
+            <v-row>
+              <v-col v-bind="colProps['6/4']">
+                <v-text-field
+                  v-model="formPayload.full_name"
+                  dense
+                  placeholder="Nhập họ và tên"
+                  :rules="[formRules.required]"
+                >
+                  <template v-slot:label>
+                    <span> Họ và tên </span>
+                    <span
+                      v-if="isUpdate"
+                      class="text-red"
+                    >
+                      *
+                    </span>
+                  </template>
+                </v-text-field>
+              </v-col>
+
+              <v-col v-bind="colProps['6/4']">
+                <v-text-field
+                  v-model="formPayload.username"
+                  dense
+                  placeholder="Nhập tên đăng nhập"
+                  :rules="[formRules.required]"
+                >
+                  <template v-slot:label>
+                    <span> Tên đăng nhập</span>
+                    <span
+                      v-if="isUpdate"
+                      class="text-red"
+                    >
+                      *
+                    </span>
+                  </template>
+                </v-text-field>
+              </v-col>
+
+              <v-col v-bind="colProps['6/4']">
+                <v-text-field
+                  v-model="formPayload.nickname"
+                  dense
+                  placeholder="Nhập biệt danh"
+                  :rules="[formRules.required]"
+                >
+                  <template v-slot:label>
+                    <span> Biệt danh </span>
+                    <span
+                      v-if="isUpdate"
+                      class="text-red"
+                    >
+                      *
+                    </span>
+                  </template>
+                </v-text-field>
+              </v-col>
+
+              <v-col v-bind="colProps['6/3']">
+                <v-select
+                  v-model="formPayload.gender"
+                  :items="GENDER_OPTIONS"
+                  dense
+                  placeholder="Chọn giới tính"
+                  :menu-icon="isUpdate ? 'mdi-chevron-down' : ''"
+                >
+                  <template v-slot:label>
+                    <span> Giới tính </span>
+                  </template>
+                </v-select>
+              </v-col>
+
+              <v-col v-bind="colProps['6/3']">
+                <v-text-field
+                  v-model="formPayload.email"
+                  dense
+                  placeholder="Nhập email"
+                >
+                  <template v-slot:label>
+                    <span> Email </span>
+                  </template>
+                </v-text-field>
+              </v-col>
+
+              <v-col v-bind="colProps['6/3']">
+                <v-text-field
+                  v-model="formPayload.CCCD_number"
+                  dense
+                  placeholder="Nhập số CMND/CCCD"
+                >
+                  <template v-slot:label>
+                    <span> Số CMND/CCCD</span>
+                  </template>
+                </v-text-field>
+              </v-col>
+
+              <v-col v-bind="colProps['6/3']">
+                <v-date-input
+                  v-model="formPayload.date_of_birth"
+                  dense
+                  placeholder="Chọn ngày sinh"
+                  :append-inner-icon="isUpdate ? 'mdi-calendar-outline' : ''"
+                  input-format="DD/MM/YYYY"
+                >
+                  <template v-slot:label>
+                    <span> Ngày sinh </span>
+                  </template>
+                </v-date-input>
+              </v-col>
+
+              <v-col v-bind="colProps['6/3']">
+                <v-text-field
+                  v-model="formPayload.BHYT_code"
+                  dense
+                  placeholder="Nhập số BHYT"
+                >
+                  <template v-slot:label>
+                    <span> Số BHYT </span>
+                  </template>
+                </v-text-field>
+              </v-col>
+
+              <v-col v-bind="colProps['6/3']">
+                <v-text-field
+                  v-model="formPayload.phone_number"
+                  dense
+                  placeholder="Nhập số điện thoại"
+                  :rules="[formRules.required]"
+                >
+                  <template v-slot:label>
+                    <span> Số điện thoại </span>
+                    <span
+                      v-if="isUpdate"
+                      class="text-red"
+                    >
+                      *
+                    </span>
+                  </template>
+                </v-text-field>
+              </v-col>
+
+              <v-col v-bind="colProps['6/3']">
+                <v-text-field
+                  v-model="formPayload.primary_contact_number"
+                  dense
+                  placeholder="Nhập số điện thoại liên hệ 1"
+                >
+                  <template v-slot:label>
+                    <span> Số điện thoại liên hệ 1</span>
+                  </template>
+                </v-text-field>
+              </v-col>
+
+              <v-col v-bind="colProps['6/3']">
+                <v-text-field
+                  v-model="formPayload.secondary_contact_number"
+                  dense
+                  placeholder="Nhập số điện thoại liên hệ 2"
+                >
+                  <template v-slot:label>
+                    <span> Số điện thoại liên hệ 2</span>
+                  </template>
+                </v-text-field>
+              </v-col>
+            </v-row>
+          </CommonFieldset>
+
+          <CommonFieldset
+            title="Địa chỉ"
+            class="mt-8"
+          >
+            <v-row>
+              <v-col v-bind="colProps.full">
+                <v-text-field
+                  v-model="formPayload.address"
+                  dense
+                  placeholder="Nhập địa chỉ chi tiết"
+                  :rules="[formRules.required]"
+                >
+                  <template v-slot:label>
+                    <span>Địa chỉ chi tiết</span>
+                    <span
+                      v-if="isUpdate"
+                      class="text-red"
+                    >
+                      *
+                    </span>
+                  </template>
+                </v-text-field>
+              </v-col>
+            </v-row>
+          </CommonFieldset>
+        </v-col>
+
+        <template v-if="!isUpdate">
+          <v-col v-bind="colProps['6/6']">
+            <v-text-field
+              :model-value="
+                userData?.created_at ? formatDateTime(userData?.created_at) : 'Chưa cập nhật'
+              "
+              placeholder="Chưa cập nhật"
+              label="Tạo lúc"
+              readonly
+            >
+              <template v-slot:details>
+                <p class="text-caption text-black w-100">
+                  Bởi
+                  <strong class="font-weight-medium">
+                    {{ userData?.created_by?.full_name || 'Hệ thống' }}
+                  </strong>
+                </p>
+              </template>
+            </v-text-field>
+          </v-col>
+
+          <v-col v-bind="colProps['6/6']">
+            <v-text-field
+              :model-value="
+                userData?.updated_at ? formatDateTime(userData?.updated_at) : 'Chưa cập nhật'
+              "
+              placeholder="Chưa cập nhật"
+              label="Cập nhật lúc"
+              readonly
+            >
+              <template
+                v-if="userData?.updated_by?.full_name"
+                v-slot:details
+              >
+                <p class="text-caption text-black w-100">
+                  Bởi
+                  <strong class="font-weight-medium">
+                    {{ userData?.updated_by?.full_name }}
+                  </strong>
+                </p>
+              </template>
+            </v-text-field>
+          </v-col>
+        </template>
+      </v-row>
+    </v-form>
+  </v-container>
+
+  <v-overlay
+    :model-value="isLoading"
+    class="d-flex justify-center align-center"
+    persistent
+  >
+    <v-progress-circular
+      indeterminate
+      size="80"
+    />
+  </v-overlay>
 </template>
 
 <script setup lang="ts">

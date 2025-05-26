@@ -1,5 +1,8 @@
 <template>
-  <div class="erp-phieu-linh pa-6">
+  <v-container
+    fluid
+    class="erp-phieu-linh pa-6"
+  >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
         <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
@@ -150,7 +153,7 @@
         </div>
       </template>
     </v-data-table>
-  </div>
+  </v-container>
 </template>
 
 <script setup lang="ts">
