@@ -115,15 +115,11 @@
         </template>
 
         <div class="ps-6 pe-6">
-          <p
-            class="text-body-2 text-blue-grey-lighten-1 border-opacity-25 text-start"
-          >
+          <p class="text-body-2 text-blue-grey-lighten-1 border-opacity-25 text-start">
             Quét mã QR bằng điện thoại để đăng nhập vào tài khoản của bạn
           </p>
 
-          <div
-            class="d-flex align-center justify-center mt-4 mb-4 position-relative"
-          >
+          <div class="d-flex align-center justify-center mt-4 mb-4 position-relative">
             <div
               v-if="!qrCode"
               class="qr-code-example position-absolute top-0 left-n1 w-100 h-100 bg-grey-darken-1 border-lg rounded-xl opacity-60 d-flex align-center justify-center w-100 h-100"
@@ -147,8 +143,6 @@
                 v-else
                 :src="qrCode"
                 alt="QR Code"
-                width="100%"
-                height="100%"
                 style="object-fit: cover; vertical-align: middle"
               />
             </div>

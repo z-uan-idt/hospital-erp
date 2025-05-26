@@ -25,12 +25,7 @@
       </div>
 
       <template v-slot:append>
-        <div
-          :class="[
-            'pa-2 mb-6 d-flex flex-column w-auto',
-            'ga-3 align-center justify-center',
-          ]"
-        >
+        <div :class="['pa-2 mb-6 d-flex flex-column w-auto', 'ga-3 align-center justify-center']">
           <v-avatar
             size="58"
             variant="outlined"
@@ -55,10 +50,7 @@
           <div class="d-flex flex-column ga-2 align-center justify-center">
             <p
               class="text-body-1 font-weight-medium text-erp-gray-800 cursor-pointer select-none"
-              style="
-                min-width: max-content;
-                text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-              "
+              style="min-width: max-content; text-shadow: 0 0 8px rgba(0, 0, 0, 0.3)"
               @click="navigateTo(ROUTE_THONG_TIN_CA_NHAN.path)"
             >
               {{ userData?.full_name }}

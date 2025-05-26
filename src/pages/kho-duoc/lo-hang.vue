@@ -1,21 +1,9 @@
 <template>
-  <div class="erp-don-vi-tinh pa-6">
+  <div class="erp-lo-hang pa-6">
     <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
-        <v-btn
-          icon="mdi-chevron-left"
-          variant="outlined"
-          color="erp-gray-700"
-          class="text-body-1 font-weight-medium"
-          size="x-small"
-        />
-        <h1
-          :class="[
-            'text-lg-h5 text-h6 font-weight-medium',
-            'text-blue-grey-darken-3',
-          ]"
-        >
-          Đơn vị tính
+        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
+          Lô hàng
         </h1>
       </div>
 
@@ -96,7 +84,7 @@
       :items-length="departments.length"
       disable-sort
       style="height: calc(100dvh - 240px)"
-      @update:options="onLoadTable"
+      @click:row="console.log"
     >
       <template v-slot:headers="{ columns }">
         <tr>
@@ -180,7 +168,7 @@
 
   const page = ref(1)
   const isLoading = ref(false)
-  const itemsPerPage = ref(100)
+  const itemsPerPage = ref(15)
   const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
 
   const headers = ref<DataTableHeader[]>([

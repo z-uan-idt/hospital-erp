@@ -2,13 +2,11 @@
   import type { NuxtError } from '#app'
   const { isAuthenticated, isSelectedOrganization } = useAuth()
 
+  const router = useRouter()
+
   watchEffect(() => {
     setPageLayout(
-      isAuthenticated.value
-        ? isSelectedOrganization.value
-          ? 'default'
-          : 'welcome'
-        : 'empty'
+      isAuthenticated.value ? (isSelectedOrganization.value ? 'default' : 'welcome') : 'empty'
     )
   })
 
@@ -22,12 +20,7 @@
 </script>
 
 <template>
-  <div
-    :class="[
-      'd-flex align-center justify-center',
-      'h-100 w-100 position-relative',
-    ]"
-  >
+  <div :class="['d-flex align-center justify-center', 'h-100 w-100 position-relative']">
     <div class="d-flex flex-column align-center justify-center h-100">
       <h1 class="text-blue-grey-darken-1 font-weight-black">
         {{ error?.statusCode ?? 500 }}
@@ -40,7 +33,7 @@
         color="blue-grey-darken-2"
         class="text-none mt-4"
         rounded="pill"
-        @click="navigateTo('/')"
+        @click="router.back()"
       >
         <template #prepend>
           <v-icon class="me-n1">mdi-arrow-left</v-icon>

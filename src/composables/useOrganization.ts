@@ -1,7 +1,4 @@
-import type {
-  IOrganization,
-  IOrganizationActionRequest,
-} from '~/types/oranization.types'
+import type { IOrganization, IOrganizationActionRequest } from '~/types/oranization.types'
 import type { IPagination } from '~/types/response.types'
 
 import * as apiConstants from '~/constants/api.constants'

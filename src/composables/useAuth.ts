@@ -80,17 +80,11 @@ export const useAuth = () => {
     userCookie.value = data.user
   }
 
-  const onLogin = async (
-    payload: ILoginPayload,
-    onError?: (message: string) => void
-  ) => {
+  const onLogin = async (payload: ILoginPayload, onError?: (message: string) => void) => {
     const defaultErrorMessage = 'Hệ thống gặp sự cố, vui lòng thử lại sau'
 
     try {
-      const { data: response } = await fetchApi.post(
-        'api/v1/auth/login',
-        payload
-      )
+      const { data: response } = await fetchApi.post('api/v1/auth/login', payload)
       if (response.code === 0) {
         refreshTokenCookie.value = response.data.refresh_token
         accessTokenCookie.value = response.data.access_token
@@ -114,9 +108,7 @@ export const useAuth = () => {
   }
 
   const onFetchCurrentUser = async () => {
-    const { data: response } = await fetchPrivateApi.get(
-      'api/v1/auth/current-user'
-    )
+    const { data: response } = await fetchPrivateApi.get('api/v1/auth/current-user')
     if (response.code === 0) {
       setUserData(response.data)
     }
@@ -127,15 +119,11 @@ export const useAuth = () => {
     onSuccess: (account: IAccount) => void,
     onError: (error: string) => void
   ) => {
-    const { data: response } = await fetchApi.post<IAccount>(
-      'api/v1/auth/current-user',
-      formData,
-      {
-        headers: {
-          'Content-Type': apiConstants.API_CONTENT_TYPE_MULTIPART_FORM_DATA,
-        },
-      }
-    )
+    const { data: response } = await fetchApi.post<IAccount>('api/v1/auth/current-user', formData, {
+      headers: {
+        'Content-Type': apiConstants.API_CONTENT_TYPE_MULTIPART_FORM_DATA,
+      },
+    })
 
     if (response.success) {
       onSuccess(response.data)

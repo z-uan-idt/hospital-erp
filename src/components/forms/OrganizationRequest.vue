@@ -8,10 +8,7 @@
       validate-on="submit"
       @submit.prevent="onFormSubmit"
     >
-      <v-card
-        class="pb-2 pe-2 pt-2"
-        rounded="xl"
-      >
+      <v-card class="pb-2 pe-2 pt-2">
         <template v-slot:title>
           <div class="d-flex align-center justify-space-between">
             Gửi duyệt truy cập tổ chức
@@ -19,6 +16,7 @@
               size="x-small"
               icon="mdi-close"
               variant="outlined"
+              class="text-body-2"
               color="grey-darken-1"
               @click="requestEmit('close')"
             />
@@ -46,9 +44,7 @@
               />
               <v-icon
                 v-else-if="isHandleSearch && !isSearchLoading"
-                :class="
-                  organization ? 'text-green-darken-1' : 'text-red-darken-1'
-                "
+                :class="organization ? 'text-green-darken-1' : 'text-red-darken-1'"
                 size="24"
               >
                 {{ organization ? 'mdi-check-circle' : 'mdi-close' }}
@@ -142,9 +138,7 @@
             elevation="0"
             rounded="pill"
             size="large"
-            :disabled="
-              !organization || organization?.infor?.value !== 'Unknown'
-            "
+            :disabled="!organization || organization?.infor?.value !== 'Unknown'"
             class="flex-grow-1 flex-md-grow-0"
             :loading="isLoading"
           >

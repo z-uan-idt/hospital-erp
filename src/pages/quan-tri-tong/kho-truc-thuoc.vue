@@ -1,21 +1,12 @@
 <template>
-  <div class="erp-phieu-nhap-kho pa-6">
+  <v-container
+    class="erp-kho-truc-thuoc pa-6"
+    fluid
+  >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
-        <v-btn
-          icon="mdi-chevron-left"
-          variant="outlined"
-          color="erp-gray-700"
-          class="text-body-1 font-weight-medium"
-          size="x-small"
-        />
-        <h1
-          :class="[
-            'text-lg-h5 text-h6 font-weight-medium',
-            'text-blue-grey-darken-3',
-          ]"
-        >
-          Phiếu nhập kho
+        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
+          Kho trực thuộc
         </h1>
       </div>
 
@@ -162,7 +153,7 @@
         </div>
       </template>
     </v-data-table>
-  </div>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -180,7 +171,7 @@
 
   const page = ref(1)
   const isLoading = ref(false)
-  const itemsPerPage = ref(100)
+  const itemsPerPage = ref(15)
   const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
 
   const headers = ref<DataTableHeader[]>([

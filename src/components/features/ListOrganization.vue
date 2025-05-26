@@ -57,9 +57,7 @@
               <v-chip
                 size="small"
                 :color="
-                  organization.infor?.value === 'PENDING'
-                    ? 'yellow-darken-4'
-                    : 'grey-darken-4'
+                  organization.infor?.value === 'PENDING' ? 'yellow-darken-4' : 'grey-darken-4'
                 "
                 class="select-none"
               >
@@ -91,7 +89,7 @@
               color="erp-gray"
               size="32"
               nuxt
-              :to="ROUTE_DON_VI_TO_CHUC.DETAIL.path(organization.id)"
+              :to="ROUTE_DON_VI_TO_CHUC.DETAIL.pathFunc(organization.id)"
               @click.stop
             >
               <Icon
@@ -259,10 +257,7 @@
 
 <script setup lang="ts">
   import { ROUTE_DON_VI_TO_CHUC } from '~/constants/route.constants'
-  import type {
-    IOrganization,
-    IOrganizationActionRequest,
-  } from '~/types/oranization.types'
+  import type { IOrganization, IOrganizationActionRequest } from '~/types/oranization.types'
 
   type IDialogOptions = {
     [key in IOrganizationActionRequest]: {
@@ -338,10 +333,7 @@
     organizationSelectedModule.value = organization
   }
 
-  const onConfirm = async (
-    organization: IOrganization,
-    type: IOrganizationActionRequest
-  ) => {
+  const onConfirm = async (organization: IOrganization, type: IOrganizationActionRequest) => {
     organizationSelected.value = organization
     isShowConfirm.value = true
     confirmType.value = type

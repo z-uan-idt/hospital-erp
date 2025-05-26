@@ -39,8 +39,7 @@ export class ApiService {
         }
 
         if (this.authToken) {
-          config.headers['Authorization'] =
-            `${this.authPrefix} ${this.authToken}`
+          config.headers['Authorization'] = `${this.authPrefix} ${this.authToken}`
         }
         return config
       },

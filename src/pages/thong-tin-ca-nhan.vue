@@ -6,12 +6,7 @@ c
         :readonly="!isUpdate"
         @submit.prevent="onFormSubmit"
       >
-        <div
-          :class="[
-            'd-flex align-center flex-md-row',
-            'flex-column justify-space-between ga-4',
-          ]"
-        >
+        <div :class="['d-flex align-center flex-md-row', 'flex-column justify-space-between ga-4']">
           <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
             <v-btn
               icon="mdi-chevron-left"
@@ -21,15 +16,8 @@ c
               size="x-small"
               @click="isUpdate ? onCloseUpdate() : router.back()"
             />
-            <h1
-              :class="[
-                'text-lg-h5 text-h6 font-weight-medium',
-                'text-blue-grey-darken-3',
-              ]"
-            >
-              {{
-                isUpdate ? 'Chỉnh sửa thông tin cá nhân' : 'Thông tin cá nhân'
-              }}
+            <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
+              {{ isUpdate ? 'Chỉnh sửa thông tin cá nhân' : 'Thông tin cá nhân' }}
             </h1>
           </div>
 
@@ -158,10 +146,7 @@ c
               </v-avatar>
 
               <div
-                :class="[
-                  'mb-4 text-lg-h5 text-h6',
-                  'font-weight-bold text-uppercase text-center',
-                ]"
+                :class="['mb-4 text-lg-h5 text-h6', 'font-weight-bold text-uppercase text-center']"
               >
                 {{ userData?.full_name }}
               </div>
@@ -193,6 +178,7 @@ c
           <v-col
             cols="12"
             md="12"
+            class="mb-2"
             :class="{ 'form-readonly': !isUpdate }"
           >
             <CommonFieldset title="Thông tin tài khoản">
@@ -392,52 +378,46 @@ c
 
           <template v-if="!isUpdate">
             <v-col v-bind="colProps['6/6']">
-              <v-card
-                variant="tonal"
-                color="erp-gray"
-                class="ps-4 pe-4 pt-3 pb-3"
+              <v-text-field
+                :model-value="
+                  userData?.created_at ? formatDateTime(userData?.created_at) : 'Chưa cập nhật'
+                "
+                placeholder="Chưa cập nhật"
+                label="Tạo lúc"
+                readonly
               >
-                <span class="text-caption text-black"> Tạo lúc </span>
-                <p class="text-body-1 text-black">
-                  {{
-                    userData?.created_at
-                      ? formatDateTime(userData?.created_at)
-                      : 'Chưa cập nhật'
-                  }}
-                </p>
-              </v-card>
-              <p class="ms-4 me-4 mt-2 mb-2 text-caption text-black">
-                Bởi
-                <strong class="font-weight-medium">
-                  {{ userData?.created_by?.full_name || 'Hệ thống' }}
-                </strong>
-              </p>
+                <template v-slot:details>
+                  <p class="text-caption text-black w-100">
+                    Bởi
+                    <strong class="font-weight-medium">
+                      {{ userData?.created_by?.full_name || 'Hệ thống' }}
+                    </strong>
+                  </p>
+                </template>
+              </v-text-field>
             </v-col>
 
             <v-col v-bind="colProps['6/6']">
-              <v-card
-                variant="tonal"
-                color="erp-gray"
-                class="ps-4 pe-4 pt-3 pb-3"
+              <v-text-field
+                :model-value="
+                  userData?.updated_at ? formatDateTime(userData?.updated_at) : 'Chưa cập nhật'
+                "
+                placeholder="Chưa cập nhật"
+                label="Cập nhật lúc"
+                readonly
               >
-                <span class="text-caption text-black"> Cập nhật lúc </span>
-                <p class="text-body-1 text-black">
-                  {{
-                    userData?.updated_at
-                      ? formatDateTime(userData?.updated_at)
-                      : 'Chưa cập nhật'
-                  }}
-                </p>
-              </v-card>
-              <p
-                v-if="userData?.updated_by?.full_name"
-                class="ms-4 me-4 mt-2 mb-2 text-caption text-black"
-              >
-                Bởi
-                <strong class="font-weight-medium">
-                  {{ userData?.updated_by?.full_name }}
-                </strong>
-              </p>
+                <template
+                  v-if="userData?.updated_by?.full_name"
+                  v-slot:details
+                >
+                  <p class="text-caption text-black w-100">
+                    Bởi
+                    <strong class="font-weight-medium">
+                      {{ userData?.updated_by?.full_name }}
+                    </strong>
+                  </p>
+                </template>
+              </v-text-field>
             </v-col>
           </template>
         </v-row>
@@ -575,11 +555,7 @@ c
       const value = _formPayload[key]
       if (key === 'date_of_birth') {
         _formPayload[key] = formatDate(value, 'yyyy-MM-dd')
-      } else if (
-        typeof value === 'object' &&
-        value &&
-        !file_keys.includes(key)
-      ) {
+      } else if (typeof value === 'object' && value && !file_keys.includes(key)) {
         _formPayload[key] = (value as IChoice).value
       }
     })

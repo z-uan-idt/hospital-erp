@@ -1,165 +1,214 @@
-export const ROUTE_DANG_NHAP = {
-  path: '/dang-nhap',
-  name: 'dang-nhap',
+export type IRouteBase = {
+  pathFunc?: (pk: number | string) => string
+  path?: string
+  name: string
 }
-export const ROUTE_DANH_SACH_THUOC = {
-  path: '/danh-sach-thuoc',
-  name: 'danh-sach-thuoc',
+
+export interface IRoute extends IRouteBase {
+  CREATE?: IRouteBase
+  DETAIL?: IRouteBase
+}
+
+export const QUAN_TRI_TONG_PREFIX: string & IRoute = Object.assign('quan-tri-tong', {
+  path: '/quan-tri-tong',
+  name: 'quan-tri-tong',
+})
+export const KHO_DUOC_PREFIX = Object.assign('kho-duoc', {
+  path: '/kho-duoc',
+  name: 'kho-duoc',
+})
+
+// GM router
+export const ROUTE_DANH_SACH_THUOC: IRoute = {
+  path: `/${QUAN_TRI_TONG_PREFIX}/danh-sach-thuoc`,
+  name: `${QUAN_TRI_TONG_PREFIX}-danh-sach-thuoc`,
   CREATE: {
-    name: 'danh-sach-thuoc-tao-moi',
-    path: '/danh-sach-thuoc/tao-moi',
+    name: `${QUAN_TRI_TONG_PREFIX}-danh-sach-thuoc-tao-moi`,
+    path: `/${QUAN_TRI_TONG_PREFIX}/danh-sach-thuoc/tao-moi`,
   },
   DETAIL: {
-    name: 'danh-sach-thuoc-drug_id',
-    path: (pk: number | string) => `/danh-sach-thuoc/${pk}`,
+    name: `${QUAN_TRI_TONG_PREFIX}-danh-sach-thuoc-drug_id`,
+    pathFunc: (pk) => `/${QUAN_TRI_TONG_PREFIX}/danh-sach-thuoc/${pk}`,
   },
 }
-export const ROUTE_KHO_TRUC_THUOC = {
-  path: '/kho-truc-thuoc',
-  name: 'kho-truc-thuoc',
+export const ROUTE_KHO_TRUC_THUOC: IRoute = {
+  path: `/${QUAN_TRI_TONG_PREFIX}/kho-truc-thuoc`,
+  name: `${QUAN_TRI_TONG_PREFIX}-kho-truc-thuoc`,
   CREATE: {
-    name: 'kho-truc-thuoc-tao-moi',
-    path: '/kho-truc-thuoc/tao-moi',
+    name: `${QUAN_TRI_TONG_PREFIX}-kho-truc-thuoc-tao-moi`,
+    path: `/${QUAN_TRI_TONG_PREFIX}/kho-truc-thuoc/tao-moi`,
   },
   DETAIL: {
-    name: 'kho-truc-thuoc-warehouse_id',
-    path: (pk: number | string) => `/kho-truc-thuoc/${pk}`,
+    name: `${QUAN_TRI_TONG_PREFIX}-kho-truc-thuoc-warehouse_id`,
+    pathFunc: (pk) => `/${QUAN_TRI_TONG_PREFIX}/kho-truc-thuoc/${pk}`,
   },
 }
-export const ROUTE_PHIEU_KIEM_KHO = {
-  path: '/phieu-kiem-kho',
-  name: 'phieu-kiem-kho',
+export const ROUTE_NHAN_VIEN: IRoute = {
+  path: `/${QUAN_TRI_TONG_PREFIX}/nhan-vien`,
+  name: `${QUAN_TRI_TONG_PREFIX}-nhan-vien`,
   CREATE: {
-    name: 'phieu-kiem-kho-tao-moi',
-    path: '/phieu-kiem-kho/tao-moi',
+    name: `${QUAN_TRI_TONG_PREFIX}-nhan-vien-tao-moi`,
+    path: `/${QUAN_TRI_TONG_PREFIX}/nhan-vien/tao-moi`,
   },
   DETAIL: {
-    name: 'phieu-kiem-kho-receipt_id',
-    path: (pk: number | string) => `/phieu-kiem-kho/${pk}`,
+    name: `${QUAN_TRI_TONG_PREFIX}-nhan-vien-staff_id`,
+    pathFunc: (pk) => `/${QUAN_TRI_TONG_PREFIX}/nhan-vien/${pk}`,
   },
 }
-export const ROUTE_PHIEU_NHAP_KHO = {
-  path: '/phieu-nhap-kho',
-  name: 'phieu-nhap-kho',
+export const ROUTE_DANH_SACH_KHOA: IRoute = {
+  name: `${QUAN_TRI_TONG_PREFIX}-danh-sach-khoa-index`,
+  path: `/${QUAN_TRI_TONG_PREFIX}/danh-sach-khoa`,
   CREATE: {
-    name: 'phieu-nhap-kho-tao-moi',
-    path: '/phieu-nhap-kho/tao-moi',
+    name: `${QUAN_TRI_TONG_PREFIX}-danh-sach-khoa-tao-moi`,
+    path: `/${QUAN_TRI_TONG_PREFIX}/danh-sach-khoa/tao-moi`,
   },
   DETAIL: {
-    name: 'phieu-nhap-kho-receipt_id',
-    path: (pk: number | string) => `/phieu-nhap-kho/${pk}`,
-  },
-}
-export const ROUTE_PHIEU_XUAT_KHO = {
-  path: '/phieu-xuat-kho',
-  name: 'phieu-xuat-kho',
-  CREATE: {
-    name: 'phieu-xuat-kho-tao-moi',
-    path: '/phieu-xuat-kho/tao-moi',
-  },
-  DETAIL: {
-    name: 'phieu-xuat-kho-receipt_id',
-    path: (pk: number | string) => `/phieu-xuat-kho/${pk}`,
-  },
-}
-export const ROUTE_LO_HANG = {
-  path: '/lo-hang',
-  name: 'lo-hang',
-  CREATE: {
-    name: 'lo-hang-tao-moi',
-    path: '/lo-hang/tao-moi',
-  },
-  DETAIL: {
-    name: 'lo-hang-csm_id',
-    path: (pk: number | string) => `/lo-hang/${pk}`,
-  },
-}
-export const ROUTE_NHAN_VIEN = {
-  path: '/nhan-vien',
-  name: 'nhan-vien',
-  CREATE: {
-    name: 'nhan-vien-tao-moi',
-    path: '/nhan-vien/tao-moi',
-  },
-  DETAIL: {
-    name: 'nhan-vien-staff_id',
-    path: (pk: number | string) => `/nhan-vien/${pk}`,
-  },
-}
-export const ROUTE_DON_VI_TO_CHUC = {
-  name: 'don-vi-to-chuc',
-  path: '/don-vi-to-chuc',
-  CREATE: {
-    name: 'don-vi-to-chuc-tao-moi',
-    path: '/don-vi-to-chuc/tao-moi',
-  },
-  DETAIL: {
-    name: 'don-vi-to-chuc-org_id',
-    path: (pk: number | string) => `/don-vi-to-chuc/${pk}`,
-  },
-}
-export const ROUTE_PHIEU_LINH = {
-  name: 'phieu-linh',
-  path: '/phieu-linh',
-  CREATE: {
-    name: 'phieu-linh-tao-moi',
-    path: '/phieu-linh/tao-moi',
-  },
-  DETAIL: {
-    name: 'phieu-linh-receipt_id',
-    path: (pk: number | string) => `/phieu-linh/${pk}`,
-  },
-}
-export const ROUTE_THONG_TIN_CA_NHAN = {
-  name: 'thong-tin-ca-nhan',
-  path: '/thong-tin-ca-nhan',
-}
-export const ROUTE_DON_VI_TINH = {
-  name: 'don-vi-tinh',
-  path: '/don-vi-tinh',
-  CREATE: {
-    name: 'don-vi-tinh-tao-moi',
-    path: '/don-vi-tinh/tao-moi',
-  },
-  DETAIL: {
-    name: 'don-vi-tinh-unit_id',
-    path: (pk: number | string) => `/don-vi-tinh/${pk}`,
-  },
-}
-export const ROUTE_DON_THUOC = {
-  name: 'don-thuoc',
-  path: '/don-thuoc',
-  CREATE: {
-    name: 'don-thuoc-tao-moi',
-    path: '/don-thuoc/tao-moi',
-  },
-  DETAIL: {
-    name: 'don-thuoc-prescription_id',
-    path: (pk: number | string) => `/don-thuoc/${pk}`,
-  },
-}
-export const ROUTE_PHIEU_CHUYEN_HANG = {
-  name: 'phieu-chuyen-hang',
-  path: '/phieu-chuyen-hang',
-  CREATE: {
-    name: 'phieu-chuyen-hang-tao-moi',
-    path: '/phieu-chuyen-hang/tao-moi',
-  },
-  DETAIL: {
-    name: 'phieu-chuyen-hang-receipt_id',
-    path: (pk: number | string) => `/phieu-chuyen-hang/${pk}`,
+    name: `${QUAN_TRI_TONG_PREFIX}-danh-sach-khoa-department_id`,
+    pathFunc: (pk) => `/${QUAN_TRI_TONG_PREFIX}/danh-sach-khoa/${pk}`,
   },
 }
 
-export const ROUTE_DANH_SACH_KHOA = {
-  name: 'danh-sach-khoa',
-  path: '/danh-sach-khoa',
+// Kho router
+export const ROUTE_PHIEU_KIEM_KHO: IRoute = {
+  path: `/${KHO_DUOC_PREFIX}/phieu-kiem-kho`,
+  name: `${KHO_DUOC_PREFIX}-phieu-kiem-kho`,
   CREATE: {
-    name: 'danh-sach-khoa-tao-moi',
-    path: '/danh-sach-khoa/tao-moi',
+    name: `${KHO_DUOC_PREFIX}-phieu-kiem-kho-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/phieu-kiem-kho/tao-moi`,
   },
   DETAIL: {
-    name: 'danh-sach-khoa-department_id',
-    path: (pk: number | string) => `/danh-sach-khoa/${pk}`,
+    name: `${KHO_DUOC_PREFIX}-phieu-kiem-kho-receipt_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/phieu-kiem-kho/${pk}`,
   },
 }
+export const ROUTE_PHIEU_NHAP_KHO: IRoute = {
+  path: `/${KHO_DUOC_PREFIX}/phieu-nhap-kho`,
+  name: `${KHO_DUOC_PREFIX}-phieu-nhap-kho`,
+  CREATE: {
+    name: `${KHO_DUOC_PREFIX}-phieu-nhap-kho-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/phieu-nhap-kho/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHO_DUOC_PREFIX}-phieu-nhap-kho-receipt_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/phieu-nhap-kho/${pk}`,
+  },
+}
+export const ROUTE_PHIEU_XUAT_KHO: IRoute = {
+  path: `/${KHO_DUOC_PREFIX}/phieu-xuat-kho`,
+  name: `${KHO_DUOC_PREFIX}-phieu-xuat-kho`,
+  CREATE: {
+    name: `${KHO_DUOC_PREFIX}-phieu-xuat-kho-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/phieu-xuat-kho/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHO_DUOC_PREFIX}-phieu-xuat-kho-receipt_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/phieu-xuat-kho/${pk}`,
+  },
+}
+export const ROUTE_LO_HANG: IRoute = {
+  path: `/${KHO_DUOC_PREFIX}/lo-hang`,
+  name: `${KHO_DUOC_PREFIX}-lo-hang`,
+  CREATE: {
+    name: `${KHO_DUOC_PREFIX}-lo-hang-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/lo-hang/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHO_DUOC_PREFIX}-lo-hang-csm_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/lo-hang/${pk}`,
+  },
+}
+export const ROUTE_PHIEU_LINH: IRoute = {
+  name: `${KHO_DUOC_PREFIX}-phieu-linh`,
+  path: `/${KHO_DUOC_PREFIX}/phieu-linh`,
+  CREATE: {
+    name: `${KHO_DUOC_PREFIX}-phieu-linh-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/phieu-linh/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHO_DUOC_PREFIX}-phieu-linh-receipt_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/phieu-linh/${pk}`,
+  },
+}
+export const ROUTE_DON_VI_TINH: IRoute = {
+  name: `${KHO_DUOC_PREFIX}-don-vi-tinh`,
+  path: `/${KHO_DUOC_PREFIX}/don-vi-tinh`,
+  CREATE: {
+    name: `${KHO_DUOC_PREFIX}-don-vi-tinh-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/don-vi-tinh/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHO_DUOC_PREFIX}-don-vi-tinh-unit_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/don-vi-tinh/${pk}`,
+  },
+}
+export const ROUTE_DON_THUOC: IRoute = {
+  name: `${KHO_DUOC_PREFIX}-don-thuoc`,
+  path: `/${KHO_DUOC_PREFIX}/don-thuoc`,
+  CREATE: {
+    name: `${KHO_DUOC_PREFIX}-don-thuoc-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/don-thuoc/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHO_DUOC_PREFIX}-don-thuoc-prescription_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/don-thuoc/${pk}`,
+  },
+}
+export const ROUTE_PHIEU_CHUYEN_HANG: IRoute = {
+  name: `${KHO_DUOC_PREFIX}-phieu-chuyen-hang`,
+  path: `/${KHO_DUOC_PREFIX}/phieu-chuyen-hang`,
+  CREATE: {
+    name: `${KHO_DUOC_PREFIX}-phieu-chuyen-hang-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/phieu-chuyen-hang/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHO_DUOC_PREFIX}-phieu-chuyen-hang-receipt_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/phieu-chuyen-hang/${pk}`,
+  },
+}
+
+// Other router
+export const ROUTE_DON_VI_TO_CHUC: IRoute = {
+  path: '/',
+  name: 'index',
+  CREATE: {
+    name: 'to-chuc-tao-moi',
+    path: '/to-chuc/tao-moi',
+  },
+  DETAIL: {
+    name: 'to-chuc-org_id',
+    pathFunc: (pk) => `/to-chuc/${pk}`,
+  },
+}
+
+export const ROUTE_THONG_TIN_CA_NHAN: IRoute = {
+  name: 'thong-tin-ca-nhan',
+  path: '/thong-tin-ca-nhan',
+}
+
+export const ROUTE_DANG_NHAP: IRoute = {
+  path: '/dang-nhap',
+  name: 'dang-nhap',
+}
+
+const reduceRoutes = (route: IRoute) => {
+  return [route.name, route?.CREATE?.name, route?.DETAIL?.name]
+}
+
+export const ROUTES_QUAN_TRI_TONG = [
+  QUAN_TRI_TONG_PREFIX.name,
+  ...reduceRoutes(ROUTE_DANH_SACH_THUOC),
+  ...reduceRoutes(ROUTE_KHO_TRUC_THUOC),
+  ...reduceRoutes(ROUTE_NHAN_VIEN),
+  ...reduceRoutes(ROUTE_DANH_SACH_KHOA),
+]
+export const ROUTES_KHO_DUOC = [
+  KHO_DUOC_PREFIX.name,
+  ...reduceRoutes(ROUTE_PHIEU_KIEM_KHO),
+  ...reduceRoutes(ROUTE_PHIEU_NHAP_KHO),
+  ...reduceRoutes(ROUTE_PHIEU_XUAT_KHO),
+  ...reduceRoutes(ROUTE_LO_HANG),
+  ...reduceRoutes(ROUTE_PHIEU_LINH),
+  ...reduceRoutes(ROUTE_DON_VI_TINH),
+  ...reduceRoutes(ROUTE_DON_THUOC),
+  ...reduceRoutes(ROUTE_PHIEU_CHUYEN_HANG),
+]

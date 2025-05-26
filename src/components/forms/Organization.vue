@@ -5,12 +5,7 @@
       :readonly="!props.isCreate && !props.isUpdate"
       @submit.prevent="onFormSubmit"
     >
-      <div
-        :class="[
-          'd-flex align-center flex-md-row',
-          'flex-column justify-space-between ga-4',
-        ]"
-      >
+      <div :class="['d-flex align-center flex-md-row', 'flex-column justify-space-between ga-4']">
         <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
           <slot
             name="prepend-button"
@@ -24,12 +19,7 @@
               size="x-small"
               @click="onButtonBack"
             />
-            <h1
-              :class="[
-                'text-lg-h5 text-h6 font-weight-medium',
-                'text-blue-grey-darken-3',
-              ]"
-            >
+            <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
               {{ pageLabel }}
             </h1>
           </slot>
@@ -150,21 +140,14 @@
                 v-if="props.organizationData?.is_verified"
                 color="blue-darken-1"
                 class="mt-n1 position-absolute bg-white rounded-circle"
-                style="
-                  bottom: 8px;
-                  left: 50%;
-                  transform: translateX(calc(-50% + 3px));
-                "
+                style="bottom: 8px; left: 50%; transform: translateX(calc(-50% + 3px))"
                 size="35"
               >
                 mdi-check-circle
               </v-icon>
             </div>
             <div
-              :class="[
-                'mb-4 text-lg-h5 text-h6',
-                'font-weight-bold text-uppercase text-center',
-              ]"
+              :class="['mb-4 text-lg-h5 text-h6', 'font-weight-bold text-uppercase text-center']"
             >
               {{ props.organizationData ? formPayload.name : 'Unnamed' }}
             </div>
@@ -198,7 +181,7 @@
         <v-col
           :class="{
             'form-readonly': !props.isCreate && !props.isUpdate,
-            'mb-2': true,
+            'mb-4': true,
           }"
           v-bind="colProps.full"
         >
@@ -357,55 +340,50 @@
 
         <template v-if="!props.isCreate && !props.isUpdate">
           <v-col v-bind="colProps['6/6']">
-            <v-card
-              variant="tonal"
-              color="erp-gray"
-              class="ps-4 pe-4 pt-3 pb-3"
+            <v-text-field
+              :model-value="
+                props.organizationData?.created_at
+                  ? formatDateTime(props.organizationData?.created_at)
+                  : 'Chưa cập nhật'
+              "
+              placeholder="Chưa cập nhật"
+              label="Tạo lúc"
+              readonly
             >
-              <span class="text-caption text-black"> Tạo lúc </span>
-              <p class="text-body-1 text-black">
-                {{
-                  props.organizationData?.created_at
-                    ? formatDateTime(props.organizationData?.created_at)
-                    : 'Chưa cập nhật'
-                }}
-              </p>
-            </v-card>
-            <p
-              v-if="props.organizationData?.created_by?.full_name"
-              class="ms-4 me-4 mt-2 mb-2 text-caption text-black"
-            >
-              Bởi
-              <strong class="font-weight-medium">
-                {{ props.organizationData?.created_by?.full_name }}
-              </strong>
-            </p>
+              <template v-slot:details>
+                <p class="text-caption text-black w-100">
+                  Bởi
+                  <strong class="font-weight-medium">
+                    {{ props.organizationData?.created_by?.full_name || 'Hệ thống' }}
+                  </strong>
+                </p>
+              </template>
+            </v-text-field>
           </v-col>
 
           <v-col v-bind="colProps['6/6']">
-            <v-card
-              variant="tonal"
-              color="erp-gray"
-              class="ps-4 pe-4 pt-3 pb-3"
+            <v-text-field
+              :model-value="
+                props.organizationData?.updated_at
+                  ? formatDateTime(props.organizationData?.updated_at)
+                  : 'Chưa cập nhật'
+              "
+              placeholder="Chưa cập nhật"
+              label="Cập nhật lúc"
+              readonly
             >
-              <span class="text-caption text-black"> Cập nhật lúc </span>
-              <p class="text-body-1 text-black">
-                {{
-                  props.organizationData?.updated_at
-                    ? formatDateTime(props.organizationData?.updated_at)
-                    : 'Chưa cập nhật'
-                }}
-              </p>
-            </v-card>
-            <p
-              v-if="props.organizationData?.updated_by?.full_name"
-              class="ms-4 me-4 mt-2 mb-2 text-caption text-black"
-            >
-              Bởi
-              <strong class="font-weight-medium">
-                {{ props.organizationData?.updated_by?.full_name }}
-              </strong>
-            </p>
+              <template
+                v-if="props.organizationData?.updated_by?.full_name"
+                v-slot:details
+              >
+                <p class="text-caption text-black w-100">
+                  Bởi
+                  <strong class="font-weight-medium">
+                    {{ props.organizationData?.updated_by?.full_name }}
+                  </strong>
+                </p>
+              </template>
+            </v-text-field>
           </v-col>
         </template>
       </v-row>
@@ -445,9 +423,7 @@
           </v-icon>
         </template>
         <template #title>
-          <p class="text-body-1 font-weight-regular">
-            Bạn có chắc chắn muốn xóa tổ chức này?
-          </p>
+          <p class="text-body-1 font-weight-regular">Bạn có chắc chắn muốn xóa tổ chức này?</p>
         </template>
         <div class="d-flex ga-2 ps-4 pe-4 pb-4 align-center justify-end">
           <v-btn
@@ -492,10 +468,7 @@
 <script setup lang="ts">
   import type { SubmitEventPromise } from 'vuetify'
   import type { VForm } from 'vuetify/components/VForm'
-  import type {
-    IOrganization,
-    IOrganizationFormPayload,
-  } from '~/types/oranization.types'
+  import type { IOrganization, IOrganizationFormPayload } from '~/types/oranization.types'
 
   const props = withDefaults(defineProps<Props>(), {
     isCreate: true,

@@ -57,7 +57,7 @@
         $toast.success('Thành công', {
           description: 'Tạo tổ chức thành công',
         })
-        router.replace(ROUTE_DON_VI_TO_CHUC.DETAIL.path(organization.id))
+        router.replace(ROUTE_DON_VI_TO_CHUC.DETAIL.pathFunc(organization.id))
       },
       (error) => {
         isSuccess.value = false

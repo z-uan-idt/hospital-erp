@@ -56,10 +56,20 @@ export default defineNuxtConfig({
         VSelect: {
           itemTitle: 'label',
           itemValue: 'value',
+          noDataText: 'Không có dữ liệu',
         },
         VDateInput: {
           prependIcon: null,
           appendInnerIcon: 'mdi-calendar',
+        },
+        VImg: {
+          lazy: true,
+          cover: true,
+          aspectRatio: 1,
+          lazySrc: '/assets/images/loading.gif',
+        },
+        VDialog: {
+          opacity: 0.6,
         },
       },
       theme: {

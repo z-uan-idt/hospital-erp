@@ -18,7 +18,7 @@
       @update:rail="isRailOpen = $event"
     >
       <template v-slot:prepend>
-        <div class="d-flex flex-column align-center justify-center">
+        <div class="d-flex flex-column align-center justify-center mb-3">
           <NuxtLink to="/">
             <Icon
               name="custom:logo"
@@ -48,15 +48,14 @@
             class="select-none"
             :class="{
               'border border-opacity-25': isRailOpen && mdAndUp,
-              'border-success': item.path === $route.path,
             }"
             variant="elevated"
             color="erp-brand"
             active-class="erp-brand"
             elevation="0"
-            :active="item.path === $route.path"
             :to="item.path"
             nuxt
+            exact
           >
             <template #prepend="{ isActive }">
               <v-icon
@@ -82,10 +81,7 @@
 
       <template v-slot:append>
         <div
-          :class="[
-            'pa-2 mb-6 d-flex flex-column w-auto mt-2',
-            'ga-3 align-center justify-center',
-          ]"
+          :class="['pa-2 mb-6 d-flex flex-column w-auto mt-2', 'ga-3 align-center justify-center']"
         >
           <v-avatar
             size="48"
@@ -218,17 +214,18 @@
     </v-app-bar>
 
     <v-main class="h-screen pt-17">
-      <div
-        class="pa-4 h-100 overflow-y-auto erp-scrollbar ps-md-4 ps-0 pe-md-4 pe-0 pb-0"
+      <v-container
+        class="h-100 overflow-y-auto erp-scrollbar ps-md-4 ps-0 pe-md-4 pe-0 pb-0"
+        fluid
       >
         <div
           class="bg-white position-relative"
-          :class="[mdAndUp ? 'rounded-lg' : 'rounded-0']"
+          :class="[mdAndUp ? 'rounded-t-lg' : 'rounded-0']"
           style="min-height: 100%"
         >
           <slot />
         </div>
-      </div>
+      </v-container>
     </v-main>
   </v-container>
 </template>
@@ -247,111 +244,145 @@
     ROUTE_PHIEU_NHAP_KHO,
     ROUTE_PHIEU_XUAT_KHO,
     ROUTE_THONG_TIN_CA_NHAN,
-    ROUTE_DON_VI_TINH,
     ROUTE_DANH_SACH_KHOA,
+    QUAN_TRI_TONG_PREFIX,
+    KHO_DUOC_PREFIX,
   } from '~/constants/route.constants'
 
   const { $vuetify } = useNuxtApp()
   const { userData, onLogout, organizationSelected } = useAuth()
   const sessionCookie = useCookie('session_id')
 
-  const isDrawerOpen = ref(false)
+  const router = useRouter()
   const isRailOpen = ref(true)
+  const isDrawerOpen = ref(false)
   const mdAndUp = computed(() => $vuetify.display.mdAndUp.value)
 
-  const moduleItems = [
-    {
-      iconStyle: 'margin-left: 2px !important',
-      iconSize: 18,
-      icon: 'custom-chart-simple',
-      name: 'Tổng quan',
-      path: '/',
-    },
-    {
-      iconStyle: 'margin-left: 3px !important',
-      iconSize: 18,
-      icon: 'custom-list-timeline',
-      name: 'Đơn thuốc',
-      path: ROUTE_DON_THUOC.path,
-    },
-    {
-      iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
-      iconSize: 22,
-      icon: 'custom-box-circle-check',
-      name: 'Phiếu lĩnh',
-      path: ROUTE_PHIEU_LINH.path,
-    },
-    {
-      iconStyle: 'margin-top: 1px !important; margin-left: 0px !important',
-      iconSize: 23,
-      icon: 'custom-box-open',
-      name: 'Lô hàng',
-      path: ROUTE_LO_HANG.path,
-    },
-    {
-      iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
-      iconSize: 22,
-      icon: 'custom-capsules',
-      name: 'Danh sách thuốc',
-      path: ROUTE_DANH_SACH_THUOC.path,
-    },
-    {
-      iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
-      iconSize: 18,
-      icon: 'custom-bars',
-      name: 'Đơn vị tính',
-      path: ROUTE_DON_VI_TINH.path,
-    },
-    {
-      iconStyle: 'margin-left: 0px !important; margin-top: -1px !important',
-      iconSize: 22,
-      icon: 'custom-circle-arrow-down-right',
-      name: 'Phiếu nhập kho',
-      path: ROUTE_PHIEU_NHAP_KHO.path,
-    },
-    {
-      iconStyle: 'margin-left: 0px !important; margin-top: 0px !important',
-      iconSize: 22,
-      icon: 'custom-circle-arrow-up-left',
-      name: 'Phiếu xuất kho',
-      path: ROUTE_PHIEU_XUAT_KHO.path,
-    },
-    {
-      iconStyle: 'margin-left: 2px !important',
-      iconSize: 19,
-      icon: 'custom-arrow-right-arrow-left',
-      name: 'Phiếu chuyển hàng',
-      path: ROUTE_PHIEU_CHUYEN_HANG.path,
-    },
-    {
-      iconStyle: 'margin-left: 2px !important;',
-      iconSize: 20,
-      icon: 'custom-shield-check',
-      name: 'Phiếu kiểm kho',
-      path: ROUTE_PHIEU_KIEM_KHO.path,
-    },
-    {
-      iconStyle: 'margin-top: -2px; margin-left: 1px !important',
-      iconSize: 20,
-      icon: 'custom-house-medical',
-      name: 'Danh sách khoa',
-      path: ROUTE_DANH_SACH_KHOA.path,
-    },
-    {
-      iconStyle: 'margin-top: -3px; margin-left: 2px !important',
-      iconSize: 20,
-      icon: 'custom-warehouse-full',
-      name: 'Kho trực thuộc',
-      path: ROUTE_KHO_TRUC_THUOC.path,
-    },
-    {
-      iconStyle: 'margin-top: -3px; margin-left: 2px !important',
-      iconSize: 18,
-      icon: 'custom-user',
-      name: 'Nhân viên',
-      path: ROUTE_NHAN_VIEN.path,
-    },
-  ]
+  const isQuanTriTong = computed(() =>
+    router.currentRoute.value.fullPath.startsWith(QUAN_TRI_TONG_PREFIX.path)
+  )
+
+  const isKhoaDuoc = computed(() =>
+    router.currentRoute.value.fullPath.startsWith(KHO_DUOC_PREFIX.path)
+  )
+
+  const moduleItems = computed(() => {
+    if (isQuanTriTong.value) {
+      return [
+        {
+          iconStyle: 'margin-left: 2px !important',
+          iconSize: 18,
+          icon: 'custom-chart-simple',
+          name: 'Tổng quan',
+          path: QUAN_TRI_TONG_PREFIX.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
+          iconSize: 22,
+          icon: 'custom-capsules',
+          name: 'Danh sách thuốc',
+          path: ROUTE_DANH_SACH_THUOC.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-top: -2px; margin-left: 1px !important',
+          iconSize: 20,
+          icon: 'custom-house-medical',
+          name: 'Danh sách khoa',
+          path: ROUTE_DANH_SACH_KHOA.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-top: -3px; margin-left: 2px !important',
+          iconSize: 20,
+          icon: 'custom-warehouse-full',
+          name: 'Kho trực thuộc',
+          path: ROUTE_KHO_TRUC_THUOC.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-top: -3px; margin-left: 2px !important',
+          iconSize: 18,
+          icon: 'custom-user',
+          name: 'Nhân viên',
+          path: ROUTE_NHAN_VIEN.path,
+          isActive: true,
+        },
+      ].filter((item) => item.isActive)
+    }
+
+    if (isKhoaDuoc.value) {
+      return [
+        {
+          iconStyle: 'margin-left: 2px !important',
+          iconSize: 18,
+          icon: 'custom-chart-simple',
+          name: 'Tổng quan',
+          path: KHO_DUOC_PREFIX.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-left: 3px !important',
+          iconSize: 18,
+          icon: 'custom-list-timeline',
+          name: 'Đơn thuốc',
+          path: ROUTE_DON_THUOC.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
+          iconSize: 22,
+          icon: 'custom-box-circle-check',
+          name: 'Phiếu lĩnh',
+          path: ROUTE_PHIEU_LINH.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-top: 1px !important; margin-left: 0px !important',
+          iconSize: 23,
+          icon: 'custom-box-open',
+          name: 'Lô hàng',
+          path: ROUTE_LO_HANG.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-left: 0px !important; margin-top: -1px !important',
+          iconSize: 22,
+          icon: 'custom-circle-arrow-down-right',
+          name: 'Phiếu nhập kho',
+          path: ROUTE_PHIEU_NHAP_KHO.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-left: 0px !important; margin-top: 0px !important',
+          iconSize: 22,
+          icon: 'custom-circle-arrow-up-left',
+          name: 'Phiếu xuất kho',
+          path: ROUTE_PHIEU_XUAT_KHO.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-left: 2px !important',
+          iconSize: 19,
+          icon: 'custom-arrow-right-arrow-left',
+          name: 'Phiếu chuyển hàng',
+          path: ROUTE_PHIEU_CHUYEN_HANG.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-left: 2px !important;',
+          iconSize: 20,
+          icon: 'custom-shield-check',
+          name: 'Phiếu kiểm kho',
+          path: ROUTE_PHIEU_KIEM_KHO.path,
+          isActive: true,
+        },
+      ].filter((item) => item.isActive)
+    }
+
+    return []
+  })
 
   watchEffect(() => {
     isDrawerOpen.value = mdAndUp.value

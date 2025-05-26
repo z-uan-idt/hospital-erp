@@ -35,10 +35,7 @@
       })
     })
 
-    if (
-      isAuthenticated.value &&
-      !(userData.value?.devices || []).includes($deviceId.value)
-    ) {
+    if (isAuthenticated.value && !(userData.value?.devices || []).includes($deviceId.value)) {
       onUpdateOrCreateDevice()
     }
   })

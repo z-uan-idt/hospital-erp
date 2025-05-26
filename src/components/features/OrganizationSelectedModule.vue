@@ -2,13 +2,12 @@
   <v-dialog
     v-model="isShow"
     max-width="852px"
-    persistent
     transition="slide-y-transition"
+    persistent
   >
     <v-card
       :class="$vuetify.display.mdAndUp ? 'pa-3 pt-4' : 'pt-3'"
       min-height="575"
-      rounded="xl"
     >
       <template v-slot:title>
         <div class="d-flex align-start justify-space-between">
@@ -69,25 +68,17 @@
           </div>
 
           <v-btn
+            size="x-small"
             icon="mdi-close"
             variant="outlined"
-            color="grey-darken-1 text-body-1 flex-basis-0 ms-2"
-            size="small"
+            color="grey-darken-1 flex-basis-0 ms-2 text-body-2"
             @click="selectedEmits('close')"
           />
         </div>
       </template>
 
       <div class="ps-6 pe-6 pb-6">
-        <div class="d-flex align-center justify-start ga-2 mb-4">
-          <span
-            style="min-width: max-content"
-            class="text-grey-darken-3"
-          >
-            Chọn chức năng
-          </span>
-          <v-divider />
-        </div>
+        <CommonDivider label="Chọn chức năng" />
 
         <v-row>
           <v-col
@@ -129,6 +120,7 @@
 </template>
 
 <script setup lang="ts">
+  import { KHO_DUOC_PREFIX, QUAN_TRI_TONG_PREFIX } from '~/constants/route.constants'
   import type { IOrganization } from '~/types/oranization.types'
 
   type Props = {
@@ -157,14 +149,14 @@
     {
       name: 'Quản trị tổng',
       icon: 'custom-module-hospital',
+      path: QUAN_TRI_TONG_PREFIX.path,
       isActive: true,
-      path: '/',
     },
     {
-      name: 'Quản lý kho',
+      name: 'Kho dược',
       icon: 'custom-module-warehouse',
-      isActive: false,
-      path: '/warehouse',
+      path: KHO_DUOC_PREFIX.path,
+      isActive: true,
     },
     {
       name: 'Khách hàng',
@@ -227,6 +219,7 @@
   const onSelectModule = (module: IModule) => {
     if (organizationSelected.value) {
       setSelectedOrganization(JSON.stringify(organizationSelected.value))
+      selectedEmits('close')
     }
   }
 </script>

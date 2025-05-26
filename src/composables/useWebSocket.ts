@@ -5,9 +5,7 @@ export const useWebSocket = (path: string = 'ws') => {
   const message = ref<{ [key: string]: any } | null>(null)
 
   const connect = (code: string) => {
-    ws.value = new WebSocket(
-      `${runtimeConfig.public.wsBaseUrl}/${path}/${code}/`
-    )
+    ws.value = new WebSocket(`${runtimeConfig.public.wsBaseUrl}/${path}/${code}/`)
 
     ws.value.onopen = () => {
       isConnected.value = true

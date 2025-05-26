@@ -1,12 +1,7 @@
 import { getAuth } from 'firebase/auth'
 import { initializeApp } from 'firebase/app'
 import { getFirestore } from 'firebase/firestore'
-import {
-  getMessaging,
-  getToken,
-  isSupported,
-  onMessage,
-} from 'firebase/messaging'
+import { getMessaging, getToken, isSupported, onMessage } from 'firebase/messaging'
 
 interface TokenOptions {
   vapidKey: string

@@ -25,8 +25,7 @@
         :class="{ 'mt-3': preview }"
       >
         <span>
-          Tải lên <br v-if="!preview" />logo/<br v-if="preview" />ảnh
-          <br v-if="!preview" />đại diện
+          Tải lên <br v-if="!preview" />logo/<br v-if="preview" />ảnh <br v-if="!preview" />đại diện
         </span>
       </div>
       <v-btn
@@ -60,8 +59,8 @@
     <v-img
       v-if="preview"
       :src="preview"
-      cover
       class="erp-upload-image-preview position-absolute top-0 right-0 w-100 h-100"
+      cover
     />
   </v-sheet>
 </template>
