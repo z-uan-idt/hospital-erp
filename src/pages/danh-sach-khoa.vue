@@ -136,7 +136,6 @@
             variant="outlined"
             rounded="lg"
             max-width="100px"
-            size="small"
             hide-details
             density="compact"
           />
