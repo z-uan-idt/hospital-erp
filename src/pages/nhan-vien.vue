@@ -103,6 +103,9 @@
           <th
             v-for="column in columns"
             :key="column.key"
+            :style="{
+              minWidth: column.minWidth,
+            }"
             @click="sortableColumns.includes(column.key) && sortBy(column)"
           >
             <span>{{ column.title }}</span>
@@ -129,19 +132,21 @@
 
       <template v-slot:bottom>
         <div class="d-flex align-center w-100 pa-2 ga-2">
-          <span>Số dòng trên 1 trang</span>
-          <v-select
-            v-model="itemsPerPage"
-            :items="[10, 20, 50, 100]"
-            variant="outlined"
-            rounded="lg"
-            max-width="100px"
-            hide-details
-            density="compact"
-          />
-          <span>
-            Trong tổng số: <strong>{{ departments.length }}</strong> bản ghi
-          </span>
+          <template v-if="!$vuetify.display.smAndDown">
+            <span> Số dòng trên 1 trang </span>
+            <v-select
+              v-model="itemsPerPage"
+              :items="[10, 20, 50, 100]"
+              variant="outlined"
+              rounded="lg"
+              max-width="100px"
+              hide-details
+              density="compact"
+            />
+            <span>
+              Trong tổng số: <strong>{{ departments.length }}</strong> bản ghi
+            </span>
+          </template>
           <v-spacer />
           <v-pagination
             v-model="page"
