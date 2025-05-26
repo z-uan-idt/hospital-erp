@@ -226,7 +226,7 @@
       </v-tabs>
 
       <CommonFieldset
-        :class="!$vuetify.display.smAndDown ? 'mt-6' : ' rounded-t-0'"
+        :class="!$vuetify.display.smAndDown ? 'mt-6' : 'rounded-t-0 pa-0'"
         :style="!$vuetify.display.smAndDown ? '' : 'margin-top: -1px'"
         :no-title="$vuetify.display.smAndDown"
         center
@@ -264,16 +264,13 @@
           </v-tabs>
         </template>
 
-        <v-tabs-window
-          v-model="currentTab"
-          class="pa-4"
-        >
+        <v-tabs-window v-model="currentTab">
           <v-tabs-window-item
             value="staff"
-            :transition="''"
+            :transition="false"
           >
             <v-container fluid>
-              <div class="d-flex flex-column align-center justify-center w-100">
+              <div class="d-flex flex-column align-center justify-center w-100 pa-4">
                 <Icon
                   name="custom:organization-empty"
                   :size="
@@ -294,7 +291,7 @@
 
           <v-tabs-window-item value="warehouse">
             <v-container fluid>
-              <div class="d-flex flex-column align-center justify-center w-100">
+              <div class="d-flex flex-column align-center justify-center w-100 pa-4">
                 <Icon
                   name="custom:organization-empty"
                   :size="
