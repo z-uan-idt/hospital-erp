@@ -1,24 +1,32 @@
-import type { IAccount, IBasicAccount } from './account.types'
+import type { IBasicAccount } from './account.types'
+import type { IBasicOrganization } from './oranization.types'
 
 export type IDepartmentCreatePayload = {
   code: string
   name: string
   dean?: number | null
   description?: string
+  organization?: number
 }
 
 export interface IDepartment {
   id?: number
-  code?: string
+  staff_count?: number
+  warehouse_count?: number
+  dean?: IBasicAccount
+  created_by?: IBasicAccount
+  updated_by?: IBasicAccount
+  organization?: IBasicOrganization
+  updated_at?: string
+  created_at?: string
   name?: string
-  dean?: IBasicAccount | null
+  code?: string
   description?: string
-  created_at?: string | null
-  updated_at?: string | null
-  updated_by?: IBasicAccount | null
-  created_by?: IBasicAccount | null
-  staff_count?: number | null
-  warehouse_count?: number | null
-  direct_staffs?: IAccount[] | null
-  direct_warehouses?: any[] | null
+  is_active?: boolean
+}
+
+export interface IBasicDepartment {
+  id?: number
+  name?: string
+  code?: string
 }

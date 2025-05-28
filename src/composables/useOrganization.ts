@@ -2,6 +2,7 @@ import type { IOrganization, IOrganizationActionRequest } from '~/types/oranizat
 import type { IPagination } from '~/types/response.types'
 
 import * as apiConstants from '~/constants/api.constants'
+import type { IStaff } from '~/types/account.types'
 
 type IMetadata = {
   pagination: IPagination

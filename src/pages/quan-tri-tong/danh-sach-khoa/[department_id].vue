@@ -62,7 +62,7 @@
             class="pb-0"
           >
             <v-text-field
-              v-model="department.code"
+              :model-value="department?.code"
               placeholder="Nhập mã khoa"
               label="Mã khoa"
             />
@@ -76,7 +76,7 @@
             class="pb-0"
           >
             <v-text-field
-              v-model="department.name"
+              :model-value="department?.name"
               placeholder="Nhập tên khoa"
               label="Tên khoa"
             />
@@ -90,7 +90,7 @@
             class="pb-0"
           >
             <v-select
-              v-model="department.dean"
+              :model-value="department?.dean?.full_name"
               label="Trưởng khoa"
               placeholder="Chọn trưởng khoa"
               menu-icon=""
@@ -105,7 +105,7 @@
             class="pb-0"
           >
             <v-text-field
-              :model-value="department.staff_count"
+              :model-value="department?.staff_count"
               label="Số lượng nhân viên"
               placeholder="0"
             />
@@ -119,7 +119,7 @@
             class="pb-0"
           >
             <v-text-field
-              :model-value="department.warehouse_count"
+              :model-value="department?.warehouse_count"
               label="Số lượng kho trực thuộc"
               placeholder="0"
             />
@@ -133,7 +133,7 @@
             class="pb-0"
           >
             <v-textarea
-              v-model="department.description"
+              :model-value="department?.description"
               label="Mô tả"
               placeholder="Nhập mô tả"
             />
@@ -234,14 +234,14 @@
           v-show="currentTab === 'staff'"
           class="w-100 pa-4 pt-0 pb-0"
         >
-          <FeatureListDirectStaff :departments="department.direct_staffs" />
+          <FeatureListDirectStaff :department-id="departmentId" />
         </div>
 
         <div
           v-show="currentTab === 'warehouse'"
-          class="pt-n1 w-100 pt-0 pb-0"
+          class="w-100 pa-4 pt-0 pb-0"
         >
-          <FeatureListDirectWarehouse :warehouses="department.direct_warehouses" />
+          <FeatureListDirectWarehouse :department-id="departmentId" />
         </div>
       </CommonFieldset>
     </v-form>
@@ -380,6 +380,17 @@
         </v-card>
       </v-form>
     </v-dialog>
+
+    <v-overlay
+      :model-value="isLoading"
+      class="d-flex justify-center align-center"
+      persistent
+    >
+      <v-progress-circular
+        indeterminate
+        size="80"
+      />
+    </v-overlay>
   </v-container>
 </template>
 
@@ -397,13 +408,20 @@
   const route = useRoute()
   const router = useRouter()
 
+  const isLoading = ref(false)
   const isUpdate = ref(false)
   const isUpdateLoading = ref(false)
   const currentTab = ref('staff')
   const formRef = ref<InstanceType<typeof VForm> | null>(null)
   const departmentId = route.params?.['department_id'] as string
 
-  const { department } = useDepartment()
+  const { department, ...hooks } = useDepartment()
+
+  onMounted(async () => {
+    isLoading.value = true
+    await hooks.onFetchDepartmentById(departmentId)
+    isLoading.value = false
+  })
 
   const formRules = useFormRules()
 

@@ -45,3 +45,9 @@ export type IOrganizationActionRequest =
   | 'ACTIVATE'
   | 'DELETE'
   | 'LEAVE'
+
+export type IBasicOrganization = {
+  id: number
+  code: string
+  name: string
+}

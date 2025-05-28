@@ -5,6 +5,8 @@ export type IBasicAccount = {
   code?: string
   phone_number?: string
   full_name?: string
+  is_active?: boolean
+  avatar?: string
 }
 
 export type IAccount = IBasicAccount & {
@@ -46,4 +48,23 @@ export type IAccount = IBasicAccount & {
   nickname?: string
   primary_contact_number?: string
   secondary_contact_number?: string
+}
+
+export type IStaff = {
+  id?: number
+  code?: string
+  phone_number?: string
+  full_name?: string
+  username?: string
+  organization_phone_number?: string | null
+  department_role?: string
+  organization_email?: string | null
+  department?: string
+  warehouse?: string
+  created_at?: string
+  updated_at?: string
+  staff_code?: string | null
+  joined_at?: string
+  avatar?: string
+  is_active?: boolean
 }

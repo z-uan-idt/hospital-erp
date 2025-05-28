@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="props.warehouses.length > 0"
+    v-if="isLoading || hooks.count.value > 0"
     class="list-direct-staff"
   >
     <v-text-field
@@ -33,8 +33,9 @@
       fixed-header
       hover
       :loading="isLoading"
-      :items-length="warehouses.length"
+      :items-length="hooks.count"
       disable-sort
+      loading-text="Đang tải dữ liệu..."
     >
       <template v-slot:headers="{ columns }">
         <tr>
@@ -76,18 +77,20 @@
               :items="ITEM_PER_PAGES"
               variant="outlined"
               rounded="lg"
-              max-width="90px"
+              max-width="max-content"
               hide-details
               density="compact"
+              :menu-icon="null"
+              readonly
             />
             <span>
-              Trong tổng số: <strong>{{ props.warehouses.length }}</strong> bản ghi
+              Trong tổng số: <strong>{{ hooks.count }}</strong> bản ghi
             </span>
           </template>
           <v-spacer />
           <v-pagination
             v-model="page"
-            :length="Math.ceil(props.warehouses.length / itemsPerPage)"
+            :length="hooks.numPages.value"
             rounded="circle"
             variant="elevated"
             elevation="0"
@@ -101,7 +104,7 @@
     </v-data-table>
   </div>
   <div
-    v-else
+    v-if="!isLoading && hooks.count.value === 0"
     class="d-flex flex-column align-center justify-center w-100 pa-4"
   >
     <Icon
@@ -109,66 +112,62 @@
       :size="$vuetify.display.smAndDown ? '45vw' : $vuetify.display.mdAndDown ? '30vw' : '20vw'"
     />
 
-    <p class="text-md-h4 text-h5 mt-4 mb-4 font-playfair text-erp-gray-800">
-      Chưa có kho trực thuộc
-    </p>
+    <p class="text-md-h4 text-h5 mt-4 mb-4 font-playfair text-erp-gray-800">Chưa có nhân viên</p>
   </div>
 </template>
 
 <script setup lang="ts">
   import type { DataTableHeader } from 'vuetify'
   import { ITEM_PER_PAGES } from '~/constants/core.constants'
-  import type { IDepartment } from '~/types/department.types'
+
+  const { warehouses, ...hooks } = useWarehouse()
 
   const props = withDefaults(
     defineProps<{
-      warehouses: IDepartment[]
+      departmentId: string | number
     }>(),
     {
-      warehouses: () => [],
+      departmentId: () => '',
     }
   )
 
   const headers = ref<DataTableHeader[]>([
     {
-      title: 'Mã nhân viên',
+      title: 'Mã kho',
       key: 'code',
-      minWidth: '160px',
     },
     {
-      title: 'Tên tài khoản',
+      title: 'Tên kho',
       key: 'name',
-      minWidth: '180px',
     },
     {
-      title: 'Số điện thoại tại tổ chức',
-      key: 'dean',
-      minWidth: '200px',
+      title: 'Trực thuộc khoa',
+      key: 'department.name',
     },
     {
-      title: 'Email tại tổ chức',
+      title: 'Thủ kho',
+      key: 'keeper.full_name',
+    },
+    {
+      title: 'Số lượng nhân viên',
       key: 'staff_count',
-      minWidth: '180px',
     },
     {
-      title: 'Chức vụ',
-      key: 'warehouse_count',
-      minWidth: '160px',
-    },
-    {
-      title: 'Kho trực thuộc',
-      key: 'warehouse_count',
-      minWidth: '160px',
-    },
-    {
-      title: 'Thời gian thêm',
+      title: 'Ngày tạo',
       key: 'created_at',
-      minWidth: '180px',
     },
   ])
 
   const page = ref(1)
   const isLoading = ref(false)
   const itemsPerPage = ref(5)
+  const { organizationSelected } = useAuth()
   const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
+
+  onMounted(async () => {
+    isLoading.value = true
+    hooks.setDid(Number(props.departmentId))
+    await hooks.onFetchWarehouse(organizationSelected.value.id)
+    isLoading.value = false
+  })
 </script>

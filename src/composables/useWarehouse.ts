@@ -1,17 +1,13 @@
-import type {
-  IBasicDepartment,
-  IDepartment,
-  IDepartmentCreatePayload,
-} from '~/types/department.types'
 import type { IPagination } from '~/types/response.types'
+import type { IWarehouse, IWarehouseCreatePayload } from '~/types/warehouse.types'
 
 type IMetadata = {
   pagination: IPagination
 }
 
-export const useDepartment = () => {
-  const departments = ref<IDepartment[]>([])
-  const department = ref<IDepartment | null>(null)
+export const useWarehouse = () => {
+  const warehouses = ref<IWarehouse[]>([])
+  const warehouse = ref<IWarehouse | null>(null)
 
   const fetchApi = usePrivateApi()
   const page = ref(1)
@@ -20,6 +16,16 @@ export const useDepartment = () => {
   const count = ref(0)
   const numPages = ref(0)
   const orderBy = ref<string[]>([])
+  const aid = ref<number | null>(null)
+  const did = ref<number | null>(null)
+
+  const setAid = (value: number) => {
+    aid.value = value
+  }
+
+  const setDid = (value: number) => {
+    did.value = value
+  }
 
   const setPage = (value: number) => {
     page.value = value
@@ -42,7 +48,7 @@ export const useDepartment = () => {
     }
   }
 
-  const onFetchDepartment = async (organizationId: string | number) => {
+  const onFetchWarehouse = async (organizationId: string | number) => {
     const params = {
       page: page.value,
       limit: limit.value,
@@ -54,32 +60,38 @@ export const useDepartment = () => {
     if (orderBy.value.length > 0) {
       params['order_by'] = orderBy.value.join(',')
     }
-    const { data: response } = await fetchApi.get<IDepartment[], IMetadata>(
-      '/api/v1/department',
+    if (aid.value) {
+      params['aid'] = aid.value
+    }
+    if (did.value) {
+      params['did'] = did.value
+    }
+    const { data: response } = await fetchApi.get<IWarehouse[], IMetadata>(
+      '/api/v1/warehouse',
       params
     )
     if (response.success) {
       const metadata = response.metadata
-      departments.value = response.data
+      warehouses.value = response.data
       count.value = metadata.pagination.count ?? 0
       numPages.value = metadata.pagination.num_pages ?? 0
     }
   }
 
-  const onFetchDepartmentById = async (departmentId: string | number) => {
-    const { data: response } = await fetchApi.get<IDepartment>(`/api/v1/department/${departmentId}`)
+  const onFetchWarehouseById = async (warehouseId: string | number) => {
+    const { data: response } = await fetchApi.get<IWarehouse>(`/api/v1/warehouse/${warehouseId}`)
     if (response.success) {
-      department.value = response.data
-      console.log(department.value)
+      warehouse.value = response.data
+      console.log(warehouse.value)
     }
   }
 
-  const onCreateDepartment = async (
-    payload: IDepartmentCreatePayload,
-    onSuccess: (department: IDepartment) => void,
+  const onCreateWarehouse = async (
+    payload: IWarehouseCreatePayload,
+    onSuccess: (warehouse: IWarehouse) => void,
     onError: (error: string) => void
   ) => {
-    const { data: response } = await fetchApi.post<IDepartment>('/api/v1/department', payload)
+    const { data: response } = await fetchApi.post<IWarehouse>('/api/v1/warehouse', payload)
 
     if (response.success) {
       onSuccess(response.data)
@@ -88,23 +100,9 @@ export const useDepartment = () => {
     }
   }
 
-  const onFetchDepartmentDropdown = async (organizationId: string | number) => {
-    const params = {
-      oid: organizationId,
-    }
-
-    const { data: response } = await fetchApi.get<IBasicDepartment[]>(
-      'api/v1/department/dropdown',
-      params
-    )
-    if (response.success) {
-      return response.data
-    }
-  }
-
   return {
-    departments,
-    department,
+    warehouses,
+    warehouse,
     page,
     limit,
     search,
@@ -114,9 +112,10 @@ export const useDepartment = () => {
     setOrderBy,
     numPages,
     count,
-    onFetchDepartment,
-    onFetchDepartmentById,
-    onCreateDepartment,
-    onFetchDepartmentDropdown,
+    setAid,
+    setDid,
+    onFetchWarehouse,
+    onFetchWarehouseById,
+    onCreateWarehouse,
   }
 }

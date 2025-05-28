@@ -58,6 +58,7 @@
     </div>
 
     <v-text-field
+      v-model="search"
       prepend-inner-icon="mdi-magnify"
       label="Tìm kiếm"
       variant="outlined"
@@ -75,6 +76,7 @@
             ? '300px'
             : '400px',
       }"
+      @update:model-value="onSearch"
     />
 
     <v-data-table
@@ -89,6 +91,7 @@
       :loading="isLoading"
       :items-length="departments.length"
       disable-sort
+      loading-text="Đang tải dữ liệu..."
       :sort-by="[]"
       style="height: calc(100dvh - 240px)"
       @click:row="onRowClick"
@@ -131,22 +134,23 @@
           <template v-if="!$vuetify.display.smAndDown">
             <span> Số dòng trên 1 trang </span>
             <v-select
-              v-model="itemsPerPage"
+              :model-value="hooks.limit.value"
               :items="ITEM_PER_PAGES"
               variant="outlined"
               rounded="lg"
               max-width="90px"
               hide-details
               density="compact"
+              @update:model-value="onSelectItemsPerPage"
             />
             <span>
-              Trong tổng số: <strong>{{ departments.length }}</strong> bản ghi
+              Trong tổng số: <strong>{{ hooks.count }}</strong> bản ghi
             </span>
           </template>
           <v-spacer />
           <v-pagination
             v-model="page"
-            :length="Math.ceil(departments.length / itemsPerPage)"
+            :length="numPages"
             rounded="circle"
             variant="elevated"
             elevation="0"
@@ -231,8 +235,39 @@
                   v-model="createFormPayload.dean"
                   label="Trưởng khoa"
                   placeholder="Chọn trưởng khoa"
-                  :items="[]"
-                />
+                  :items="members"
+                  :item-title="(item) => item?.full_name"
+                  :item-value="(item) => item?.id"
+                >
+                  <template v-slot:item="{ props: itemProps, item: { raw } }">
+                    <v-list-item v-bind="itemProps">
+                      <template #prepend>
+                        <v-avatar
+                          size="48"
+                          :image="raw?.avatar"
+                          border="sm"
+                          :text="raw?.full_name?.charAt(0)"
+                        />
+                      </template>
+                      <template #title>
+                        <div class="d-flex align-center ga-1">
+                          <span>{{ raw?.full_name }}</span>
+                          <v-icon
+                            size="8"
+                            class="text-erp-gray-800"
+                            style="margin-top: -1px"
+                            :color="raw?.is_active ? 'erp-brand' : 'erp-error'"
+                          >
+                            mdi-circle
+                          </v-icon>
+                        </div>
+                      </template>
+                      <template #subtitle>
+                        <span>{{ raw?.organization_phone_number || raw?.phone_number }}</span>
+                      </template>
+                    </v-list-item>
+                  </template>
+                </v-select>
               </v-col>
 
               <v-col
@@ -305,6 +340,7 @@
   import type { DataTableHeader, SubmitEventPromise } from 'vuetify'
   import { ITEM_PER_PAGE, ITEM_PER_PAGES } from '~/constants/core.constants'
   import type { IDepartmentCreatePayload } from '~/types/department.types'
+  import type { IStaff } from '~/types/account.types'
 
   definePageMeta({
     layout: 'default',
@@ -316,14 +352,37 @@
     title: 'Danh sách khoa',
   })
 
-  const page = ref(1)
   const router = useRouter()
   const isLoading = ref(false)
   const itemsPerPage = ref(ITEM_PER_PAGE)
+  const members = ref<IStaff[]>([])
+  const { organizationSelected } = useAuth()
+  const { onFetchMemberOfOrganizationNoRole } = useStaff()
   const formRef = ref<InstanceType<typeof VForm> | null>(null)
   const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
 
-  const search = ref('')
+  const { departments, numPages, page, setPage, search, setSearch, ...hooks } = useDepartment()
+
+  onMounted(async () => {
+    members.value = await onFetchMemberOfOrganizationNoRole(organizationSelected.value?.id)
+  })
+
+  onMounted(async () => {
+    isLoading.value = true
+    await hooks.onFetchDepartment(organizationSelected.value?.id)
+    isLoading.value = false
+  })
+
+  const onSelectItemsPerPage = async (value: number) => {
+    setPage(1)
+    hooks.setLimit(value)
+    isLoading.value = true
+    await hooks.onFetchDepartment(organizationSelected.value?.id)
+    isLoading.value = false
+  }
+
+  const { $toast } = useNuxtApp()
+
   const hasChanged = ref(false)
   const isCreateDialog = ref(false)
   const isCreateLoading = ref(false)
@@ -334,6 +393,7 @@
     name: '',
     dean: null,
     description: '',
+    organization: organizationSelected.value?.id,
   })
 
   const createFormPayloadJSON = ref(JSON.stringify(createFormPayload.value))
@@ -344,7 +404,7 @@
       const newValueJSON = JSON.stringify(newValue)
       hasChanged.value = newValueJSON !== createFormPayloadJSON.value
     },
-    { deep: true }
+    { immediate: true, deep: true }
   )
 
   watch(
@@ -363,6 +423,7 @@
       title: 'Mã khoa',
       key: 'code',
       minWidth: '100px',
+      value: (item) => '#' + item?.['code'],
     },
     {
       title: 'Tên khoa',
@@ -371,7 +432,7 @@
     },
     {
       title: 'Trưởng khoa',
-      key: 'dean',
+      key: 'dean.full_name',
       minWidth: '120px',
     },
     {
@@ -390,18 +451,6 @@
       minWidth: '180px',
     },
   ])
-
-  const departments = ref(
-    Array.from({ length: 1000 }, (_, index) => ({
-      id: index + 1,
-      code: `KHOA_${index + 1}`,
-      name: `Khoa ${index + 1}`,
-      dean: `Nguyễn Văn ${index + 1}`,
-      staff_count: Math.floor(Math.random() * 100),
-      warehouse_count: Math.floor(Math.random() * 10),
-      created_at: new Date().toISOString(),
-    }))
-  )
 
   const sortBy = (column: any) => {
     if (!column.sort_by) {
@@ -431,8 +480,49 @@
 
   async function onFormSubmit(formEvent: SubmitEventPromise) {
     const results = await formEvent
-    console.log(results)
+    if (results.valid) {
+      let isSuccess = false
+      try {
+        isCreateLoading.value = true
+        await hooks.onCreateDepartment(
+          createFormPayload.value,
+          async () => {
+            isSuccess = true
+            isCreateDialog.value = false
+            $toast.success('Tạo khoa thành công', {
+              description: 'Khoa đã được tạo thành công',
+            })
+          },
+          (error) => {
+            $toast.error('Tạo khoa thất bại', {
+              description: error,
+            })
+          }
+        )
+      } catch {
+        $toast.error('Thất bại', {
+          description: 'Hệ thống gặp sự cố, vui lòng thử lại sau',
+        })
+      } finally {
+        isCreateLoading.value = false
+      }
+
+      if (isSuccess) {
+        isLoading.value = true
+        await hooks.onFetchDepartment(organizationSelected.value?.id)
+        isLoading.value = false
+        members.value = await onFetchMemberOfOrganizationNoRole(organizationSelected.value?.id)
+      }
+    }
   }
+
+  const onSearch = useDebounce(async (value: string) => {
+    setPage(1)
+    setSearch(value)
+    isLoading.value = true
+    await hooks.onFetchDepartment(organizationSelected.value?.id)
+    isLoading.value = false
+  }, 1000)
 </script>
 
 <style scoped lang="scss"></style>
