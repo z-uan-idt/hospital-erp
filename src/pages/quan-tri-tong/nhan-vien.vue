@@ -55,6 +55,7 @@
     </div>
 
     <v-text-field
+      v-model="hooks.search.value"
       prepend-inner-icon="mdi-magnify"
       label="Tìm kiếm"
       variant="outlined"
@@ -72,19 +73,20 @@
             ? '300px'
             : '400px',
       }"
+      @update:model-value="onSearch"
     />
 
     <v-data-table
       v-model:page="page"
       v-model:items-per-page="itemsPerPage"
-      :items="departments"
+      :items="staffs"
       item-value="name"
       :headers="headers"
       class="mt-3"
       fixed-header
       hover
       :loading="isLoading"
-      :items-length="departments.length"
+      :items-length="hooks.count"
       disable-sort
       style="height: calc(100dvh - 240px)"
       @update:options="onLoadTable"
@@ -133,15 +135,16 @@
               max-width="100px"
               hide-details
               density="compact"
+              @update:model-value="onSelectItemsPerPage"
             />
             <span>
-              Trong tổng số: <strong>{{ departments.length }}</strong> bản ghi
+              Trong tổng số: <strong>{{ hooks.count }}</strong> bản ghi
             </span>
           </template>
           <v-spacer />
           <v-pagination
             v-model="page"
-            :length="Math.ceil(departments.length / itemsPerPage)"
+            :length="hooks.numPages.value"
             rounded="circle"
             variant="elevated"
             elevation="0"
@@ -172,51 +175,59 @@
   const page = ref(1)
   const isLoading = ref(false)
   const itemsPerPage = ref(15)
+  const { staffs, ...hooks } = useStaff()
+  const { organizationSelected } = useAuth()
+
+  onMounted(async () => {
+    isLoading.value = true
+    await hooks.onFetchStaff(organizationSelected.value.id)
+    isLoading.value = false
+  })
+
   const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
 
   const headers = ref<DataTableHeader[]>([
     {
-      title: 'Mã khoa',
-      key: 'code',
-      minWidth: '100px',
+      title: 'Mã nhân viên',
+      key: 'staff_code',
     },
     {
-      title: 'Tên khoa',
-      key: 'name',
-      minWidth: '100px',
+      title: 'Tên tài khoản',
+      key: 'full_name',
     },
     {
-      title: 'Trưởng khoa',
-      key: 'dean',
-      minWidth: '120px',
+      title: 'Số điện thoại tại tổ chức',
+      key: 'organization_phone_number',
     },
     {
-      title: 'Số lượng nhân viên',
-      key: 'staff_count',
-      minWidth: '180px',
+      title: 'Email tại tổ chức',
+      key: 'organization_email',
     },
     {
-      title: 'Số lượng kho',
-      key: 'warehouse_count',
-      minWidth: '160px',
+      title: 'Chức vụ',
+      key: 'department_role',
+    },
+    {
+      title: 'Khoa',
+      key: 'department',
+    },
+    {
+      title: 'Kho trực thuộc',
+      key: 'warehouse',
     },
     {
       title: 'Ngày tạo',
       key: 'created_at',
-      minWidth: '180px',
     },
   ])
 
-  const departments = ref(
-    Array.from({ length: 1000 }, (_, index) => ({
-      code: `KHOA_${index + 1}`,
-      name: `Khoa ${index + 1}`,
-      dean: `Nguyễn Văn ${index + 1}`,
-      staff_count: Math.floor(Math.random() * 100),
-      warehouse_count: Math.floor(Math.random() * 10),
-      created_at: new Date().toISOString(),
-    }))
-  )
+  const onSelectItemsPerPage = async (value: number) => {
+    hooks.setPage(1)
+    hooks.setLimit(value)
+    isLoading.value = true
+    await hooks.onFetchStaff(organizationSelected.value?.id)
+    isLoading.value = false
+  }
 
   const sortBy = (column: any) => {
     if (!column.sort_by) {
@@ -239,6 +250,14 @@
   function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {
     console.log(page, itemsPerPage, sortBy, args)
   }
+
+  const onSearch = useDebounce(async (value: string) => {
+    hooks.setPage(1)
+    hooks.setSearch(value)
+    isLoading.value = true
+    await hooks.onFetchStaff(organizationSelected.value?.id)
+    isLoading.value = false
+  }, 1000)
 </script>
 
 <style scoped lang="scss"></style>
