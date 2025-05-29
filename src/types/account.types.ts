@@ -7,6 +7,7 @@ export type IBasicAccount = {
   full_name?: string
   is_active?: boolean
   avatar?: string
+  requested_at?: string
 }
 
 export type IAccount = IBasicAccount & {

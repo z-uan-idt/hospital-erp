@@ -2,6 +2,7 @@ export const useSystemStore = defineStore('system', () => {
   const isLoading = ref(false)
   const isReloadWelcome = ref(false)
   const reloadWelcomeData = ref(null)
+  const notification = ref(null)
 
   const setLoading = (value: boolean) => {
     isLoading.value = value
@@ -15,6 +16,10 @@ export const useSystemStore = defineStore('system', () => {
     reloadWelcomeData.value = value
   }
 
+  const setNotification = (value: any) => {
+    notification.value = value
+  }
+
   return {
     isLoading,
     setLoading,
@@ -22,5 +27,7 @@ export const useSystemStore = defineStore('system', () => {
     setReloadWelcome,
     reloadWelcomeData,
     setReloadWelcomeData,
+    notification,
+    setNotification,
   }
 })

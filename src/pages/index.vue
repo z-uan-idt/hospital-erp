@@ -292,7 +292,15 @@
     await onLoadingWrapper(onFetchOrganization)
   })
 
-  watchEffect(() => {
+  watchEffect(async () => {
+    if (systemStore.notification) {
+      const payload = systemStore.notification
+      if (payload?.data?.type === 'organization_member_requested_to_join_rejected') {
+        await onLoadingWrapper(onFetchOrganization)
+        systemStore.setNotification(null)
+      }
+    }
+
     if (systemStore.isReloadWelcome) {
       const payload = systemStore.reloadWelcomeData
 

@@ -7,7 +7,7 @@
         variant="outlined"
         base-color="grey-lighten-1"
         class="mb-4 pt-3 pb-3 ps-3 pe-6"
-        :ripple="organization.infor?.value !== 'PENDING'"
+        :ripple="organization.infor?.value !== 'REQUESTED_TO_JOIN'"
         :rounded="!$vuetify.display.lgAndUp ? 'xl' : 'pill'"
         :disabled="organizationSelected?.id === organization.id"
         @click.prevent="onSelectOrganizationModule(organization)"
@@ -53,7 +53,7 @@
             <div class="d-flex align-center ga-2 select-none ms-lg-4 flex-wrap">
               <v-chip
                 size="small"
-                :color="organization.infor?.value === 'PENDING' ? 'yellow-darken-4' : 'grey-darken-4'"
+                :color="organization.infor?.value === 'REQUESTED_TO_JOIN' ? 'yellow-darken-4' : 'grey-darken-4'"
                 class="select-none"
               >
                 {{ organization.infor.label }}
@@ -140,7 +140,7 @@
             </v-btn>
 
             <v-btn
-              v-if="notOwnerCheckStatus(organization, 'PENDING')"
+              v-if="notOwnerCheckStatus(organization, 'REQUESTED_TO_JOIN')"
               icon
               variant="outlined"
               color="erp-gray"
@@ -324,7 +324,7 @@
   const { onActionOrganization } = useOrganization()
 
   const onSelectOrganizationModule = (organization: IOrganization) => {
-    if (organization.infor?.value === 'PENDING') return
+    if (organization.infor?.value === 'REQUESTED_TO_JOIN') return
     organizationSelectedModule.value = organization
   }
 

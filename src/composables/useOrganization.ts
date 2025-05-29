@@ -2,7 +2,7 @@ import type { IOrganization, IOrganizationActionRequest } from '~/types/oranizat
 import type { IPagination } from '~/types/response.types'
 
 import * as apiConstants from '~/constants/api.constants'
-import type { IStaff } from '~/types/account.types'
+import type { IBasicAccount, IStaff } from '~/types/account.types'
 
 type IMetadata = {
   pagination: IPagination
@@ -72,6 +72,29 @@ export const useOrganization = () => {
     }
   }
 
+  const onFetchRequestJoinOrganizations = async (organizationId: string | number) => {
+    const { data: response } = await fetchApi.get<IBasicAccount[]>(`api/v1/organization/request-join-organizations`, {
+      oid: organizationId,
+    })
+    if (response.success) {
+      return response.data
+    }
+
+    return []
+  }
+
+  const onFetchInvitationSentOrganizations = async (organizationId: string | number) => {
+    const { data: response } = await fetchApi.get<IBasicAccount[]>(
+      `api/v1/organization/invitation-sent-organizations`,
+      { oid: organizationId }
+    )
+    if (response.success) {
+      return response.data
+    }
+
+    return []
+  }
+
   const onRequestOrganization = async (
     organizationId: number,
     onSuccess: (organization: IOrganization) => void,
@@ -82,6 +105,23 @@ export const useOrganization = () => {
     })
     if (response.success) {
       onSuccess(response.data)
+    } else {
+      onError(response.message)
+    }
+  }
+
+  const onRequestJoinOrganizationAction = async (
+    payload: {
+      oid?: number
+      aid?: number
+      is_accept?: boolean
+    },
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
+    const { data: response } = await fetchApi.post('api/v1/organization/request-join-organization-action', payload)
+    if (response.success) {
+      onSuccess()
     } else {
       onError(response.message)
     }
@@ -138,6 +178,28 @@ export const useOrganization = () => {
     }
   }
 
+  const onAcceptRequestJoinOrganization = async (
+    formData: FormData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
+    const { data: response } = await fetchApi.post<IOrganization>(
+      'api/v1/organization/accept-request-join-organization',
+      formData,
+      {
+        headers: {
+          'Content-Type': apiConstants.API_CONTENT_TYPE_MULTIPART_FORM_DATA,
+        },
+      }
+    )
+
+    if (response.success) {
+      onSuccess()
+    } else {
+      onError(response.message)
+    }
+  }
+
   const onUpdateOrganization = async (
     organizationId: number,
     formData: FormData,
@@ -185,5 +247,9 @@ export const useOrganization = () => {
     onUpdateOrganization,
     isEmptyOrganization,
     onFetchOrganizationByCode,
+    onFetchRequestJoinOrganizations,
+    onFetchInvitationSentOrganizations,
+    onRequestJoinOrganizationAction,
+    onAcceptRequestJoinOrganization,
   }
 }

@@ -79,6 +79,7 @@
         >
           <template v-slot:activator="{ props }">
             <v-chip
+              v-if="invitationSentOrganizations.length > 0"
               variant="outlined"
               color="erp-gray"
               size="auto"
@@ -92,21 +93,80 @@
                 size="auto"
                 class="text-body-2 ps-2 pe-2 pt-1 pb-1"
               >
-                10
+                {{ formatNumberDot(invitationSentOrganizations.length) }}
               </v-chip>
             </v-chip>
           </template>
 
-          <v-card min-width="300"> 1 </v-card>
+          <div class="erp-scrollbar border border-opacity-25 pa-2 rounded-lg bg-white mt-2">
+            <div class="ps-4 pe-4 pt-4">
+              <CommonDivider label="Đã gửi lời mời gia nhập tổ chức" />
+            </div>
+            <div class="overflow-y-auto">
+              <v-sheet
+                min-width="534"
+                rounded="lg"
+                max-height="500px"
+                variant="outlined"
+              >
+                <template
+                  v-for="(item, index) in invitationSentOrganizations"
+                  :key="index"
+                >
+                  <v-card
+                    class="pa-0"
+                    elevation="0"
+                  >
+                    <template #prepend>
+                      <v-avatar
+                        size="40"
+                        variant="outlined"
+                        color="grey-darkĐã yêu cầu lúc: en-4"
+                        class="text-body-1 text-black"
+                        :image="item.avatar"
+                        :text="item.full_name.charAt(0).toUpperCase()"
+                      />
+                    </template>
+                    <template #title>
+                      <div class="d-flex align-center ga-2 mt-1">
+                        <span class="text-body-1 font-weight-medium">{{ item.full_name }}</span>
+                      </div>
+                    </template>
+                    <template
+                      v-if="item.phone_number"
+                      #subtitle
+                    >
+                      <span class="text-body-2 text-erp-gray-700">{{ item.phone_number }}</span>
+                    </template>
+                    <template #append>
+                      <v-btn
+                        icon="mdi-close"
+                        size="small"
+                        color="erp-error"
+                        class="me-2"
+                        variant="outlined"
+                      />
+                    </template>
+                    <div class="text-body-2 text-erp-gray-700 ps-5 pb-3">
+                      Đã gửi lúc: {{ formatDate(item.requested_at, 'HH:mm:ss dd/MM/yyyy') }}
+                    </div>
+                  </v-card>
+                  <v-divider v-if="index !== invitationSentOrganizations.length - 1" />
+                </template>
+              </v-sheet>
+            </div>
+          </div>
         </v-menu>
 
         <v-menu
           v-model="isRequestJoin"
           :close-on-content-click="false"
           location="bottom right"
+          class="erp-scrollbar"
         >
           <template v-slot:activator="{ props }">
             <v-chip
+              v-if="requestJoinOrganizations.length > 0"
               variant="outlined"
               color="erp-gray"
               size="auto"
@@ -120,29 +180,86 @@
                 size="auto"
                 class="text-body-2 ps-2 pe-2 pt-1 pb-1"
               >
-                10
+                {{ formatNumberDot(requestJoinOrganizations.length) }}
               </v-chip>
             </v-chip>
           </template>
 
-          <v-sheet
-            min-width="534"
-            class="pa-4 mt-1"
-            rounded="lg"
-          >
-            <CommonDivider label="Xét duyệt yêu cầu gia nhập" />
-            <v-list
-              item-props
-              density="compact"
-              class="pa-0"
-            >
-              <v-list-item>
-                <v-list-item-title> 1 </v-list-item-title>
-              </v-list-item>
-              <v-divider />
-              <v-list-item> 2 </v-list-item>
-            </v-list>
-          </v-sheet>
+          <div class="erp-scrollbar border border-opacity-25 pa-2 rounded-lg bg-white mt-2">
+            <div class="ps-4 pe-4 pt-4">
+              <CommonDivider label="Xét duyệt yêu cầu gia nhập" />
+            </div>
+            <div class="overflow-y-auto">
+              <v-sheet
+                min-width="534"
+                rounded="lg"
+                max-height="500px"
+                variant="outlined"
+              >
+                <template
+                  v-for="(item, index) in requestJoinOrganizations"
+                  :key="index"
+                >
+                  <v-card
+                    class="pa-0"
+                    elevation="0"
+                  >
+                    <template #prepend>
+                      <v-avatar
+                        size="40"
+                        variant="outlined"
+                        color="grey-darkĐã yêu cầu lúc: en-4"
+                        class="text-body-1 text-black"
+                        :image="item.avatar"
+                        :text="item.full_name.charAt(0).toUpperCase()"
+                      />
+                    </template>
+                    <template #title>
+                      <div class="d-flex align-center ga-2">
+                        <span class="text-body-1 font-weight-medium">{{ item.full_name }}</span>
+                        <v-icon
+                          size="8"
+                          class="text-erp-gray-800"
+                          style="margin-top: -1px"
+                          :color="item?.is_active ? 'erp-brand' : 'erp-error'"
+                        >
+                          mdi-circle
+                        </v-icon>
+                      </div>
+                    </template>
+                    <template
+                      v-if="item.phone_number"
+                      #subtitle
+                    >
+                      <span class="text-body-2 text-erp-gray-700">{{ item.phone_number }}</span>
+                    </template>
+                    <template #append>
+                      <v-btn
+                        icon="mdi-close"
+                        size="small"
+                        color="erp-error"
+                        class="me-2"
+                        variant="outlined"
+                        :loading="isRequestJoinLoading === item.id"
+                        @click="onRequestJoinOrganizationAction(item.id, false)"
+                      />
+                      <v-btn
+                        icon="mdi-check"
+                        color="erp-brand"
+                        variant="outlined"
+                        size="small"
+                        @click="requestJoinAccept = item"
+                      />
+                    </template>
+                    <div class="text-body-2 text-erp-gray-700 ps-5 pb-3">
+                      Đã yêu cầu lúc: {{ formatDate(item.requested_at, 'HH:mm:ss dd/MM/yyyy') }}
+                    </div>
+                  </v-card>
+                  <v-divider v-if="index !== requestJoinOrganizations.length - 1" />
+                </template>
+              </v-sheet>
+            </div>
+          </div>
         </v-menu>
       </div>
     </div>
@@ -227,12 +344,20 @@
         </div>
       </template>
     </v-data-table>
+
+    <FormOrganizationAccept
+      :visible="!!requestJoinAccept"
+      active="accept"
+      :account="requestJoinAccept"
+      @close="requestJoinAccept = null"
+    />
   </v-container>
 </template>
 
 <script setup lang="ts">
   import { CommonDivider } from '#components'
   import type { DataTableHeader } from 'vuetify'
+  import type { IBasicAccount } from '~/types/account.types'
 
   definePageMeta({
     layout: 'default',
@@ -249,13 +374,50 @@
   const isInvitationSent = ref(false)
   const isRequestJoin = ref(false)
   const itemsPerPage = ref(15)
+  const { $toast } = useNuxtApp()
+  const requestJoinOrganizations = ref<IBasicAccount[]>([])
+  const invitationSentOrganizations = ref<IBasicAccount[]>([])
+  const isRequestJoinLoading = ref(null)
+  const isInvitationSentLoading = ref(false)
+  const requestJoinAccept = ref<IBasicAccount | null>(null)
+
+  const systemStore = useSystemStore()
   const { staffs, ...hooks } = useStaff()
   const { organizationSelected } = useAuth()
+  const organizationHooks = useOrganization()
 
   onMounted(async () => {
     isLoading.value = true
     await hooks.onFetchStaff(organizationSelected.value.id)
     isLoading.value = false
+  })
+
+  onMounted(async () => {
+    requestJoinOrganizations.value = await organizationHooks.onFetchRequestJoinOrganizations(
+      organizationSelected.value.id
+    )
+  })
+
+  onMounted(async () => {
+    invitationSentOrganizations.value = await organizationHooks.onFetchInvitationSentOrganizations(
+      organizationSelected.value.id
+    )
+  })
+
+  watchEffect(async () => {
+    if (systemStore.notification) {
+      const payload = systemStore.notification
+      const data = payload?.data
+      if (
+        data?.type === 'organization_member_requested_to_join' &&
+        Number(data?.id) === Number(organizationSelected.value.id)
+      ) {
+        requestJoinOrganizations.value = await organizationHooks.onFetchRequestJoinOrganizations(
+          organizationSelected.value.id
+        )
+        systemStore.setNotification(null)
+      }
+    }
   })
 
   const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
@@ -335,6 +497,45 @@
     await hooks.onFetchStaff(organizationSelected.value?.id)
     isLoading.value = false
   }, 1000)
+
+  const onRequestJoinOrganizationAction = async (aid: number, is_accept: boolean) => {
+    try {
+      isRequestJoinLoading.value = aid
+      await organizationHooks.onRequestJoinOrganizationAction(
+        {
+          aid,
+          is_accept,
+          oid: organizationSelected.value.id,
+        },
+        () => {
+          requestJoinOrganizations.value = requestJoinOrganizations.value.filter((item) => item.id !== aid)
+          if (requestJoinOrganizations.value.length === 0) {
+            isRequestJoin.value = false
+          }
+          if (is_accept) {
+            $toast.success('Đã xác nhận yêu cầu gia nhập', {
+              description: 'Nhân viên đã được thêm vào tổ chức',
+            })
+          } else {
+            $toast.success('Đã từ chối yêu cầu gia nhập', {
+              description: 'Nhân viên đã bị từ chối gia nhập tổ chức',
+            })
+          }
+        },
+        (error) => {
+          $toast.error('Thất bại', {
+            description: error,
+          })
+        }
+      )
+    } catch (error) {
+      $toast.error('Thất bại', {
+        description: 'Hệ thống đang gặp sự cố, vui lòng thử lại sau',
+      })
+    } finally {
+      isRequestJoinLoading.value = null
+    }
+  }
 </script>
 
 <style scoped lang="scss"></style>

@@ -89,6 +89,8 @@ export const useDepartment = () => {
     if (response.success) {
       return response.data
     }
+
+    return []
   }
 
   return {

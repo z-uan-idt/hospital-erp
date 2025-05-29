@@ -31,6 +31,7 @@ export default defineNuxtPlugin(async () => {
   const app = initializeApp(firebaseConfig)
   const isMessagingSupported = ref(false)
   const firestore = getFirestore(app)
+  const { $toast } = useNuxtApp()
   const auth = getAuth(app)
   const deviceId = ref('')
 
@@ -63,6 +64,7 @@ export default defineNuxtPlugin(async () => {
       const systemStore = useSystemStore()
 
       onMessage(messaging, (payload) => {
+        systemStore.setNotification(payload)
         if (payload?.data?.type === 'organization_member_approved') {
           systemStore.setReloadWelcomeData(payload)
           systemStore.setReloadWelcome(true)
@@ -75,6 +77,10 @@ export default defineNuxtPlugin(async () => {
               icon: payload.notification.icon || '/favicon.svg',
             }
             new Notification(title, options)
+          } else {
+            $toast.success(payload.notification.title || 'Thông báo mới', {
+              description: payload.notification.body,
+            })
           }
         }
       })

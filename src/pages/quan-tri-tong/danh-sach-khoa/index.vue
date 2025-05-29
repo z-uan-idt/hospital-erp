@@ -239,7 +239,7 @@
                           size="48"
                           :image="raw?.avatar"
                           border="sm"
-                          :text="raw?.full_name?.charAt(0)"
+                          :text="raw?.full_name?.charAt(0).toUpperCase()"
                         />
                       </template>
                       <template #title>

@@ -68,13 +68,19 @@
           </v-btn>
         </v-col>
 
-        <v-col cols="12">
+        <v-col
+          cols="12"
+          class="d-none"
+        >
           <div class="mt-4 mb-4">
             <v-divider>Hoặc</v-divider>
           </div>
         </v-col>
 
-        <v-col cols="12">
+        <v-col
+          cols="12"
+          class="d-none"
+        >
           <div class="d-flex justify-center">
             <v-btn
               variant="outlined"

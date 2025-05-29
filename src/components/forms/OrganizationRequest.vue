@@ -133,7 +133,7 @@
             elevation="0"
             rounded="pill"
             size="large"
-            :disabled="!organization || organization?.infor?.value !== 'Unknown'"
+            :disabled="!organization || organization?.infor?.value !== 'UNKNOWN'"
             class="flex-grow-1 flex-md-grow-0"
             :loading="isLoading"
           >

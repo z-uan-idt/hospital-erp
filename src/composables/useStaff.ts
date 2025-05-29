@@ -71,6 +71,8 @@ export const useStaff = () => {
     if (response.success) {
       return response.data
     }
+
+    return []
   }
 
   const onFetchStaff = async (organizationId: string | number) => {
