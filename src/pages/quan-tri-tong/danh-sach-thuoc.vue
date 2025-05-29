@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="erp-danh-sach-thuoc pa-6"
+    class="erp-danh-sach-thuoc pa-md-6 pa-3"
     fluid
   >
     <div class="d-flex align-center flex-row justify-space-between ga-4">

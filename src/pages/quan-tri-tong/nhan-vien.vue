@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="erp-nhan-vien pa-6"
+    class="erp-nhan-vien pa-md-6 pa-3"
     fluid
   >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
@@ -41,6 +41,7 @@
           color="erp-gray"
           size="small"
           class="text-body-1"
+          @click="isInvitationSentAccept = true"
         >
           <v-icon
             size="18"
@@ -53,7 +54,7 @@
       </div>
     </div>
 
-    <div class="d-flex align-center flex-row justify-space-between ga-4 mt-3">
+    <div class="d-flex align-center flex-row justify-space-between mt-3 w-100">
       <v-text-field
         v-model="hooks.search.value"
         prepend-inner-icon="mdi-magnify"
@@ -71,7 +72,12 @@
         @update:model-value="onSearch"
       />
 
-      <div class="action-buttons d-flex align-center ga-2">
+      <div
+        class="action-buttons d-flex align-center ga-2"
+        :class="{
+          'ms-2': invitationSentOrganizations.length || requestJoinOrganizations.length,
+        }"
+      >
         <v-menu
           v-model="isInvitationSent"
           :close-on-content-click="false"
@@ -86,12 +92,20 @@
               class="pa-1"
               v-bind="props"
             >
-              <div class="ps-3 pe-2 text-erp-gray-700">Đã gửi lời mời</div>
+              <div
+                v-if="!$vuetify.display.smAndDown"
+                class="ps-3 pe-2 text-erp-gray-700"
+              >
+                Đã gửi lời mời
+              </div>
               <v-chip
                 variant="tonal"
                 color="erp-blue"
                 size="auto"
-                class="text-body-2 ps-2 pe-2 pt-1 pb-1"
+                :style="{
+                  width: $vuetify.display.smAndDown ? '28px' : 'auto',
+                }"
+                class="text-body-2 ps-2 pe-2 pt-1 pb-1 d-flex align-center justify-center"
               >
                 {{ formatNumberDot(invitationSentOrganizations.length) }}
               </v-chip>
@@ -121,7 +135,7 @@
                       <v-avatar
                         size="40"
                         variant="outlined"
-                        color="grey-darkĐã yêu cầu lúc: en-4"
+                        color="grey-darken-4"
                         class="text-body-1 text-black"
                         :image="item.avatar"
                         :text="item.full_name.charAt(0).toUpperCase()"
@@ -145,6 +159,8 @@
                         color="erp-error"
                         class="me-2"
                         variant="outlined"
+                        :loading="isInvitationSentLoading === item.id"
+                        @click="onInvitationSentOrganizationAction(item.id, false)"
                       />
                     </template>
                     <div class="text-body-2 text-erp-gray-700 ps-5 pb-3">
@@ -171,14 +187,25 @@
               color="erp-gray"
               size="auto"
               class="pa-1"
+              :style="{
+                width: $vuetify.display.smAndDown ? '38px' : 'auto',
+              }"
               v-bind="props"
             >
-              <div class="ps-3 pe-2 text-erp-gray-700">Yêu cầu gia nhập</div>
+              <div
+                v-if="!$vuetify.display.smAndDown"
+                class="ps-3 pe-2 text-erp-gray-700"
+              >
+                Yêu cầu gia nhập
+              </div>
               <v-chip
                 variant="tonal"
                 color="erp-error"
                 size="auto"
-                class="text-body-2 ps-2 pe-2 pt-1 pb-1"
+                :style="{
+                  width: $vuetify.display.smAndDown ? '28px' : 'auto',
+                }"
+                class="text-body-2 ps-2 pe-2 pt-1 pb-1 d-flex align-center justify-center"
               >
                 {{ formatNumberDot(requestJoinOrganizations.length) }}
               </v-chip>
@@ -189,9 +216,9 @@
             <div class="ps-4 pe-4 pt-4">
               <CommonDivider label="Xét duyệt yêu cầu gia nhập" />
             </div>
-            <div class="overflow-y-auto">
+            <div class="overflow-y-auto erp-scrollbar">
               <v-sheet
-                min-width="534"
+                :min-width="$vuetify.display.smAndDown ? 'calc(100dvw - 42px)' : '534px'"
                 rounded="lg"
                 max-height="500px"
                 variant="outlined"
@@ -208,7 +235,7 @@
                       <v-avatar
                         size="40"
                         variant="outlined"
-                        color="grey-darkĐã yêu cầu lúc: en-4"
+                        color="grey-darken-4"
                         class="text-body-1 text-black"
                         :image="item.avatar"
                         :text="item.full_name.charAt(0).toUpperCase()"
@@ -350,6 +377,14 @@
       active="accept"
       :account="requestJoinAccept"
       @close="requestJoinAccept = null"
+      @success="onRequestJoinOrganizationSuccess"
+    />
+
+    <FormOrganizationAccept
+      :visible="isInvitationSentAccept"
+      active="search"
+      @close="isInvitationSentAccept = false"
+      @success="onInviteRequestJoinOrganizationSuccess"
     />
   </v-container>
 </template>
@@ -378,13 +413,32 @@
   const requestJoinOrganizations = ref<IBasicAccount[]>([])
   const invitationSentOrganizations = ref<IBasicAccount[]>([])
   const isRequestJoinLoading = ref(null)
-  const isInvitationSentLoading = ref(false)
+  const isInvitationSentLoading = ref(null)
   const requestJoinAccept = ref<IBasicAccount | null>(null)
+  const isInvitationSentAccept = ref<boolean>(false)
 
   const systemStore = useSystemStore()
   const { staffs, ...hooks } = useStaff()
   const { organizationSelected } = useAuth()
   const organizationHooks = useOrganization()
+
+  const onRequestJoinOrganizationSuccess = async () => {
+    isLoading.value = true
+    requestJoinOrganizations.value = requestJoinOrganizations.value.filter(
+      (item) => item.id !== requestJoinAccept.value?.id
+    )
+    requestJoinAccept.value = null
+    isRequestJoin.value = false
+    await hooks.onFetchStaff(organizationSelected.value.id)
+    isLoading.value = false
+  }
+
+  const onInviteRequestJoinOrganizationSuccess = async () => {
+    isInvitationSentAccept.value = false
+    invitationSentOrganizations.value = await organizationHooks.onFetchInvitationSentOrganizations(
+      organizationSelected.value.id
+    )
+  }
 
   onMounted(async () => {
     isLoading.value = true
@@ -534,6 +588,45 @@
       })
     } finally {
       isRequestJoinLoading.value = null
+    }
+  }
+
+  const onInvitationSentOrganizationAction = async (aid: number, is_accept: boolean) => {
+    try {
+      isInvitationSentLoading.value = aid
+      await organizationHooks.onInvitationSentOrganizationAction(
+        {
+          aid,
+          is_accept,
+          oid: organizationSelected.value.id,
+        },
+        () => {
+          invitationSentOrganizations.value = invitationSentOrganizations.value.filter((item) => item.id !== aid)
+          if (invitationSentOrganizations.value.length === 0) {
+            isInvitationSent.value = false
+          }
+          if (is_accept) {
+            $toast.success('Đã xác nhận lời mời gia nhập', {
+              description: 'Nhân viên đã được thêm vào tổ chức',
+            })
+          } else {
+            $toast.success('Đã hủy lời mời gia nhập', {
+              description: 'Đã hủy lời mời gia nhập tổ chức',
+            })
+          }
+        },
+        (error) => {
+          $toast.error('Thất bại', {
+            description: error,
+          })
+        }
+      )
+    } catch (error) {
+      $toast.error('Thất bại', {
+        description: 'Hệ thống đang gặp sự cố, vui lòng thử lại sau',
+      })
+    } finally {
+      isInvitationSentLoading.value = null
     }
   }
 </script>

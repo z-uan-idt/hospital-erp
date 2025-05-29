@@ -1,4 +1,9 @@
-import type { IBasicDepartment, IDepartment, IDepartmentCreatePayload } from '~/types/department.types'
+import type {
+  IBasicDepartment,
+  IBasicRolePermission,
+  IDepartment,
+  IDepartmentCreatePayload,
+} from '~/types/department.types'
 import type { IPagination } from '~/types/response.types'
 
 type IMetadata = {
@@ -93,6 +98,19 @@ export const useDepartment = () => {
     return []
   }
 
+  const onFetchRolePermissionDropdown = async (departmentId: string | number) => {
+    const params = {
+      did: departmentId,
+    }
+
+    const { data: response } = await fetchApi.get<IBasicRolePermission[]>('api/v1/role-permission/dropdown', params)
+    if (response.success) {
+      return response.data
+    }
+
+    return []
+  }
+
   return {
     departments,
     department,
@@ -109,5 +127,6 @@ export const useDepartment = () => {
     onFetchDepartmentById,
     onCreateDepartment,
     onFetchDepartmentDropdown,
+    onFetchRolePermissionDropdown,
   }
 }

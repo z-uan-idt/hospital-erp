@@ -13,10 +13,11 @@
       Mời bạn chọn Tổ chức để làm việc
     </p>
     <div
-      v-if="!isEmptyOrganization"
+      v-if="!isEmptyOrganization || (!isLoading && invitateOrgs.length > 0)"
       :class="['d-flex justify-space-between align-center', 'mb-8 gap-4 flex-column flex-md-row']"
     >
       <v-text-field
+        v-if="!isEmptyOrganization"
         v-model="search"
         prepend-inner-icon="mdi-magnify"
         label="Tìm kiếm"
@@ -33,13 +34,157 @@
         }"
         @update:model-value="onHandleSearch"
       />
+      <v-spacer v-else />
+
+      <v-menu
+        v-model="isInvitationSent"
+        :close-on-content-click="false"
+        location="bottom right"
+      >
+        <template v-slot:activator="{ props }">
+          <v-chip
+            v-if="invitateOrgs.length > 0"
+            variant="outlined"
+            color="erp-gray"
+            size="auto"
+            class="pa-1 ms-auto"
+            style="height: 48px"
+            v-bind="props"
+          >
+            <div
+              v-if="!$vuetify.display.smAndDown.value"
+              class="ps-3 pe-2 text-erp-gray-700"
+            >
+              Lời mời gia nhập
+            </div>
+            <v-chip
+              variant="tonal"
+              color="erp-blue"
+              size="auto"
+              :style="{
+                width: '38px',
+                height: '38px',
+              }"
+              class="text-body-2 ps-2 pe-2 pt-1 pb-1 d-flex align-center justify-center"
+            >
+              {{ formatNumberDot(invitateOrgs.length) }}
+            </v-chip>
+          </v-chip>
+        </template>
+
+        <div class="erp-scrollbar border border-opacity-25 pa-1 rounded-lg bg-white mt-2">
+          <div class="ps-4 pe-4 pt-4 mb-n2">
+            <CommonDivider label="Chấp nhận lời mời tham gia tổ chức" />
+          </div>
+          <div class="overflow-y-auto">
+            <v-sheet
+              min-width="700"
+              rounded="lg"
+              max-height="500px"
+              variant="outlined"
+            >
+              <v-list class="ps-4 pe-4">
+                <v-list-item
+                  v-for="(item, index) in invitateOrgs"
+                  :key="item.id"
+                  variant="outlined"
+                  base-color="grey-lighten-1"
+                  class="mb-3 ps-3 pe-4"
+                  :rounded="!$vuetify.display.lgAndUp ? 'xl' : 'pill'"
+                >
+                  <template #prepend>
+                    <v-avatar
+                      size="48"
+                      variant="outlined"
+                      color="grey-darken-4"
+                      class="text-body-1 text-black me-n2"
+                      :image="item.profile_picture"
+                      :text="item.name.charAt(0).toUpperCase()"
+                    />
+                  </template>
+                  <template #title>
+                    <div class="d-flex align-center ga-2 mt-1 text-erp-gray-900">
+                      <span class="text-body-1 font-weight-medium">{{ item.name }}</span>
+                    </div>
+                    <div class="d-flex align-center ga-2 mt-1 text-erp-gray-900">
+                      <v-chip
+                        v-if="item.is_active"
+                        size="small"
+                        color="green-darken-1"
+                        class="select-none opacity-100"
+                      >
+                        Đang hoạt động
+                      </v-chip>
+                      <v-chip
+                        v-else
+                        size="small"
+                        color="red-darken-1"
+                        class="select-none opacity-100"
+                      >
+                        Bị khóa
+                      </v-chip>
+                      <v-chip
+                        v-if="item?.role_name"
+                        size="small"
+                        class="text-body-2 text-erp-gray-900 opacity-100"
+                      >
+                        {{ item?.role_name }}
+                      </v-chip>
+                      <v-chip
+                        v-for="department in item.departments"
+                        :key="department.id"
+                        size="small"
+                        class="text-body-2 text-erp-gray-900 opacity-100"
+                      >
+                        {{ department.role_name }}
+                      </v-chip>
+                      <v-chip
+                        v-for="department in item.departments"
+                        :key="department.id"
+                        size="small"
+                        class="text-body-2 text-erp-gray-900 opacity-100"
+                      >
+                        {{ department.name }}
+                      </v-chip>
+                    </div>
+                  </template>
+                  <template #append>
+                    <v-btn
+                      icon="mdi-close"
+                      size="small"
+                      color="erp-error"
+                      class="me-2"
+                      variant="outlined"
+                      :loading="isInvitationSentLoading === item.id && currentInvitation === 'CANCEL_INVITATION'"
+                      @click="onActionInvitation(item.id, 'CANCEL_INVITATION')"
+                    />
+                    <v-btn
+                      icon="mdi-check"
+                      color="erp-brand"
+                      variant="outlined"
+                      size="small"
+                      :loading="isInvitationSentLoading === item.id && currentInvitation === 'ACCEPT_INVITATION'"
+                      @click="onActionInvitation(item.id, 'ACCEPT_INVITATION')"
+                    />
+                  </template>
+                </v-list-item>
+              </v-list>
+            </v-sheet>
+          </div>
+        </div>
+      </v-menu>
       <v-btn
-        class="ms-auto w-md-auto w-100 w-md-auto order-md-2 order-first mt-3 mt-md-0 ps-5"
+        v-if="!isEmptyOrganization"
+        class="w-md-auto w-100 w-md-auto order-md-2 order-first mt-3 mt-md-0 ps-5"
         color="erp-gray-700"
         elevation="0"
         height="48"
         variant="outlined"
         rounded="pill"
+        :class="{
+          'ms-auto': invitateOrgs.length === 0,
+          'ms-4': invitateOrgs.length > 0,
+        }"
         @click="isRequestVisible = true"
       >
         <template #prepend>
@@ -51,6 +196,7 @@
         <span class="text-body-1 font-weight-medium">Gửi duyệt</span>
       </v-btn>
       <v-btn
+        v-if="!isEmptyOrganization"
         class="ms-md-3 w-100 w-md-auto order-md-last order-2 mt-3 mt-md-0"
         color="erp-brand"
         elevation="0"
@@ -261,8 +407,17 @@
 
   const { userData, setSelectedOrganization } = useAuth()
   const { $vuetify } = useNuxtApp()
-  const { onFetchOrganization, organizations, numPages, page, setPage, search, setSearch, isEmptyOrganization } =
-    useOrganization()
+  const {
+    onFetchOrganization,
+    organizations,
+    numPages,
+    page,
+    setPage,
+    search,
+    setSearch,
+    isEmptyOrganization,
+    ...hooks
+  } = useOrganization()
 
   const { $toast } = useNuxtApp()
   const systemStore = useSystemStore()
@@ -271,9 +426,70 @@
   const isNotificationVisible = ref<boolean>(false)
   const notificationData = ref<INotificationData | null>(null)
 
+  type IInvitationSentOrganization = {
+    id: number
+    name: string
+    is_active: boolean
+    profile_picture: string
+    departments: {
+      id: number
+      name: string
+      code: string
+      role_name: string
+    }[]
+    role_name: string
+  }
+
+  const isInvitationSent = ref<boolean>(false)
+  const invitateOrgs = ref<IInvitationSentOrganization[]>([])
+  const isInvitationSentLoading = ref<number | null>(null)
+  const currentInvitation = ref<'CANCEL_INVITATION' | 'ACCEPT_INVITATION'>(null)
+
   onActivated(() => {
     setSelectedOrganization(null)
   })
+
+  onMounted(async () => {
+    invitateOrgs.value = await hooks.onFetchInvitationSentOrganizationsByCurrentUser<IInvitationSentOrganization[]>()
+  })
+
+  const onActionInvitation = async (organizationId: number, type: 'CANCEL_INVITATION' | 'ACCEPT_INVITATION') => {
+    let isSuccess = false
+    try {
+      currentInvitation.value = type
+      isInvitationSentLoading.value = organizationId
+      await hooks.onActionOrganization(
+        organizationId,
+        type,
+        async () => {
+          $toast.success('Thành công', {
+            description:
+              type === 'CANCEL_INVITATION'
+                ? 'Đã từ chối lời mời tham gia tổ chức'
+                : 'Đã chấp nhận lời mời tham gia tổ chức',
+          })
+          invitateOrgs.value = invitateOrgs.value.filter((item) => item.id !== organizationId)
+          isSuccess = type === 'ACCEPT_INVITATION'
+        },
+        (error) => {
+          $toast.error('Thất bại', {
+            description: error || 'Thao tác không thành công',
+          })
+        }
+      )
+    } catch {
+      $toast.error('Thất bại', {
+        description: 'Hệ thống gặp sự cố, vui lòng thử lại sau',
+      })
+    } finally {
+      isInvitationSent.value = invitateOrgs.value.length === 0
+      isInvitationSentLoading.value = null
+      currentInvitation.value = null
+    }
+    if (isSuccess) {
+      await onLoadingWrapper(onFetchOrganization)
+    }
+  }
 
   const onLoadingWrapper = async (fn: () => Promise<void>) => {
     isLoading.value = true
@@ -295,45 +511,20 @@
   watchEffect(async () => {
     if (systemStore.notification) {
       const payload = systemStore.notification
-      if (payload?.data?.type === 'organization_member_requested_to_join_rejected') {
+      const reload = [
+        'organization_member_requested_to_join_rejected',
+        'organization_member_requested_to_join_accepted',
+      ]
+      if (reload.includes(payload?.data?.type)) {
         await onLoadingWrapper(onFetchOrganization)
         systemStore.setNotification(null)
       }
-    }
 
-    if (systemStore.isReloadWelcome) {
-      const payload = systemStore.reloadWelcomeData
-
-      const body = payload.notification?.body
-
-      notificationData.value = {
-        id: Number(payload.data.id),
-        name: payload.data.name as string,
-        profile_picture: payload.data.profile_picture as string,
-        message: body || 'Bạn đã được chấp thuận vào tổ chức',
+      if (payload?.data?.type === 'organization_member_invited_to_join') {
+        invitateOrgs.value =
+          await hooks.onFetchInvitationSentOrganizationsByCurrentUser<IInvitationSentOrganization[]>()
+        systemStore.setNotification(null)
       }
-
-      isNotificationVisible.value = true
-
-      organizations.value = organizations.value.map((organization) => {
-        if (organization.id === Number(payload.data.id)) {
-          return {
-            ...organization,
-            infor: {
-              label: payload.data.role_label,
-              value: payload.data.role_value,
-            },
-            status: {
-              label: payload.data.status_label,
-              value: payload.data.status_value,
-            },
-          }
-        }
-        return organization
-      })
-
-      systemStore.setReloadWelcome(false)
-      systemStore.setReloadWelcomeData(null)
     }
   })
 

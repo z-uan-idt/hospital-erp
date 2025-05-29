@@ -4,18 +4,14 @@
     max-width="900"
     persistent
   >
-    <template v-if="tabActive === 'search'">
-      <v-btn @click="tabActive = 'accept'">Accept</v-btn>
-    </template>
     <v-form
-      v-if="tabActive === 'accept'"
       validate-on="submit"
       @submit.prevent="onFormSubmit"
     >
       <v-card class="pb-2 pe-2 pt-2">
         <template v-slot:title>
           <div class="d-flex align-center justify-space-between">
-            Xét duyệt yêu cầu gia nhập
+            {{ props.active === 'search' ? 'Gửi lời mời gia nhập tổ chức' : 'Xét duyệt yêu cầu gia nhập' }}
             <v-btn
               size="x-small"
               icon="mdi-close"
@@ -29,47 +25,94 @@
 
         <div class="ps-2 pe-2">
           <div class="ps-4 pe-4 mb-n2">
-            <CommonDivider label="Cho phép tài khoản gia nhập vào khoa của bạn" />
+            <CommonDivider label="Thêm tài khoản vào làm nhân viên trong tổ chức của bạn" />
+          </div>
+
+          <div
+            v-if="tabActive === 'search' || accountSearch"
+            class="ps-4 pe-4 pt-2"
+            :class="!accountSearch ? 'mb-6' : 'mb-0'"
+          >
+            <v-text-field
+              v-model="search"
+              label="Số điện thoại"
+              placeholder="Nhập số điện thoại"
+              @update:model-value="onSearch"
+            >
+              <template #label>
+                <span> Số điện thoại </span>
+                <span class="text-red"> * </span>
+              </template>
+              <template v-slot:append-inner>
+                <v-progress-circular
+                  v-if="isSearchLoading"
+                  size="24"
+                  width="2"
+                  indeterminate
+                />
+                <v-icon
+                  v-else-if="isHandleSearch && !isSearchLoading"
+                  :class="accountSearch ? 'text-green-darken-1' : 'text-red-darken-1'"
+                  size="24"
+                >
+                  {{ accountSearch ? 'mdi-check-circle' : 'mdi-close' }}
+                </v-icon>
+              </template>
+            </v-text-field>
+          </div>
+
+          <div
+            v-if="accountSearch"
+            class="ps-5 pe-5 mb-n3"
+          >
+            <CommonDivider label="Kết quả tìm kiếm" />
           </div>
 
           <v-card
+            v-if="tabActive === 'accept' || accountSearch"
             class="pa-0"
             elevation="0"
           >
             <template #prepend>
               <v-avatar
-                size="40"
+                size="46"
                 variant="outlined"
-                color="grey-darkĐã yêu cầu lúc: en-4"
+                color="grey-darken-4"
                 class="text-body-1 text-black"
-                :image="props?.account?.avatar"
-                :text="props?.account?.full_name.charAt(0).toUpperCase()"
+                :image="(props?.account || accountSearch)?.avatar"
+                :text="(props?.account || accountSearch)?.full_name.charAt(0).toUpperCase()"
               />
             </template>
             <template #title>
-              <div class="d-flex align-center ga-1">
-                <span class="text-body-1 font-weight-medium">{{ props?.account?.full_name }}</span>
+              <div class="d-flex align-center ga-1 mt-1">
+                <span class="text-body-1 font-weight-medium">{{ (props?.account || accountSearch)?.full_name }}</span>
                 <v-icon
                   size="8"
                   class="text-erp-gray-800"
                   style="margin-top: -1px"
-                  :color="props?.account?.is_active ? 'erp-brand' : 'erp-error'"
+                  :color="(props?.account || accountSearch)?.is_active ? 'erp-brand' : 'erp-error'"
                 >
                   mdi-circle
                 </v-icon>
               </div>
             </template>
             <template
-              v-if="props?.account?.phone_number"
+              v-if="(props?.account || accountSearch)?.phone_number"
               #subtitle
             >
-              <span class="text-body-2 text-erp-gray-700">{{ props?.account?.phone_number }}</span>
+              <span class="text-body-2 text-erp-gray-700">{{ (props?.account || accountSearch)?.phone_number }}</span>
             </template>
-            <div class="text-body-2 text-erp-gray-700 ps-5 pb-3">
+            <div
+              v-if="tabActive === 'accept'"
+              class="text-body-2 text-erp-gray-700 ps-5 pb-3"
+            >
               Đã yêu cầu lúc: {{ formatDate(props?.account?.requested_at, 'HH:mm:ss dd/MM/yyyy') }}
             </div>
 
-            <div class="ps-5 pe-5 pt-3">
+            <div
+              v-if="tabActive === 'accept' || accountSearch"
+              class="ps-5 pe-5 pt-3"
+            >
               <CommonDivider label="Chọn chức vụ" />
             </div>
 
@@ -81,6 +124,8 @@
                 class="pb-0"
               >
                 <v-select
+                  v-model="acceptFormPayload.department"
+                  :loading="isLoadingDepartmentDropdown"
                   clearable
                   label="Khoa"
                   placeholder="Chọn khoa"
@@ -88,6 +133,7 @@
                   :items="departmentsDropdown"
                   item-title="name"
                   item-value="id"
+                  @update:model-value="onFetchDepartmentRelationshipDropdown"
                 >
                   <template v-slot:label>
                     <span> Khoa </span>
@@ -103,9 +149,15 @@
                 class="pb-0"
               >
                 <v-select
+                  v-model="acceptFormPayload.warehouse"
+                  :loading="isLoadingRelationshipDropdown"
                   clearable
                   label="Kho trực thuộc"
                   placeholder="Chọn kho trực thuộc"
+                  :items="warehousesDropdown"
+                  item-title="name"
+                  item-value="id"
+                  :disabled="!acceptFormPayload.department"
                 />
               </v-col>
 
@@ -116,10 +168,16 @@
                 class="pb-0"
               >
                 <v-select
+                  v-model="acceptFormPayload.role"
+                  :loading="isLoadingRelationshipDropdown"
                   clearable
                   label="Chức vụ"
                   placeholder="Chọn chức vụ"
                   variant="outlined"
+                  :items="rolePermissionsDropdown"
+                  item-title="name"
+                  item-value="id"
+                  :disabled="!acceptFormPayload.department"
                 />
               </v-col>
 
@@ -130,6 +188,7 @@
                 class="pb-0"
               >
                 <v-text-field
+                  v-model="acceptFormPayload.staff_code"
                   label="Mã nhân viên"
                   placeholder="Nhập mã nhân viên"
                 />
@@ -142,6 +201,7 @@
                 class="pb-0"
               >
                 <v-text-field
+                  v-model="acceptFormPayload.phone_number"
                   label="Số điện thoại tại tổ chức"
                   placeholder="Nhập số điện thoại tại tổ chức"
                   :rules="[rules.required]"
@@ -160,6 +220,7 @@
                 class="pb-0"
               >
                 <v-text-field
+                  v-model="acceptFormPayload.email"
                   label="Email tại tổ chức"
                   placeholder="Nhập email tại tổ chức"
                 />
@@ -190,12 +251,33 @@
           </v-btn>
 
           <v-btn
+            v-if="tabActive === 'search'"
             type="submit"
             color="erp-brand"
             elevation="0"
             rounded="pill"
             size="large"
-            :disabled="!organization || organization?.infor?.value !== 'UNKNOWN'"
+            :disabled="!hasChanged"
+            class="flex-grow-1 flex-md-grow-0 border border-success"
+            :loading="isLoading"
+          >
+            <template #prepend>
+              <Icon
+                name="custom:paper-plane"
+                size="18"
+                class="me-n1"
+              />
+            </template>
+            <span class="text-body-1">Gửi lời mời</span>
+          </v-btn>
+          <v-btn
+            v-else
+            type="submit"
+            color="erp-brand"
+            elevation="0"
+            rounded="pill"
+            size="large"
+            :disabled="!hasChanged"
             class="flex-grow-1 flex-md-grow-0"
             :loading="isLoading"
           >
@@ -217,8 +299,8 @@
 <script setup lang="ts">
   import type { SubmitEventPromise } from 'vuetify'
   import type { IBasicAccount } from '~/types/account.types'
-  import type { IBasicDepartment } from '~/types/department.types'
-  import type { IOrganization } from '~/types/oranization.types'
+  import type { IBasicDepartment, IBasicRolePermission } from '~/types/department.types'
+  import type { IBasicWarehouse } from '~/types/response.types'
 
   type Props = {
     visible: boolean
@@ -230,7 +312,7 @@
     visible: false,
   })
   const requestEmit = defineEmits<{
-    (e: 'success', value: IOrganization | null): void
+    (e: 'success'): void
     (e: 'close'): void
   }>()
 
@@ -241,19 +323,90 @@
   const tabActive = ref<'search' | 'accept'>('search')
 
   const departmentsDropdown = ref<IBasicDepartment[]>([])
+  const warehousesDropdown = ref<IBasicWarehouse[]>([])
+  const rolePermissionsDropdown = ref<IBasicRolePermission[]>([])
 
-  const { onFetchDepartmentDropdown } = useDepartment()
+  const acceptFormPayload = ref<{
+    account: number | null
+    department: number | null
+    warehouse: number | null
+    role: number | null
+    organization: number | null
+    staff_code: string | null
+    phone_number: string | null
+    email: string | null
+  }>({
+    account: props.account?.id,
+    department: null,
+    warehouse: null,
+    role: null,
+    organization: organizationSelected.value?.id,
+    staff_code: '',
+    phone_number: '',
+    email: '',
+  })
+
+  const isLoadingDepartmentDropdown = ref<boolean>(false)
+  const isLoadingRelationshipDropdown = ref<boolean>(false)
+
+  const acceptFormPayloadJson = ref<string>(JSON.stringify(acceptFormPayload.value))
+
+  const hasChanged = computed(() => {
+    return acceptFormPayloadJson.value !== JSON.stringify(acceptFormPayload.value)
+  })
+
+  const { onFetchDepartmentDropdown, onFetchRolePermissionDropdown } = useDepartment()
+  const {
+    onAcceptRequestJoinOrganization,
+    onFindExactByPhoneNumberWithoutCurrentOrganization,
+    onInviteRequestJoinOrganization,
+  } = useOrganization()
+  const { onFetchWarehouseDropdown } = useWarehouse()
+
+  const onFetchDepartmentRelationshipDropdown = async (departmentId: string | number) => {
+    warehousesDropdown.value = []
+    rolePermissionsDropdown.value = []
+    acceptFormPayload.value.role = null
+    acceptFormPayload.value.warehouse = null
+    isLoadingRelationshipDropdown.value = false
+    isLoadingDepartmentDropdown.value = false
+    if (departmentId) {
+      isLoadingRelationshipDropdown.value = true
+      warehousesDropdown.value = await onFetchWarehouseDropdown(departmentId)
+      rolePermissionsDropdown.value = await onFetchRolePermissionDropdown(departmentId)
+      isLoadingRelationshipDropdown.value = false
+    }
+  }
 
   onMounted(async () => {
-    console.log(organizationSelected.value)
-
+    isLoadingDepartmentDropdown.value = true
     departmentsDropdown.value = await onFetchDepartmentDropdown(organizationSelected.value?.id)
+    isLoadingDepartmentDropdown.value = false
   })
 
   const search = ref<string>('')
   const isLoading = ref<boolean>(false)
   const isHandleSearch = ref<boolean>(false)
   const isSearchLoading = ref<boolean>(false)
+  const accountSearch = ref<IBasicAccount | null>(null)
+
+  const onSearch = useDebounce(async () => {
+    isHandleSearch.value = false
+    isSearchLoading.value = true
+    const searchValue = search.value.trim()
+    if (searchValue) {
+      accountSearch.value = await onFindExactByPhoneNumberWithoutCurrentOrganization(
+        organizationSelected.value?.id,
+        search.value
+      )
+      acceptFormPayload.value.account = accountSearch.value?.id
+      acceptFormPayload.value.phone_number = accountSearch.value?.phone_number
+    } else {
+      accountSearch.value = null
+    }
+    isHandleSearch.value = !!searchValue
+    isSearchLoading.value = false
+  }, 1000)
 
   watch(
     () => props.active,
@@ -272,8 +425,19 @@
         search.value = ''
         isLoading.value = false
         organization.value = null
+        accountSearch.value = null
         isHandleSearch.value = false
         isSearchLoading.value = false
+        acceptFormPayload.value.account = null
+        acceptFormPayload.value.phone_number = null
+        acceptFormPayload.value.department = null
+        acceptFormPayload.value.warehouse = null
+        acceptFormPayload.value.role = null
+        acceptFormPayload.value.staff_code = null
+      } else {
+        acceptFormPayload.value.account = props.account?.id
+        acceptFormPayload.value.phone_number = props.account?.phone_number
+        acceptFormPayload.value.organization = organizationSelected.value?.id
       }
     }
   )
@@ -283,20 +447,43 @@
     if (results.valid) {
       try {
         isLoading.value = true
-        await hooks.onRequestOrganization(
-          organization.value.id,
-          () => {
-            requestEmit('success', organization.value)
-            $toast.success('Thông báo', {
-              description: 'Đã gửi yêu cầu tham gia tổ chức',
-            })
-          },
-          (error) => {
-            $toast.error('Thông báo', {
-              description: error || 'Gửi yêu cầu tham gia tổ chức thất bại',
-            })
+        const formData = new FormData()
+        Object.entries(acceptFormPayload.value).forEach(([key, value]) => {
+          if (value) {
+            formData.append(key, value as string)
           }
-        )
+        })
+        if (tabActive.value === 'accept') {
+          await onAcceptRequestJoinOrganization(
+            formData,
+            () => {
+              requestEmit('success')
+              $toast.success('Thông báo', {
+                description: 'Đã xét duyệt yêu cầu gia nhập',
+              })
+            },
+            (error) => {
+              $toast.error('Thông báo', {
+                description: error || 'Hệ thống gặp sự cố, vui lòng thử lại sau',
+              })
+            }
+          )
+        } else {
+          await onInviteRequestJoinOrganization(
+            formData,
+            () => {
+              requestEmit('success')
+              $toast.success('Thông báo', {
+                description: `Đã gửi lời mời gia nhập tới ${accountSearch.value?.phone_number}`,
+              })
+            },
+            (error) => {
+              $toast.error('Thông báo', {
+                description: error || 'Hệ thống gặp sự cố, vui lòng thử lại sau',
+              })
+            }
+          )
+        }
       } catch {
         $toast.error('Thông báo', {
           description: 'Hệ thống gặp sự cố, vui lòng thử lại sau',
@@ -306,17 +493,4 @@
       }
     }
   }
-
-  const onSearch = useDebounce(async () => {
-    isHandleSearch.value = false
-    isSearchLoading.value = true
-    const searchValue = search.value.trim()
-    if (searchValue) {
-      await hooks.onSearchOrganization(searchValue)
-    } else {
-      organization.value = null
-    }
-    isHandleSearch.value = !!searchValue
-    isSearchLoading.value = false
-  }, 1000)
 </script>

@@ -73,7 +73,7 @@ export default defineNuxtConfig({
         },
         VDataTable: {
           mobileBreakpoint: 'sm',
-          textNoData: 'Không có dữ liệu',
+          noDataText: 'Không có dữ liệu',
           loadingText: 'Đang tải dữ liệu...',
         },
       },

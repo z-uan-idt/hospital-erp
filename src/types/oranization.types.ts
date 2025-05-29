@@ -39,7 +39,14 @@ export type IOrganization = {
   created_by?: IBasicAccount
 }
 
-export type IOrganizationActionRequest = 'CANCEL_REQUEST' | 'DEACTIVATE' | 'ACTIVATE' | 'DELETE' | 'LEAVE'
+export type IOrganizationActionRequest =
+  | 'CANCEL_REQUEST'
+  | 'DEACTIVATE'
+  | 'ACTIVATE'
+  | 'DELETE'
+  | 'LEAVE'
+  | 'CANCEL_INVITATION'
+  | 'ACCEPT_INVITATION'
 
 export type IBasicOrganization = {
   id: number

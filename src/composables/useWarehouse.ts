@@ -1,4 +1,4 @@
-import type { IPagination } from '~/types/response.types'
+import type { IBasicWarehouse, IPagination } from '~/types/response.types'
 import type { IWarehouse, IWarehouseCreatePayload } from '~/types/warehouse.types'
 
 type IMetadata = {
@@ -96,6 +96,19 @@ export const useWarehouse = () => {
     }
   }
 
+  const onFetchWarehouseDropdown = async (departmentId: string | number) => {
+    const params = {
+      did: departmentId,
+    }
+
+    const { data: response } = await fetchApi.get<IBasicWarehouse[]>('api/v1/warehouse/dropdown', params)
+    if (response.success) {
+      return response.data
+    }
+
+    return []
+  }
+
   return {
     warehouses,
     warehouse,
@@ -113,5 +126,6 @@ export const useWarehouse = () => {
     onFetchWarehouse,
     onFetchWarehouseById,
     onCreateWarehouse,
+    onFetchWarehouseDropdown,
   }
 }

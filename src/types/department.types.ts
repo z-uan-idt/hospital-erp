@@ -30,3 +30,8 @@ export interface IBasicDepartment {
   name?: string
   code?: string
 }
+
+export interface IBasicRolePermission {
+  id?: number
+  name?: string
+}

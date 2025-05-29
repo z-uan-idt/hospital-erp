@@ -1,7 +1,7 @@
 <template>
   <v-container
     fluid
-    class="erp-don-thuoc pa-6"
+    class="erp-don-thuoc pa-md-6 pa-3"
   >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">

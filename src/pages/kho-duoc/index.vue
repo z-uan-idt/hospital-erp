@@ -1,7 +1,7 @@
 <template>
   <v-container
     fluid
-    class="erp-kho-duoc pa-6"
+    class="erp-kho-duoc pa-md-6 pa-3"
   ></v-container>
 </template>
 

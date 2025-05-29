@@ -7,6 +7,7 @@ export type IWarehouseCreatePayload = {
   department?: number | null
   description?: string
   keeper?: number | null
+  organization?: number | null
 }
 
 export interface IWarehouse {

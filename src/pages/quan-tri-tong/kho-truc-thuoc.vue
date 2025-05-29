@@ -1,6 +1,6 @@
 <template>
   <v-container
-    class="erp-kho-truc-thuoc pa-6"
+    class="erp-kho-truc-thuoc pa-md-6 pa-3"
     fluid
   >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
@@ -408,6 +408,7 @@
     department: null,
     description: '',
     keeper: null,
+    organization: organizationSelected.value?.id,
   })
 
   const createFormPayloadJSON = ref(JSON.stringify(createFormPayload.value))
@@ -490,6 +491,7 @@
   function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {}
 
   async function onFormSubmit(formEvent: SubmitEventPromise) {
+    createFormPayload.value.organization = organizationSelected.value?.id
     const results = await formEvent
     if (results.valid) {
       let isSuccess = false

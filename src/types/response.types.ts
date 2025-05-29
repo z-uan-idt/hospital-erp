@@ -17,3 +17,9 @@ export type IPagination = {
   per_page: number | null
   previous_page: number | null
 }
+
+export interface IBasicWarehouse {
+  id?: number
+  name?: string
+  code?: string
+}

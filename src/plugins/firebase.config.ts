@@ -65,10 +65,6 @@ export default defineNuxtPlugin(async () => {
 
       onMessage(messaging, (payload) => {
         systemStore.setNotification(payload)
-        if (payload?.data?.type === 'organization_member_approved') {
-          systemStore.setReloadWelcomeData(payload)
-          systemStore.setReloadWelcome(true)
-        }
         if (payload.notification && 'Notification' in window && Notification.permission === 'granted') {
           if (!document.hasFocus()) {
             const title = payload.notification.title || 'Thông báo mới'

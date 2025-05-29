@@ -95,6 +95,30 @@ export const useOrganization = () => {
     return []
   }
 
+  const onFetchInvitationSentOrganizationsByCurrentUser = async <T>(): Promise<T> => {
+    const { data: response } = await fetchApi.get<T>(`api/v1/organization/current-user-invitation-sent-organizations`)
+    if (response.success) {
+      return response.data
+    }
+
+    return [] as T
+  }
+
+  const onFindExactByPhoneNumberWithoutCurrentOrganization = async (
+    organizationId: string | number,
+    phoneNumber: string
+  ) => {
+    const { data: response } = await fetchApi.get<IBasicAccount>(
+      `api/v1/account/find-exact-by-phone-number-without-current-organization`,
+      { search: phoneNumber, oid: organizationId }
+    )
+    if (response.success) {
+      return response.data
+    }
+
+    return null
+  }
+
   const onRequestOrganization = async (
     organizationId: number,
     onSuccess: (organization: IOrganization) => void,
@@ -120,6 +144,23 @@ export const useOrganization = () => {
     onError: (error: string) => void
   ) => {
     const { data: response } = await fetchApi.post('api/v1/organization/request-join-organization-action', payload)
+    if (response.success) {
+      onSuccess()
+    } else {
+      onError(response.message)
+    }
+  }
+
+  const onInvitationSentOrganizationAction = async (
+    payload: {
+      oid?: number
+      aid?: number
+      is_accept?: boolean
+    },
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
+    const { data: response } = await fetchApi.post('api/v1/organization/invitation-sent-organization-action', payload)
     if (response.success) {
       onSuccess()
     } else {
@@ -200,6 +241,28 @@ export const useOrganization = () => {
     }
   }
 
+  const onInviteRequestJoinOrganization = async (
+    formData: FormData,
+    onSuccess: () => void,
+    onError: (error: string) => void
+  ) => {
+    const { data: response } = await fetchApi.post<IOrganization>(
+      'api/v1/organization/invite-request-join-organization',
+      formData,
+      {
+        headers: {
+          'Content-Type': apiConstants.API_CONTENT_TYPE_MULTIPART_FORM_DATA,
+        },
+      }
+    )
+
+    if (response.success) {
+      onSuccess()
+    } else {
+      onError(response.message)
+    }
+  }
+
   const onUpdateOrganization = async (
     organizationId: number,
     formData: FormData,
@@ -251,5 +314,9 @@ export const useOrganization = () => {
     onFetchInvitationSentOrganizations,
     onRequestJoinOrganizationAction,
     onAcceptRequestJoinOrganization,
+    onFindExactByPhoneNumberWithoutCurrentOrganization,
+    onInviteRequestJoinOrganization,
+    onInvitationSentOrganizationAction,
+    onFetchInvitationSentOrganizationsByCurrentUser,
   }
 }

@@ -255,7 +255,7 @@
   import type { IOrganization, IOrganizationActionRequest } from '~/types/oranization.types'
 
   type IDialogOptions = {
-    [key in IOrganizationActionRequest]: {
+    [key in IOrganizationActionRequest]?: {
       title: string
       icon: string
       color: string
