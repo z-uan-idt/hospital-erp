@@ -89,9 +89,7 @@
                 name="custom:qr-scan-example"
                 size="112"
               />
-              <span class="ms-4 text-h6 font-weight-medium text-erp-gray-800">
-                Đăng nhập bằng mã QR
-              </span>
+              <span class="ms-4 text-h6 font-weight-medium text-erp-gray-800"> Đăng nhập bằng mã QR </span>
             </v-btn>
           </div>
         </v-col>

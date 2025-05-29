@@ -5,9 +5,7 @@
   >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
-        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
-          Kho trực thuộc
-        </h1>
+        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">Kho trực thuộc</h1>
       </div>
 
       <div class="action-buttons d-flex align-center ga-2">
@@ -68,11 +66,7 @@
       density="compact"
       class="mt-5"
       :style="{
-        maxWidth: $vuetify.display.smAndDown
-          ? '100%'
-          : $vuetify.display.mdAndDown
-            ? '300px'
-            : '400px',
+        maxWidth: $vuetify.display.smAndDown ? '100%' : $vuetify.display.mdAndDown ? '300px' : '400px',
       }"
       @update:model-value="onSearch"
     />
@@ -395,10 +389,7 @@
   const onFetchMembers = async (departmentId?: string | number) => {
     isFetchingMembers.value = true
     if (departmentId) {
-      members.value = await onFetchMemberOfOrganizationNoRole(
-        organizationSelected.value?.id,
-        departmentId
-      )
+      members.value = await onFetchMemberOfOrganizationNoRole(organizationSelected.value?.id, departmentId)
     } else {
       members.value = []
     }
@@ -496,9 +487,7 @@
     }, 1000)
   }
 
-  function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {
-    console.log(page, itemsPerPage, sortBy, args)
-  }
+  function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {}
 
   async function onFormSubmit(formEvent: SubmitEventPromise) {
     const results = await formEvent

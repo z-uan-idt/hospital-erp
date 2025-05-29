@@ -66,10 +66,7 @@ export const useWarehouse = () => {
     if (did.value) {
       params['did'] = did.value
     }
-    const { data: response } = await fetchApi.get<IWarehouse[], IMetadata>(
-      '/api/v1/warehouse',
-      params
-    )
+    const { data: response } = await fetchApi.get<IWarehouse[], IMetadata>('/api/v1/warehouse', params)
     if (response.success) {
       const metadata = response.metadata
       warehouses.value = response.data
@@ -82,7 +79,6 @@ export const useWarehouse = () => {
     const { data: response } = await fetchApi.get<IWarehouse>(`/api/v1/warehouse/${warehouseId}`)
     if (response.success) {
       warehouse.value = response.data
-      console.log(warehouse.value)
     }
   }
 

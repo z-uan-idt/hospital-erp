@@ -29,11 +29,7 @@
         density="comfortable"
         class="w-md-auto w-100 order-md-first order-last mt-3 mt-md-0 me-md-3"
         :style="{
-          maxWidth: $vuetify.display.smAndDown.value
-            ? '100%'
-            : $vuetify.display.mdAndDown.value
-              ? '400px'
-              : '500px',
+          maxWidth: $vuetify.display.smAndDown.value ? '100%' : $vuetify.display.mdAndDown.value ? '400px' : '500px',
         }"
         @update:model-value="onHandleSearch"
       />
@@ -80,13 +76,7 @@
       >
         <Icon
           name="custom:organization-empty"
-          :size="
-            $vuetify.display.smAndDown.value
-              ? '45vw'
-              : $vuetify.display.mdAndDown.value
-                ? '30vw'
-                : '20vw'
-          "
+          :size="$vuetify.display.smAndDown.value ? '45vw' : $vuetify.display.mdAndDown.value ? '30vw' : '20vw'"
         />
 
         <p class="text-md-h3 text-h4 mt-4 mb-4 font-playfair text-erp-gray-800">
@@ -95,10 +85,7 @@
 
         <div
           v-if="isEmptyOrganization"
-          :class="[
-            'w-100 d-flex flex-column flex-md-row mt-6',
-            'align-center justify-center gap-4',
-          ]"
+          :class="['w-100 d-flex flex-column flex-md-row mt-6', 'align-center justify-center gap-4']"
         >
           <v-btn
             class="w-100 w-md-auto order-md-2 order-first mt-3 mt-md-0 ps-5"
@@ -274,16 +261,8 @@
 
   const { userData, setSelectedOrganization } = useAuth()
   const { $vuetify } = useNuxtApp()
-  const {
-    onFetchOrganization,
-    organizations,
-    numPages,
-    page,
-    setPage,
-    search,
-    setSearch,
-    isEmptyOrganization,
-  } = useOrganization()
+  const { onFetchOrganization, organizations, numPages, page, setPage, search, setSearch, isEmptyOrganization } =
+    useOrganization()
 
   const { $toast } = useNuxtApp()
   const systemStore = useSystemStore()

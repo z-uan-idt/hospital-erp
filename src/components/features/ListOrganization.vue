@@ -35,10 +35,7 @@
           </v-avatar>
         </template>
         <div
-          :class="[
-            'd-flex flex-lg-row flex-column align-start',
-            'align-lg-center justify-space-between w-100 ga-2',
-          ]"
+          :class="['d-flex flex-lg-row flex-column align-start', 'align-lg-center justify-space-between w-100 ga-2']"
         >
           <div class="d-flex flex-lg-row flex-column ga-1">
             <div class="text-h6 font-weight-bold text-black mb-1 mb-lg-0">
@@ -56,9 +53,7 @@
             <div class="d-flex align-center ga-2 select-none ms-lg-4 flex-wrap">
               <v-chip
                 size="small"
-                :color="
-                  organization.infor?.value === 'PENDING' ? 'yellow-darken-4' : 'grey-darken-4'
-                "
+                :color="organization.infor?.value === 'PENDING' ? 'yellow-darken-4' : 'grey-darken-4'"
                 class="select-none"
               >
                 {{ organization.infor.label }}

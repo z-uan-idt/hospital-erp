@@ -24,9 +24,7 @@
         class="text-center text-body-2"
         :class="{ 'mt-3': preview }"
       >
-        <span>
-          Tải lên <br v-if="!preview" />logo/<br v-if="preview" />ảnh <br v-if="!preview" />đại diện
-        </span>
+        <span> Tải lên <br v-if="!preview" />logo/<br v-if="preview" />ảnh <br v-if="!preview" />đại diện </span>
       </div>
       <v-btn
         v-if="preview"

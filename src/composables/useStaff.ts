@@ -58,10 +58,7 @@ export const useStaff = () => {
     }
   }
 
-  const onFetchMemberOfOrganizationNoRole = async (
-    organizationId: string | number,
-    departmentId?: string | number
-  ) => {
+  const onFetchMemberOfOrganizationNoRole = async (organizationId: string | number, departmentId?: string | number) => {
     const params = {
       oid: organizationId,
     }
@@ -70,10 +67,7 @@ export const useStaff = () => {
       params['did'] = departmentId
     }
 
-    const { data: response } = await fetchApi.get<IStaff[]>(
-      'api/v1/account/member-by-organization-no-role',
-      params
-    )
+    const { data: response } = await fetchApi.get<IStaff[]>('api/v1/account/member-by-organization-no-role', params)
     if (response.success) {
       return response.data
     }
@@ -100,10 +94,7 @@ export const useStaff = () => {
     if (did.value) {
       params['did'] = did.value
     }
-    const { data: response } = await fetchApi.get<IStaff[], IMetadata>(
-      'api/v1/organization-member',
-      params
-    )
+    const { data: response } = await fetchApi.get<IStaff[], IMetadata>('api/v1/organization-member', params)
     if (response.success) {
       const metadata = response.metadata
       staffs.value = response.data

@@ -28,9 +28,7 @@
         <div
           :class="[
             'd-flex align-center justify-end ga-2',
-            !$vuetify.display.mdAndUp
-              ? 'w-100 position-fixed pa-4 bg-white bottom-0 right-0 left-0 elevation-4'
-              : '',
+            !$vuetify.display.mdAndUp ? 'w-100 position-fixed pa-4 bg-white bottom-0 right-0 left-0 elevation-4' : '',
           ]"
           style="z-index: 1000"
         >
@@ -146,9 +144,7 @@
                 mdi-check-circle
               </v-icon>
             </div>
-            <div
-              :class="['mb-4 text-lg-h5 text-h6', 'font-weight-bold text-uppercase text-center']"
-            >
+            <div :class="['mb-4 text-lg-h5 text-h6', 'font-weight-bold text-uppercase text-center']">
               {{ props.organizationData ? formPayload.name : 'Unnamed' }}
             </div>
 
@@ -543,11 +539,7 @@
   })
 
   const pageLabel = computed(() => {
-    return props.isCreate
-      ? 'Tạo tổ chức'
-      : props.isUpdate
-        ? 'Chỉnh sửa tổ chức'
-        : 'Thông tin tổ chức'
+    return props.isCreate ? 'Tạo tổ chức' : props.isUpdate ? 'Chỉnh sửa tổ chức' : 'Thông tin tổ chức'
   })
 
   const onButtonBack = () => {
@@ -630,9 +622,7 @@
 
   onBeforeRouteLeave((to, from, next) => {
     if (hasChanged.value && (props.isCreate || props.isUpdate)) {
-      const confirm = window.confirm(
-        'Bạn có thay đổi chưa lưu. Bạn có chắc chắn muốn rời khỏi trang này không?'
-      )
+      const confirm = window.confirm('Bạn có thay đổi chưa lưu. Bạn có chắc chắn muốn rời khỏi trang này không?')
       if (confirm) {
         next()
       } else {

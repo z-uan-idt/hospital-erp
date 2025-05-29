@@ -5,9 +5,7 @@
   const router = useRouter()
 
   watchEffect(() => {
-    setPageLayout(
-      isAuthenticated.value ? (isSelectedOrganization.value ? 'default' : 'welcome') : 'empty'
-    )
+    setPageLayout(isAuthenticated.value ? (isSelectedOrganization.value ? 'default' : 'welcome') : 'empty')
   })
 
   defineProps({
@@ -25,9 +23,7 @@
       <h1 class="text-blue-grey-darken-1 font-weight-black">
         {{ error?.statusCode ?? 500 }}
       </h1>
-      <p class="text-h6 font-weight-regular text-blue-grey-darken-2">
-        Trang bạn đang tìm kiếm không tồn tại.
-      </p>
+      <p class="text-h6 font-weight-regular text-blue-grey-darken-2">Trang bạn đang tìm kiếm không tồn tại.</p>
       <v-btn
         variant="outlined"
         color="blue-grey-darken-2"

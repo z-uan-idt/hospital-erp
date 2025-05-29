@@ -77,12 +77,9 @@ export const useOrganization = () => {
     onSuccess: (organization: IOrganization) => void,
     onError: (error: string) => void
   ) => {
-    const { data: response } = await fetchApi.post(
-      'api/v1/organization/current-user-request-join-organization',
-      {
-        organization: organizationId,
-      }
-    )
+    const { data: response } = await fetchApi.post('api/v1/organization/current-user-request-join-organization', {
+      organization: organizationId,
+    })
     if (response.success) {
       onSuccess(response.data)
     } else {
@@ -108,13 +105,10 @@ export const useOrganization = () => {
     onSuccess: (organization: IOrganization) => void,
     onError: (error: string) => void
   ) => {
-    const { data: response } = await fetchApi.post(
-      `api/v1/organization/current-user-organization-action`,
-      {
-        organization: organizationId,
-        action,
-      }
-    )
+    const { data: response } = await fetchApi.post(`api/v1/organization/current-user-organization-action`, {
+      organization: organizationId,
+      action,
+    })
     if (response.success) {
       onSuccess(response.data)
     } else {

@@ -1,8 +1,4 @@
-import type {
-  IBasicDepartment,
-  IDepartment,
-  IDepartmentCreatePayload,
-} from '~/types/department.types'
+import type { IBasicDepartment, IDepartment, IDepartmentCreatePayload } from '~/types/department.types'
 import type { IPagination } from '~/types/response.types'
 
 type IMetadata = {
@@ -54,10 +50,7 @@ export const useDepartment = () => {
     if (orderBy.value.length > 0) {
       params['order_by'] = orderBy.value.join(',')
     }
-    const { data: response } = await fetchApi.get<IDepartment[], IMetadata>(
-      '/api/v1/department',
-      params
-    )
+    const { data: response } = await fetchApi.get<IDepartment[], IMetadata>('/api/v1/department', params)
     if (response.success) {
       const metadata = response.metadata
       departments.value = response.data
@@ -70,7 +63,6 @@ export const useDepartment = () => {
     const { data: response } = await fetchApi.get<IDepartment>(`/api/v1/department/${departmentId}`)
     if (response.success) {
       department.value = response.data
-      console.log(department.value)
     }
   }
 
@@ -93,10 +85,7 @@ export const useDepartment = () => {
       oid: organizationId,
     }
 
-    const { data: response } = await fetchApi.get<IBasicDepartment[]>(
-      'api/v1/department/dropdown',
-      params
-    )
+    const { data: response } = await fetchApi.get<IBasicDepartment[]>('api/v1/department/dropdown', params)
     if (response.success) {
       return response.data
     }

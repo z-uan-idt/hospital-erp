@@ -17,14 +17,10 @@
         >
           <Icon
             name="custom:organization-empty"
-            :size="
-              $vuetify.display.smAndDown ? '45vw' : $vuetify.display.mdAndDown ? '30vw' : '20vw'
-            "
+            :size="$vuetify.display.smAndDown ? '45vw' : $vuetify.display.mdAndDown ? '30vw' : '20vw'"
           />
 
-          <p class="text-md-h3 text-h4 mt-4 mb-4 font-playfair text-erp-gray-800">
-            Chưa có Tổ chức
-          </p>
+          <p class="text-md-h3 text-h4 mt-4 mb-4 font-playfair text-erp-gray-800">Chưa có Tổ chức</p>
         </div>
       </template>
     </FormOrganization>

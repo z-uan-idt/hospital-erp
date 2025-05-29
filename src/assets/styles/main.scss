@@ -1,9 +1,9 @@
 .font-playfair {
-  font-family: "Playfair", serif;
+  font-family: 'Playfair', serif;
 }
 
 .font-roboto {
-  font-family: "Roboto", sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -45,7 +45,7 @@ input:-webkit-autofill:active {
 
 .erp-background {
   background: #f5f5f5 !important;
-  background-image: url("/assets/images/erp-background.png") !important;
+  background-image: url('/assets/images/erp-background.png') !important;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

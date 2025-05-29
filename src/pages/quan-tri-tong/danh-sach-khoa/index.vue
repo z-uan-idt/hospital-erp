@@ -5,9 +5,7 @@
   >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
-        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
-          Danh sách khoa
-        </h1>
+        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">Danh sách khoa</h1>
       </div>
 
       <div class="action-buttons d-flex align-center ga-2">
@@ -70,11 +68,7 @@
       density="compact"
       class="mt-5"
       :style="{
-        maxWidth: $vuetify.display.smAndDown
-          ? '100%'
-          : $vuetify.display.mdAndDown
-            ? '300px'
-            : '400px',
+        maxWidth: $vuetify.display.smAndDown ? '100%' : $vuetify.display.mdAndDown ? '300px' : '400px',
       }"
       @update:model-value="onSearch"
     />
@@ -91,7 +85,6 @@
       :loading="isLoading"
       :items-length="departments.length"
       disable-sort
-      loading-text="Đang tải dữ liệu..."
       :sort-by="[]"
       style="height: calc(100dvh - 240px)"
       @click:row="onRowClick"
@@ -474,9 +467,7 @@
     router.push(`/quan-tri-tong/danh-sach-khoa/${item.id}`)
   }
 
-  function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {
-    console.log(page, itemsPerPage, sortBy, args)
-  }
+  function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {}
 
   async function onFormSubmit(formEvent: SubmitEventPromise) {
     const results = await formEvent

@@ -60,10 +60,7 @@
             <template #prepend="{ isActive }">
               <v-icon
                 :size="isRailOpen && mdAndUp ? item.iconSize : 20"
-                :class="[
-                  isRailOpen && mdAndUp ? 'ms-1' : 'me-n4 ms-6',
-                  isActive ? 'text-white' : 'text-black',
-                ]"
+                :class="[isRailOpen && mdAndUp ? 'ms-1' : 'me-n4 ms-6', isActive ? 'text-white' : 'text-black']"
                 :style="isRailOpen && mdAndUp ? item.iconStyle : ''"
               >
                 {{ item.icon }}
@@ -80,9 +77,7 @@
       </div>
 
       <template v-slot:append>
-        <div
-          :class="['pa-2 mb-6 d-flex flex-column w-auto mt-2', 'ga-3 align-center justify-center']"
-        >
+        <div :class="['pa-2 mb-6 d-flex flex-column w-auto mt-2', 'ga-3 align-center justify-center']">
           <v-avatar
             size="48"
             variant="outlined"
@@ -258,13 +253,9 @@
   const isDrawerOpen = ref(false)
   const mdAndUp = computed(() => $vuetify.display.mdAndUp.value)
 
-  const isQuanTriTong = computed(() =>
-    router.currentRoute.value.fullPath.startsWith(QUAN_TRI_TONG_PREFIX.path)
-  )
+  const isQuanTriTong = computed(() => router.currentRoute.value.fullPath.startsWith(QUAN_TRI_TONG_PREFIX.path))
 
-  const isKhoaDuoc = computed(() =>
-    router.currentRoute.value.fullPath.startsWith(KHO_DUOC_PREFIX.path)
-  )
+  const isKhoaDuoc = computed(() => router.currentRoute.value.fullPath.startsWith(KHO_DUOC_PREFIX.path))
 
   const moduleItems = computed(() => {
     if (isQuanTriTong.value) {

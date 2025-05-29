@@ -25,9 +25,7 @@
         <div
           :class="[
             'd-flex align-center justify-end ga-2 flex-wrap',
-            !$vuetify.display.mdAndUp
-              ? 'w-100 position-fixed pa-4 bg-white bottom-0 right-0 left-0 elevation-4'
-              : '',
+            !$vuetify.display.mdAndUp ? 'w-100 position-fixed pa-4 bg-white bottom-0 right-0 left-0 elevation-4' : '',
           ]"
           style="z-index: 1000"
         >
@@ -146,9 +144,7 @@
               </span>
             </v-avatar>
 
-            <div
-              :class="['mb-4 text-lg-h5 text-h6', 'font-weight-bold text-uppercase text-center']"
-            >
+            <div :class="['mb-4 text-lg-h5 text-h6', 'font-weight-bold text-uppercase text-center']">
               {{ userData?.full_name }}
             </div>
 
@@ -380,9 +376,7 @@
         <template v-if="!isUpdate">
           <v-col v-bind="colProps['6/6']">
             <v-text-field
-              :model-value="
-                userData?.created_at ? formatDateTime(userData?.created_at) : 'Chưa cập nhật'
-              "
+              :model-value="userData?.created_at ? formatDateTime(userData?.created_at) : 'Chưa cập nhật'"
               placeholder="Chưa cập nhật"
               label="Tạo lúc"
               readonly
@@ -400,9 +394,7 @@
 
           <v-col v-bind="colProps['6/6']">
             <v-text-field
-              :model-value="
-                userData?.updated_at ? formatDateTime(userData?.updated_at) : 'Chưa cập nhật'
-              "
+              :model-value="userData?.updated_at ? formatDateTime(userData?.updated_at) : 'Chưa cập nhật'"
               placeholder="Chưa cập nhật"
               label="Cập nhật lúc"
               readonly

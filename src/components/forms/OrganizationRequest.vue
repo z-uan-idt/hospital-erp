@@ -76,12 +76,7 @@
                 </span>
               </v-avatar>
 
-              <div
-                :class="[
-                  'text-md-h5 text-h6 font-weight-bold',
-                  'text-uppercase mb-2 text-center ps-4 pe-4',
-                ]"
-              >
+              <div :class="['text-md-h5 text-h6 font-weight-bold', 'text-uppercase mb-2 text-center ps-4 pe-4']">
                 {{ organization?.name }}
                 <v-icon
                   v-if="organization.is_verified"

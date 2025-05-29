@@ -15,11 +15,7 @@
       density="comfortable"
       class="mt-5"
       :style="{
-        maxWidth: $vuetify.display.smAndDown
-          ? '100%'
-          : $vuetify.display.mdAndDown
-            ? '300px'
-            : '400px',
+        maxWidth: $vuetify.display.smAndDown ? '100%' : $vuetify.display.mdAndDown ? '300px' : '400px',
       }"
     />
 
@@ -35,7 +31,6 @@
       :loading="isLoading"
       :items-length="hooks.count"
       disable-sort
-      loading-text="Đang tải dữ liệu..."
     >
       <template v-slot:headers="{ columns }">
         <tr>
@@ -112,7 +107,7 @@
       :size="$vuetify.display.smAndDown ? '45vw' : $vuetify.display.mdAndDown ? '30vw' : '20vw'"
     />
 
-    <p class="text-md-h4 text-h5 mt-4 mb-4 font-playfair text-erp-gray-800">Chưa có nhân viên</p>
+    <p class="text-md-h4 text-h5 mt-4 mb-4 font-playfair text-erp-gray-800">Chưa có kho trực thuộc</p>
   </div>
 </template>
 
@@ -143,10 +138,12 @@
     {
       title: 'Trực thuộc khoa',
       key: 'department.name',
+      value: (item) => item?.department?.name ?? 'Không có dữ liệu',
     },
     {
       title: 'Thủ kho',
       key: 'keeper.full_name',
+      value: (item) => item?.keeper?.full_name ?? 'Không có dữ liệu',
     },
     {
       title: 'Số lượng nhân viên',

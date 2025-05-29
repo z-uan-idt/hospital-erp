@@ -116,43 +116,23 @@ export class ApiService {
     return await this.instance.request<IResponse<T, K>>(config)
   }
 
-  async get<T = any, K = any>(
-    url: string,
-    params?: any,
-    options?: AxiosRequestConfig
-  ): IRequestResult<T, K> {
+  async get<T = any, K = any>(url: string, params?: any, options?: AxiosRequestConfig): IRequestResult<T, K> {
     return this.request<T, K>('get', url, params, options)
   }
 
-  async post<T = any, K = any>(
-    url: string,
-    data?: any,
-    options?: AxiosRequestConfig
-  ): IRequestResult<T, K> {
+  async post<T = any, K = any>(url: string, data?: any, options?: AxiosRequestConfig): IRequestResult<T, K> {
     return this.request<T, K>('post', url, data, options)
   }
 
-  async put<T = any, K = any>(
-    url: string,
-    data?: any,
-    options?: AxiosRequestConfig
-  ): IRequestResult<T, K> {
+  async put<T = any, K = any>(url: string, data?: any, options?: AxiosRequestConfig): IRequestResult<T, K> {
     return this.request<T, K>('put', url, data, options)
   }
 
-  async patch<T = any, K = any>(
-    url: string,
-    data?: any,
-    options?: AxiosRequestConfig
-  ): IRequestResult<T, K> {
+  async patch<T = any, K = any>(url: string, data?: any, options?: AxiosRequestConfig): IRequestResult<T, K> {
     return this.request<T, K>('patch', url, data, options)
   }
 
-  async delete<T = any, K = any>(
-    url: string,
-    params?: any,
-    options?: AxiosRequestConfig
-  ): IRequestResult<T, K> {
+  async delete<T = any, K = any>(url: string, params?: any, options?: AxiosRequestConfig): IRequestResult<T, K> {
     return this.request<T, K>('delete', url, params, options)
   }
 }

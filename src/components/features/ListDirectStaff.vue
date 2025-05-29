@@ -15,11 +15,7 @@
       density="comfortable"
       class="mt-5"
       :style="{
-        maxWidth: $vuetify.display.smAndDown
-          ? '100%'
-          : $vuetify.display.mdAndDown
-            ? '300px'
-            : '400px',
+        maxWidth: $vuetify.display.smAndDown ? '100%' : $vuetify.display.mdAndDown ? '300px' : '400px',
       }"
     />
 
@@ -35,7 +31,6 @@
       :loading="isLoading"
       :items-length="hooks.count"
       disable-sort
-      loading-text="Đang tải dữ liệu..."
     >
       <template v-slot:headers="{ columns }">
         <tr>
@@ -136,36 +131,35 @@
       title: 'Mã nhân viên',
       key: 'staff_code',
       minWidth: '160px',
+      value: (item) => (item.staff_code ? `#${item.staff_code}` : 'Không có dữ liệu'),
     },
     {
       title: 'Tên tài khoản',
       key: 'username',
-      minWidth: '180px',
     },
     {
       title: 'Số điện thoại tại tổ chức',
       key: 'organization_phone_number',
-      minWidth: '200px',
+      value: (item) => item?.organization_phone_number ?? 'Không có dữ liệu',
     },
     {
       title: 'Email tại tổ chức',
       key: 'organization_email',
-      minWidth: '180px',
+      value: (item) => item?.organization_email ?? 'Không có dữ liệu',
     },
     {
       title: 'Chức vụ',
       key: 'department_role',
-      minWidth: '160px',
+      value: (item) => item?.department_role ?? 'Không có dữ liệu',
     },
     {
       title: 'Kho trực thuộc',
       key: 'warehouse',
-      minWidth: '160px',
+      value: (item) => item?.warehouse ?? 'Không có dữ liệu',
     },
     {
       title: 'Thời gian thêm',
       key: 'created_at',
-      minWidth: '180px',
     },
   ])
 

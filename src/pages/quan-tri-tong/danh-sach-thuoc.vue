@@ -5,9 +5,7 @@
   >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
-        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
-          Danh sách thuốc
-        </h1>
+        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">Danh sách thuốc</h1>
       </div>
 
       <div class="action-buttons d-flex align-center ga-2">
@@ -66,11 +64,7 @@
       density="compact"
       class="mt-5"
       :style="{
-        maxWidth: $vuetify.display.smAndDown
-          ? '100%'
-          : $vuetify.display.mdAndDown
-            ? '300px'
-            : '400px',
+        maxWidth: $vuetify.display.smAndDown ? '100%' : $vuetify.display.mdAndDown ? '300px' : '400px',
       }"
     />
 
@@ -236,9 +230,7 @@
     }, 1000)
   }
 
-  function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {
-    console.log(page, itemsPerPage, sortBy, args)
-  }
+  function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {}
 </script>
 
 <style scoped lang="scss"></style>

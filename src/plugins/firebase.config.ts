@@ -67,11 +67,7 @@ export default defineNuxtPlugin(async () => {
           systemStore.setReloadWelcomeData(payload)
           systemStore.setReloadWelcome(true)
         }
-        if (
-          payload.notification &&
-          'Notification' in window &&
-          Notification.permission === 'granted'
-        ) {
+        if (payload.notification && 'Notification' in window && Notification.permission === 'granted') {
           if (!document.hasFocus()) {
             const title = payload.notification.title || 'Thông báo mới'
             const options = {

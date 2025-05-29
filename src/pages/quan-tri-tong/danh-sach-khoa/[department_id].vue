@@ -14,9 +14,7 @@
             size="x-small"
             @click="router.back()"
           />
-          <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">
-            Chi tiết khoa
-          </h1>
+          <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">Chi tiết khoa</h1>
         </div>
         <div class="action-buttons d-flex align-center ga-2">
           <v-btn
@@ -32,7 +30,7 @@
               custom-file-export
             </v-icon>
           </v-btn>
-          <v-btn
+          <!-- <v-btn
             icon
             variant="outlined"
             color="erp-gray"
@@ -45,7 +43,7 @@
             >
               custom-edit-box
             </v-icon>
-          </v-btn>
+          </v-btn> -->
         </div>
       </div>
 
@@ -147,9 +145,7 @@
             class="pb-0"
           >
             <v-text-field
-              :model-value="
-                department?.created_at ? formatDateTime(department?.created_at) : 'Chưa cập nhật'
-              "
+              :model-value="department?.created_at ? formatDateTime(department?.created_at) : 'Chưa cập nhật'"
               placeholder="Chưa cập nhật"
               label="Tạo lúc"
               readonly
@@ -173,9 +169,7 @@
             class="pb-0"
           >
             <v-text-field
-              :model-value="
-                department?.updated_at ? formatDateTime(department?.updated_at) : 'Chưa cập nhật'
-              "
+              :model-value="department?.updated_at ? formatDateTime(department?.updated_at) : 'Chưa cập nhật'"
               placeholder="Chưa cập nhật"
               label="Cập nhật lúc"
               readonly
@@ -443,6 +437,5 @@
 
   const onFormSubmit = async (formEvent: SubmitEventPromise) => {
     const results = await formEvent
-    console.log(results)
   }
 </script>
