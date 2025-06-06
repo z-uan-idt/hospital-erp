@@ -1,3 +1,4 @@
+import { ITEM_PER_PAGE } from '~/constants/core.constants'
 import type { IBasicWarehouse, IPagination } from '~/types/response.types'
 import type { IWarehouse, IWarehouseCreatePayload } from '~/types/warehouse.types'
 
@@ -11,7 +12,7 @@ export const useWarehouse = () => {
 
   const fetchApi = usePrivateApi()
   const page = ref(1)
-  const limit = ref(10)
+  const limit = ref(ITEM_PER_PAGE)
   const search = ref('')
   const count = ref(0)
   const numPages = ref(0)
@@ -101,7 +102,10 @@ export const useWarehouse = () => {
       did: departmentId,
     }
 
-    const { data: response } = await fetchApi.get<IBasicWarehouse[]>('api/v1/warehouse/dropdown', params)
+    const { data: response } = await fetchApi.get<IBasicWarehouse[]>(
+      'api/v1/organization/department/warehouses-dropdown',
+      params
+    )
     if (response.success) {
       return response.data
     }

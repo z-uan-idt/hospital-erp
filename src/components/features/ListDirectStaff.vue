@@ -135,27 +135,27 @@
     },
     {
       title: 'Tên tài khoản',
-      key: 'username',
+      key: 'full_name',
     },
     {
       title: 'Số điện thoại tại tổ chức',
-      key: 'organization_phone_number',
-      value: (item) => item?.organization_phone_number ?? 'Không có dữ liệu',
+      key: 'phone_number',
+      value: (item) => item?.phone_number ?? 'Không có dữ liệu',
     },
     {
       title: 'Email tại tổ chức',
-      key: 'organization_email',
+      key: 'email',
       value: (item) => item?.organization_email ?? 'Không có dữ liệu',
     },
     {
       title: 'Chức vụ',
-      key: 'department_role',
-      value: (item) => item?.department_role ?? 'Không có dữ liệu',
+      key: 'role.name',
+      value: (item) => item?.role?.name ?? 'Không có dữ liệu',
     },
     {
       title: 'Kho trực thuộc',
-      key: 'warehouse',
-      value: (item) => item?.warehouse ?? 'Không có dữ liệu',
+      key: 'warehouse.name',
+      value: (item) => item?.warehouse?.name ?? 'Không có dữ liệu',
     },
     {
       title: 'Thời gian thêm',

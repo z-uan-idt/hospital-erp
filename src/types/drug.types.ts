@@ -1,0 +1,141 @@
+import type { IChoice, IdName } from './core.types'
+import type { IBasicAccount } from './account.types'
+
+export interface IDrug {
+  id?: number
+  source?: IChoice
+  NhomThuoc?: IdName | null
+  TrangThai?: IdName | null
+  organization?: IdName | null
+  DuongDung?: IdName | null
+  DonViDGNN?: IdName | null
+  DonViThuongDung?: IdName | null
+  DonViNhap?: IdName | null
+  CongTyDangKy?: IdName | null
+  NuocSanXuat?: IdName | null
+  NhaSanXuat?: IdName | null
+  PhanLoaiHangHoa?: IdName | null
+  PhanLoaiThuoc?: IdName | null
+  TenCSKCB?: IdName | null
+  PhanLoaiCSKCB?: IdName | null
+  LoaiBenhAn?: IdName | null
+  LoaiThanhToan?: IdName | null
+  PhuThuBaoHiem?: IdName | null
+  DonViThau?: IdName | null
+  created_by?: IBasicAccount | null
+  updated_by?: IBasicAccount | null
+  updated_at?: string | null
+  created_at?: string | null
+  image?: string | null
+  TenThuoc?: string | null
+  BYT_TenThuoc?: string | null
+  MaThuoc?: string | null
+  BYT_MaThuoc?: string | null
+  LoaiHang?: string | null
+  Barcode?: string | null
+  HoatChat?: string | null
+  HamLuong?: string | null
+  TenHoatChatSDK?: string | null
+  QuyCach?: string | null
+  SoNgayCanHan?: number | null
+  DangBaoChe?: string | null
+  SoDangKy?: string | null
+  HoaHong?: number | null
+  LoiNhuan?: number | null
+  MaThuocLienKet?: string | null
+  ThongTu30?: string
+  ThongTu40?: string | null
+  MaACT?: string | null
+  GhiChu?: string | null
+  NamThau?: number | null
+  NhomThau?: string | null
+  GoiThau?: string | null
+  LoaiThau?: string | null
+  SoNgayVuotThau?: number | null
+  SoLuongTrungThau?: number | null
+  ThongTinHopDong?: string | null
+  ThongTinThau?: string | null
+  SoQuyetDinh?: string | null
+  NgayQuyetDinh?: string | null
+  NgayHieuLuc?: string | null
+  NgayHetHieuLuc?: string | null
+  DonGia?: number | null
+  TiLeThanhToanBHYT?: number | null
+  IsQLSoLo?: boolean | null
+  IsQLHanDung?: boolean | null
+  IsBHYT?: boolean | null
+  IsHienThiWeb?: boolean | null
+  IsSendBYT?: boolean | null
+  LuongDung?: string | null
+  DonViDung?: string | null
+  LanDung?: string | null
+  MoiLanDung?: string | null
+}
+
+export interface IDrugFormPayload {
+  source?: 'HIS' | 'SELF'
+  NhomThuoc?: number | null
+  TrangThai?: number | null
+  organization?: number | null
+  DuongDung?: number | null
+  DonViDGNN?: number | null
+  DonViThuongDung?: number | null
+  DonViNhap?: number | null
+  CongTyDangKy?: number | null
+  NuocSanXuat?: number | null
+  NhaSanXuat?: number | null
+  PhanLoaiHangHoa?: number | null
+  PhanLoaiThuoc?: number | null
+  TenCSKCB?: number | null
+  PhanLoaiCSKCB?: number | null
+  LoaiBenhAn?: number[]
+  LoaiThanhToan?: number[]
+  PhuThuBaoHiem?: number | null
+  DonViThau?: number | null
+  image_file?: File | null
+  TenThuoc?: string | null
+  BYT_TenThuoc?: string | null
+  MaThuoc?: string | null
+  BYT_MaThuoc?: string | null
+  LoaiHang?: string | null
+  Barcode?: string | null
+  HoatChat?: number | null
+  HamLuong?: string | null
+  TenHoatChatSDK?: string | null
+  QuyCach?: string | null
+  SoNgayCanHan?: number | null
+  DangBaoChe?: string | null
+  SoDangKy?: string | null
+  HoaHong?: number | null
+  LoiNhuan?: number | null
+  MaThuocLienKet?: string | null
+  ThongTu30?: string | null
+  ThongTu40?: string | null
+  MaACT?: string | null
+  GhiChu?: string | null
+  NamThau?: number | null
+  NhomThau?: string | null
+  GoiThau?: string | null
+  LoaiThau?: string | null
+  SoNgayVuotThau?: number | null
+  SoLuongTrungThau?: number | null
+  ThongTinHopDong?: string | null
+  ThongTinThau?: string | null
+  SoQuyetDinh?: string | null
+  NgayQuyetDinh?: string | null
+  NgayHieuLuc?: string | null
+  NgayHetHieuLuc?: string | null
+  DonGia?: number | null
+  TiLeThanhToanBHYT?: number | null
+  IsQLSoLo?: boolean | null
+  IsQLHanDung?: boolean | null
+  IsBHYT?: boolean | null
+  IsHienThiWeb?: boolean | null
+  IsSendBYT?: boolean | null
+  LuongDung?: string | null
+  DonViDung?: string | null
+  LanDung?: string | null
+  MoiLanDung?: string | null
+  IsThau?: boolean | null
+  IsThuocKeDon?: boolean | null
+}

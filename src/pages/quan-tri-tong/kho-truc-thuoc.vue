@@ -72,8 +72,8 @@
     />
 
     <v-data-table
-      v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
+      :page="page"
+      :items-per-page="hooks.limit.value"
       :items="warehouses"
       item-value="name"
       :headers="headers"
@@ -148,6 +148,7 @@
             :total-visible="$vuetify.display.smAndDown ? 3 : 7"
             active-color="erp-brand"
             border="sm"
+            @update:model-value="onPageChange"
           />
         </div>
       </template>
@@ -165,7 +166,7 @@
         <v-card class="pb-2 pe-2 pt-2">
           <template v-slot:title>
             <div class="d-flex align-center justify-space-between">
-              Tạo mới khoa
+              Tạo mới kho trực thuộc
               <v-btn
                 size="x-small"
                 icon="mdi-close"
@@ -229,8 +230,13 @@
                   :items="departmentsDropdown"
                   :item-title="(item) => item?.name"
                   :item-value="(item) => item?.id"
+                  :rules="[formRules.required]"
                   @update:model-value="onFetchMembers"
-                />
+                >
+                  <template #label>
+                    <span>Khoa <span class="text-red">*</span></span>
+                  </template>
+                </v-select>
               </v-col>
 
               <v-col
@@ -274,7 +280,7 @@
                         </div>
                       </template>
                       <template #subtitle>
-                        <span>{{ raw?.organization_phone_number || raw?.phone_number }}</span>
+                        <span>{{ raw?.phone_number }}</span>
                       </template>
                     </v-list-item>
                   </template>
@@ -351,13 +357,12 @@
   import type { DataTableHeader, SubmitEventPromise } from 'vuetify'
   import type { IBasicDepartment } from '~/types/department.types'
   import type { IWarehouseCreatePayload } from '~/types/warehouse.types'
-  import { ITEM_PER_PAGE, ITEM_PER_PAGES } from '~/constants/core.constants'
+  import { ITEM_PER_PAGES } from '~/constants/core.constants'
   import type { IStaff } from '~/types/account.types'
 
   definePageMeta({
     layout: 'default',
     middleware: ['auth'],
-    keepalive: true,
   })
 
   useHead({
@@ -365,7 +370,6 @@
   })
 
   const isLoading = ref(false)
-  const itemsPerPage = ref(15)
   const { organizationSelected } = useAuth()
   const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
   const departmentsDropdown = ref<IBasicDepartment[]>([])
@@ -381,6 +385,13 @@
   const onSelectItemsPerPage = async (value: number) => {
     setPage(1)
     hooks.setLimit(value)
+    isLoading.value = true
+    await hooks.onFetchWarehouse(organizationSelected.value?.id)
+    isLoading.value = false
+  }
+
+  const onPageChange = async (value: number) => {
+    setPage(value)
     isLoading.value = true
     await hooks.onFetchWarehouse(organizationSelected.value?.id)
     isLoading.value = false

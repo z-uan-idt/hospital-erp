@@ -17,6 +17,10 @@ export const KHO_DUOC_PREFIX = Object.assign('kho-duoc', {
   path: '/kho-duoc',
   name: 'kho-duoc',
 })
+export const KHAM_CHUA_BENH_PREFIX = Object.assign('kham-chua-benh', {
+  path: '/kham-chua-benh',
+  name: 'kham-chua-benh',
+})
 
 // GM router
 export const ROUTE_DANH_SACH_THUOC: IRoute = {
@@ -117,6 +121,18 @@ export const ROUTE_LO_HANG: IRoute = {
     pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/lo-hang/${pk}`,
   },
 }
+export const ROUTE_PHIEU_TRA: IRoute = {
+  name: `${KHO_DUOC_PREFIX}-phieu-tra`,
+  path: `/${KHO_DUOC_PREFIX}/phieu-tra`,
+  CREATE: {
+    name: `${KHO_DUOC_PREFIX}-phieu-tra-tao-moi`,
+    path: `/${KHO_DUOC_PREFIX}/phieu-tra/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHO_DUOC_PREFIX}-phieu-tra-receipt_id`,
+    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/phieu-tra/${pk}`,
+  },
+}
 export const ROUTE_PHIEU_LINH: IRoute = {
   name: `${KHO_DUOC_PREFIX}-phieu-linh`,
   path: `/${KHO_DUOC_PREFIX}/phieu-linh`,
@@ -141,18 +157,6 @@ export const ROUTE_DON_VI_TINH: IRoute = {
     pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/don-vi-tinh/${pk}`,
   },
 }
-export const ROUTE_DON_THUOC: IRoute = {
-  name: `${KHO_DUOC_PREFIX}-don-thuoc`,
-  path: `/${KHO_DUOC_PREFIX}/don-thuoc`,
-  CREATE: {
-    name: `${KHO_DUOC_PREFIX}-don-thuoc-tao-moi`,
-    path: `/${KHO_DUOC_PREFIX}/don-thuoc/tao-moi`,
-  },
-  DETAIL: {
-    name: `${KHO_DUOC_PREFIX}-don-thuoc-prescription_id`,
-    pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/don-thuoc/${pk}`,
-  },
-}
 export const ROUTE_PHIEU_CHUYEN_HANG: IRoute = {
   name: `${KHO_DUOC_PREFIX}-phieu-chuyen-hang`,
   path: `/${KHO_DUOC_PREFIX}/phieu-chuyen-hang`,
@@ -163,6 +167,24 @@ export const ROUTE_PHIEU_CHUYEN_HANG: IRoute = {
   DETAIL: {
     name: `${KHO_DUOC_PREFIX}-phieu-chuyen-hang-receipt_id`,
     pathFunc: (pk) => `/${KHO_DUOC_PREFIX}/phieu-chuyen-hang/${pk}`,
+  },
+}
+export const ROUTE_TON_KHO: IRoute = {
+  name: `${KHO_DUOC_PREFIX}-ton-kho`,
+  path: `/${KHO_DUOC_PREFIX}/ton-kho`,
+}
+
+// Kham chua benh router
+export const ROUTE_DON_THUOC: IRoute = {
+  name: `${KHAM_CHUA_BENH_PREFIX}-don-thuoc`,
+  path: `/${KHAM_CHUA_BENH_PREFIX}/don-thuoc`,
+  CREATE: {
+    name: `${KHAM_CHUA_BENH_PREFIX}-don-thuoc-tao-moi`,
+    path: `/${KHAM_CHUA_BENH_PREFIX}/don-thuoc/tao-moi`,
+  },
+  DETAIL: {
+    name: `${KHAM_CHUA_BENH_PREFIX}-don-thuoc-prescription_id`,
+    pathFunc: (pk) => `/${KHAM_CHUA_BENH_PREFIX}/don-thuoc/${pk}`,
   },
 }
 

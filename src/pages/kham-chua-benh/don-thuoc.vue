@@ -1,11 +1,11 @@
 <template>
   <v-container
     fluid
-    class="erp-phieu-nhap-kho pa-md-6 pa-3"
+    class="erp-don-thuoc pa-md-6 pa-3"
   >
     <div class="d-flex align-center flex-row justify-space-between ga-4">
       <div class="d-flex align-center justify-start ga-3 w-100 w-md-auto">
-        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">Phiếu nhập kho</h1>
+        <h1 :class="['text-lg-h5 text-h6 font-weight-medium', 'text-blue-grey-darken-3']">Đơn thuốc</h1>
       </div>
 
       <div class="action-buttons d-flex align-center ga-2">
@@ -121,7 +121,7 @@
             <span> Số dòng trên 1 trang </span>
             <v-select
               v-model="itemsPerPage"
-              :items="[10, 20, 50, 100]"
+              :items="ITEM_PER_PAGES"
               variant="outlined"
               rounded="lg"
               max-width="100px"
@@ -152,6 +152,7 @@
 
 <script setup lang="ts">
   import type { DataTableHeader } from 'vuetify'
+  import { ITEM_PER_PAGES } from '~/constants/core.constants'
 
   definePageMeta({
     layout: 'default',

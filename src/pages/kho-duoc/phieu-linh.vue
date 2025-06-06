@@ -121,7 +121,7 @@
             <span> Số dòng trên 1 trang </span>
             <v-select
               v-model="itemsPerPage"
-              :items="[10, 20, 50, 100]"
+              :items="ITEM_PER_PAGES"
               variant="outlined"
               rounded="lg"
               max-width="100px"
@@ -152,6 +152,7 @@
 
 <script setup lang="ts">
   import type { DataTableHeader } from 'vuetify'
+  import { ITEM_PER_PAGES } from '~/constants/core.constants'
 
   definePageMeta({
     layout: 'default',

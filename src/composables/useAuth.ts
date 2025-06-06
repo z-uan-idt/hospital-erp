@@ -19,12 +19,22 @@ export const useAuth = () => {
   const refreshTokenCookie = useCookie('refresh_token', {
     maxAge: 60 * 60 * 24 * 30, // 30 days
   })
-  const isEmptyOrganization = useCookie('is_empty_organization')
-  const selectedOrganization = useCookie('selected_organization')
+  const isEmptyOrganization = useCookie('is_not_org')
+  const selectedOrganization = useCookie('o_data')
+  const selectedDepartment = useCookie('d_id')
+  const selectedWarehouse = useCookie('w_id')
 
   const isSelectedOrganization = computed(() => {
     return !!selectedOrganization.value
   })
+
+  const setSelectedDepartment = (departmentId: string | number | null) => {
+    selectedDepartment.value = departmentId?.toString()
+  }
+
+  const setSelectedWarehouse = (warehouseId: string | number | null) => {
+    selectedWarehouse.value = warehouseId?.toString()
+  }
 
   const setSelectedOrganization = (organizationCode: string | null) => {
     selectedOrganization.value = organizationCode
@@ -37,6 +47,14 @@ export const useAuth = () => {
     } catch (error) {
       return selectedOrganization.value || null
     }
+  })
+
+  const departmentSelected: Ref<string | number> = computed(() => {
+    return selectedDepartment.value
+  })
+
+  const warehouseSelected: Ref<string | number> = computed(() => {
+    return selectedWarehouse.value
   })
 
   const isAuthenticated = computed(() => {
@@ -63,6 +81,8 @@ export const useAuth = () => {
 
     selectedOrganization.value = null
     isEmptyOrganization.value = null
+    selectedDepartment.value = null
+    selectedWarehouse.value = null
     refreshTokenCookie.value = null
     accessTokenCookie.value = null
     userCookie.value = null
@@ -149,5 +169,9 @@ export const useAuth = () => {
     isSelectedOrganization,
     setSelectedOrganization,
     organizationSelected,
+    setSelectedDepartment,
+    setSelectedWarehouse,
+    departmentSelected,
+    warehouseSelected,
   }
 }

@@ -1,4 +1,4 @@
-import type { IChoice } from './core.types'
+import type { IChoice, IdName } from './core.types'
 
 export type IBasicAccount = {
   id?: number
@@ -12,60 +12,61 @@ export type IBasicAccount = {
 
 export type IAccount = IBasicAccount & {
   gender?: IChoice
-  role?: IChoice
   created_by?: IBasicAccount
   updated_by?: IBasicAccount
   referral_by?: IBasicAccount
   devices?: string[]
-  updated_at?: string
-  created_at?: string
-  CCCD_number?: string
-  CCCD_issued_by?: string
-  CCCD_issued_date?: string
-  CCCD_expired_date?: string
-  BHXH_code?: string
-  BHXH_issued_by?: string
-  BHXH_issued_date?: string
-  BHXH_expired_date?: string
-  BHYT_code?: string
-  BHYT_issued_by?: string
-  BHYT_issued_date?: string
-  BHYT_expired_date?: string
-  address?: string
-  temporary_address?: string
-  hometown?: string
-  date_of_birth?: string
-  nationality?: string
-  ethnic?: string
-  religion?: string
-  username?: string
-  is_phone_number_verified?: boolean
-  email?: string
-  is_email_verified?: boolean
-  avatar?: string
-  avatar_file?: File
+  updated_at?: string | null
+  created_at?: string | null
+  full_name?: string | null
+  CCCD_number?: string | null
+  CCCD_issued_by?: string | null
+  CCCD_issued_date?: string | null
+  CCCD_expired_date?: string | null
+  BHXH_code?: string | null
+  BHXH_issued_by?: string | null
+  BHXH_issued_date?: string | null
+  BHXH_expired_date?: string | null
+  BHYT_code?: string | null
+  BHYT_issued_by?: string | null
+  BHYT_issued_date?: string | null
+  BHYT_expired_date?: string | null
+  address?: string | null
+  temporary_address?: string | null
+  hometown?: string | null
+  date_of_birth?: string | null
+  nationality?: string | null
+  ethnicity?: string | null
+  religion?: string | null
+  username?: string | null
+  nickname?: string | null
+  phone_number?: string | null
+  avatar?: string | null
+  avatar_file?: File | null
+  email?: string | null
+  primary_contact_number?: string | null
+  secondary_contact_number?: string | null
+  is_hidden?: boolean
   is_active?: boolean
+  code?: string
   referral_code?: string
-  nickname?: string
-  primary_contact_number?: string
-  secondary_contact_number?: string
 }
 
 export type IStaff = {
   id?: number
-  code?: string
-  phone_number?: string
-  full_name?: string
-  username?: string
-  organization_phone_number?: string | null
-  department_role?: string
-  organization_email?: string | null
-  department?: string
-  warehouse?: string
-  created_at?: string
-  updated_at?: string
+  phone_number?: string | null
+  full_name?: string | null
+  username?: string | null
   staff_code?: string | null
-  joined_at?: string
-  avatar?: string
+  joined_at?: string | null
+  document_file?: string | null
+  avatar?: string | null
   is_active?: boolean
+  warehouse?: IdName | null
+  department?: IdName | null
+  role?: IdName | null
+  created_by?: IBasicAccount | null
+  updated_by?: IBasicAccount | null
+  updated_at?: string | null
+  created_at?: string | null
 }

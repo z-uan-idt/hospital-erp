@@ -120,7 +120,7 @@
 </template>
 
 <script setup lang="ts">
-  import { KHO_DUOC_PREFIX, QUAN_TRI_TONG_PREFIX } from '~/constants/route.constants'
+  import { KHAM_CHUA_BENH_PREFIX, KHO_DUOC_PREFIX, QUAN_TRI_TONG_PREFIX } from '~/constants/route.constants'
   import type { IOrganization } from '~/types/oranization.types'
 
   type Props = {
@@ -156,6 +156,12 @@
       name: 'Kho dược',
       icon: 'custom-module-warehouse',
       path: KHO_DUOC_PREFIX.path,
+      isActive: true,
+    },
+    {
+      name: 'Khám/Chữa bệnh',
+      icon: 'custom-module-stethoscope',
+      path: KHAM_CHUA_BENH_PREFIX.path,
       isActive: true,
     },
     {

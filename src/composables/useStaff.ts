@@ -1,3 +1,4 @@
+import { ITEM_PER_PAGE } from '~/constants/core.constants'
 import type { IStaff } from '~/types/account.types'
 import type { IPagination } from '~/types/response.types'
 
@@ -11,7 +12,7 @@ export const useStaff = () => {
 
   const fetchApi = usePrivateApi()
   const page = ref(1)
-  const limit = ref(10)
+  const limit = ref(ITEM_PER_PAGE)
   const search = ref('')
   const count = ref(0)
   const numPages = ref(0)
@@ -67,7 +68,7 @@ export const useStaff = () => {
       params['did'] = departmentId
     }
 
-    const { data: response } = await fetchApi.get<IStaff[]>('api/v1/account/member-by-organization-no-role', params)
+    const { data: response } = await fetchApi.get<IStaff[]>('api/v1/organization/member-department-no-role', params)
     if (response.success) {
       return response.data
     }
@@ -96,7 +97,7 @@ export const useStaff = () => {
     if (did.value) {
       params['did'] = did.value
     }
-    const { data: response } = await fetchApi.get<IStaff[], IMetadata>('api/v1/organization-member', params)
+    const { data: response } = await fetchApi.get<IStaff[], IMetadata>('api/v1/organization/members', params)
     if (response.success) {
       const metadata = response.metadata
       staffs.value = response.data

@@ -17,26 +17,28 @@ export type IOrganizationFormPayload = {
 
 export type IOrganization = {
   id?: number
-  code?: string
-  name?: string
-  representative?: string
-  tax_number?: string
-  phone_number?: string
-  email?: string
   infor?: IChoice
   status?: IChoice
-  address?: string
-  website?: string
-  description?: string
-  profile_picture?: string
-  emergency_phone_number?: string
   is_owner?: boolean
+  created_by?: IBasicAccount
+  updated_by?: IBasicAccount
+  updated_at?: string
+  created_at?: string
+  profile_picture?: string
+  name?: string
+  code?: string
+  representative?: string | null
+  tax_number?: string | null
+  phone_number?: string | null
+  emergency_phone_number?: string | null
+  hotline?: string | null
+  email?: string | null
+  address?: string | null
+  website?: string | null
+  description?: string | null
+  type?: IChoice
   is_active?: boolean
   is_verified?: boolean
-  created_at?: string
-  updated_at?: string
-  updated_by?: IBasicAccount
-  created_by?: IBasicAccount
 }
 
 export type IOrganizationActionRequest =

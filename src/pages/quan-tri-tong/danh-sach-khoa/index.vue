@@ -74,8 +74,8 @@
     />
 
     <v-data-table
-      v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
+      :page="page"
+      :items-per-page="hooks.limit.value"
       :items="departments"
       item-value="name"
       :headers="headers"
@@ -151,6 +151,7 @@
             :total-visible="$vuetify.display.smAndDown ? 3 : 7"
             active-color="erp-brand"
             border="sm"
+            @update:model-value="onPageChange"
           />
         </div>
       </template>
@@ -256,7 +257,7 @@
                         </div>
                       </template>
                       <template #subtitle>
-                        <span>{{ raw?.organization_phone_number || raw?.phone_number }}</span>
+                        <span>{{ raw?.phone_number || raw?.phone_number }}</span>
                       </template>
                     </v-list-item>
                   </template>
@@ -331,14 +332,14 @@
 <script setup lang="ts">
   import type { VForm } from 'vuetify/components'
   import type { DataTableHeader, SubmitEventPromise } from 'vuetify'
-  import { ITEM_PER_PAGE, ITEM_PER_PAGES } from '~/constants/core.constants'
+  import { ITEM_PER_PAGES } from '~/constants/core.constants'
   import type { IDepartmentCreatePayload } from '~/types/department.types'
   import type { IStaff } from '~/types/account.types'
+  import { ROUTE_DANH_SACH_KHOA } from '~/constants/route.constants'
 
   definePageMeta({
     layout: 'default',
     middleware: ['auth'],
-    keepalive: true,
   })
 
   useHead({
@@ -347,7 +348,6 @@
 
   const router = useRouter()
   const isLoading = ref(false)
-  const itemsPerPage = ref(ITEM_PER_PAGE)
   const members = ref<IStaff[]>([])
   const { organizationSelected } = useAuth()
   const { onFetchMemberOfOrganizationNoRole } = useStaff()
@@ -355,6 +355,13 @@
   const sortableColumns = ['staff_count', 'warehouse_count', 'created_at']
 
   const { departments, numPages, page, setPage, search, setSearch, ...hooks } = useDepartment()
+
+  const onPageChange = async (value: number) => {
+    setPage(value)
+    isLoading.value = true
+    await hooks.onFetchDepartment(organizationSelected.value?.id)
+    isLoading.value = false
+  }
 
   onMounted(async () => {
     members.value = await onFetchMemberOfOrganizationNoRole(organizationSelected.value?.id)
@@ -464,7 +471,7 @@
   }
 
   const onRowClick = (_: unknown, { item }) => {
-    router.push(`/quan-tri-tong/danh-sach-khoa/${item.id}`)
+    router.push(ROUTE_DANH_SACH_KHOA.DETAIL.pathFunc(item.id))
   }
 
   function onLoadTable({ page, itemsPerPage, sortBy, ...args }) {}

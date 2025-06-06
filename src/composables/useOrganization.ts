@@ -17,7 +17,7 @@ export const useOrganization = () => {
   const numPages = ref<number>(0)
   const organizations = ref<IOrganization[]>([])
   const organization = ref<IOrganization | null>(null)
-  const emptyOrganizationCookie = useCookie('is_empty_organization')
+  const emptyOrganizationCookie = useCookie('is_not_org')
 
   const fetchApi = usePrivateApi()
 
@@ -42,7 +42,7 @@ export const useOrganization = () => {
       params.search = search.value
     }
     const { data: response } = await fetchApi.get<IOrganization[], IMetadata>(
-      'api/v1/organization/current-user-organization',
+      'api/v1/organization/current-user-organizations',
       params
     )
     if (response.success) {
@@ -63,17 +63,8 @@ export const useOrganization = () => {
     }
   }
 
-  const onFetchOrganizationByCode = async (organizationCode: string) => {
-    const { data: response } = await fetchApi.get<IOrganization>(
-      `api/v1/organization/current-user-organization-retrieve-by-code?code=${organizationCode}`
-    )
-    if (response.success) {
-      organization.value = response.data
-    }
-  }
-
   const onFetchRequestJoinOrganizations = async (organizationId: string | number) => {
-    const { data: response } = await fetchApi.get<IBasicAccount[]>(`api/v1/organization/request-join-organizations`, {
+    const { data: response } = await fetchApi.get<IBasicAccount[]>(`api/v1/organization/member-request-to-joins`, {
       oid: organizationId,
     })
     if (response.success) {
@@ -84,10 +75,9 @@ export const useOrganization = () => {
   }
 
   const onFetchInvitationSentOrganizations = async (organizationId: string | number) => {
-    const { data: response } = await fetchApi.get<IBasicAccount[]>(
-      `api/v1/organization/invitation-sent-organizations`,
-      { oid: organizationId }
-    )
+    const { data: response } = await fetchApi.get<IBasicAccount[]>(`api/v1/organization/member-invitation-sent`, {
+      oid: organizationId,
+    })
     if (response.success) {
       return response.data
     }
@@ -96,10 +86,10 @@ export const useOrganization = () => {
   }
 
   const onFetchInvitationSentOrganizationsByCurrentUser = async <T>(): Promise<T> => {
-    const { data: response } = await fetchApi.get<T>(`api/v1/organization/current-user-invitation-sent-organizations`)
-    if (response.success) {
-      return response.data
-    }
+    // const { data: response } = await fetchApi.get<T>(`api/v1/organization/current-user-invitation-sent-organizations`)
+    // if (response.success) {
+    //   return response.data
+    // }
 
     return [] as T
   }
@@ -109,7 +99,7 @@ export const useOrganization = () => {
     phoneNumber: string
   ) => {
     const { data: response } = await fetchApi.get<IBasicAccount>(
-      `api/v1/account/find-exact-by-phone-number-without-current-organization`,
+      `api/v1/organization/find-exact-phone-number-without-organization`,
       { search: phoneNumber, oid: organizationId }
     )
     if (response.success) {
@@ -124,7 +114,7 @@ export const useOrganization = () => {
     onSuccess: (organization: IOrganization) => void,
     onError: (error: string) => void
   ) => {
-    const { data: response } = await fetchApi.post('api/v1/organization/current-user-request-join-organization', {
+    const { data: response } = await fetchApi.post('api/v1/organization/current-user-request-to-join-organization', {
       organization: organizationId,
     })
     if (response.success) {
@@ -134,16 +124,15 @@ export const useOrganization = () => {
     }
   }
 
-  const onRequestJoinOrganizationAction = async (
+  const onRejectRequestToJoinOrganizationAction = async (
     payload: {
-      oid?: number
-      aid?: number
-      is_accept?: boolean
+      organization?: number
+      account?: number
     },
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    const { data: response } = await fetchApi.post('api/v1/organization/request-join-organization-action', payload)
+    const { data: response } = await fetchApi.post('api/v1/organization/reject-request-to-join-organization', payload)
     if (response.success) {
       onSuccess()
     } else {
@@ -151,16 +140,18 @@ export const useOrganization = () => {
     }
   }
 
-  const onInvitationSentOrganizationAction = async (
+  const onCancelInvitationSentOrganizationAction = async (
     payload: {
-      oid?: number
-      aid?: number
-      is_accept?: boolean
+      organization?: number
+      account?: number
     },
     onSuccess: () => void,
     onError: (error: string) => void
   ) => {
-    const { data: response } = await fetchApi.post('api/v1/organization/invitation-sent-organization-action', payload)
+    const { data: response } = await fetchApi.post(
+      'api/v1/organization/cancel-request-invitation-organization',
+      payload
+    )
     if (response.success) {
       onSuccess()
     } else {
@@ -225,7 +216,7 @@ export const useOrganization = () => {
     onError: (error: string) => void
   ) => {
     const { data: response } = await fetchApi.post<IOrganization>(
-      'api/v1/organization/accept-request-join-organization',
+      'api/v1/organization/accept-request-to-join-organization',
       formData,
       {
         headers: {
@@ -247,7 +238,7 @@ export const useOrganization = () => {
     onError: (error: string) => void
   ) => {
     const { data: response } = await fetchApi.post<IOrganization>(
-      'api/v1/organization/invite-request-join-organization',
+      'api/v1/organization/send-invitation-to-join-organization',
       formData,
       {
         headers: {
@@ -309,14 +300,13 @@ export const useOrganization = () => {
     onFetchOrganizationById,
     onUpdateOrganization,
     isEmptyOrganization,
-    onFetchOrganizationByCode,
     onFetchRequestJoinOrganizations,
     onFetchInvitationSentOrganizations,
-    onRequestJoinOrganizationAction,
+    onRejectRequestToJoinOrganizationAction,
     onAcceptRequestJoinOrganization,
     onFindExactByPhoneNumberWithoutCurrentOrganization,
     onInviteRequestJoinOrganization,
-    onInvitationSentOrganizationAction,
+    onCancelInvitationSentOrganizationAction,
     onFetchInvitationSentOrganizationsByCurrentUser,
   }
 }

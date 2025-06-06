@@ -160,7 +160,7 @@
                         class="me-2"
                         variant="outlined"
                         :loading="isInvitationSentLoading === item.id"
-                        @click="onInvitationSentOrganizationAction(item.id, false)"
+                        @click="onCancelInvitationSentOrganizationAction(item.id)"
                       />
                     </template>
                     <div class="text-body-2 text-erp-gray-700 ps-5 pb-3">
@@ -268,7 +268,7 @@
                         class="me-2"
                         variant="outlined"
                         :loading="isRequestJoinLoading === item.id"
-                        @click="onRequestJoinOrganizationAction(item.id, false)"
+                        @click="onRejectRequestToJoinOrganizationAction(item.id)"
                       />
                       <v-btn
                         icon="mdi-check"
@@ -292,8 +292,8 @@
     </div>
 
     <v-data-table
-      v-model:page="page"
-      v-model:items-per-page="itemsPerPage"
+      :page="hooks.page.value"
+      :items-per-page="hooks.limit.value"
       :items="staffs"
       item-value="name"
       :headers="headers"
@@ -343,8 +343,8 @@
           <template v-if="!$vuetify.display.smAndDown">
             <span> Số dòng trên 1 trang </span>
             <v-select
-              v-model="itemsPerPage"
-              :items="[10, 20, 50, 100]"
+              :model-value="hooks.limit.value"
+              :items="ITEM_PER_PAGES"
               variant="outlined"
               rounded="lg"
               max-width="100px"
@@ -358,7 +358,7 @@
           </template>
           <v-spacer />
           <v-pagination
-            v-model="page"
+            v-model="hooks.page.value"
             :length="hooks.numPages.value"
             rounded="circle"
             variant="elevated"
@@ -367,6 +367,7 @@
             :total-visible="$vuetify.display.smAndDown ? 3 : 7"
             active-color="erp-brand"
             border="sm"
+            @update:model-value="onPageChange"
           />
         </div>
       </template>
@@ -392,30 +393,28 @@
 <script setup lang="ts">
   import { CommonDivider } from '#components'
   import type { DataTableHeader } from 'vuetify'
+  import { ITEM_PER_PAGES } from '~/constants/core.constants'
   import type { IBasicAccount } from '~/types/account.types'
 
   definePageMeta({
     layout: 'default',
     middleware: ['auth'],
-    keepalive: true,
   })
 
   useHead({
     title: 'Danh sách khoa',
   })
 
-  const page = ref(1)
   const isLoading = ref(false)
-  const isInvitationSent = ref(false)
-  const isRequestJoin = ref(false)
-  const itemsPerPage = ref(15)
   const { $toast } = useNuxtApp()
-  const requestJoinOrganizations = ref<IBasicAccount[]>([])
-  const invitationSentOrganizations = ref<IBasicAccount[]>([])
+  const isRequestJoin = ref(false)
+  const isInvitationSent = ref(false)
   const isRequestJoinLoading = ref(null)
   const isInvitationSentLoading = ref(null)
-  const requestJoinAccept = ref<IBasicAccount | null>(null)
   const isInvitationSentAccept = ref<boolean>(false)
+  const requestJoinAccept = ref<IBasicAccount | null>(null)
+  const requestJoinOrganizations = ref<IBasicAccount[]>([])
+  const invitationSentOrganizations = ref<IBasicAccount[]>([])
 
   const systemStore = useSystemStore()
   const { staffs, ...hooks } = useStaff()
@@ -430,6 +429,13 @@
     requestJoinAccept.value = null
     isRequestJoin.value = false
     await hooks.onFetchStaff(organizationSelected.value.id)
+    isLoading.value = false
+  }
+
+  const onPageChange = async (value: number) => {
+    hooks.setPage(value)
+    isLoading.value = true
+    await hooks.onFetchStaff(organizationSelected.value?.id)
     isLoading.value = false
   }
 
@@ -487,8 +493,8 @@
     },
     {
       title: 'Số điện thoại tại tổ chức',
-      key: 'organization_phone_number',
-      value: (item) => item?.organization_phone_number ?? 'Không có dữ liệu',
+      key: 'phone_number',
+      value: (item) => item?.phone_number ?? 'Không có dữ liệu',
     },
     {
       title: 'Email tại tổ chức',
@@ -497,18 +503,18 @@
     },
     {
       title: 'Chức vụ',
-      key: 'department_role',
-      value: (item) => item?.department_role ?? 'Không có dữ liệu',
+      key: 'role.name',
+      value: (item) => item?.role?.name ?? 'Không có dữ liệu',
     },
     {
       title: 'Khoa',
-      key: 'department',
-      value: (item) => item?.department ?? 'Không có dữ liệu',
+      key: 'department.name',
+      value: (item) => item?.department?.name ?? 'Không có dữ liệu',
     },
     {
       title: 'Kho trực thuộc',
-      key: 'warehouse',
-      value: (item) => item?.warehouse ?? 'Không có dữ liệu',
+      key: 'warehouse.name',
+      value: (item) => item?.warehouse?.name ?? 'Không có dữ liệu',
     },
     {
       title: 'Ngày tạo',
@@ -552,29 +558,22 @@
     isLoading.value = false
   }, 1000)
 
-  const onRequestJoinOrganizationAction = async (aid: number, is_accept: boolean) => {
+  const onRejectRequestToJoinOrganizationAction = async (aid: number) => {
     try {
       isRequestJoinLoading.value = aid
-      await organizationHooks.onRequestJoinOrganizationAction(
+      await organizationHooks.onRejectRequestToJoinOrganizationAction(
         {
-          aid,
-          is_accept,
-          oid: organizationSelected.value.id,
+          account: aid,
+          organization: organizationSelected.value.id,
         },
         () => {
           requestJoinOrganizations.value = requestJoinOrganizations.value.filter((item) => item.id !== aid)
           if (requestJoinOrganizations.value.length === 0) {
             isRequestJoin.value = false
           }
-          if (is_accept) {
-            $toast.success('Đã xác nhận yêu cầu gia nhập', {
-              description: 'Nhân viên đã được thêm vào tổ chức',
-            })
-          } else {
-            $toast.success('Đã từ chối yêu cầu gia nhập', {
-              description: 'Nhân viên đã bị từ chối gia nhập tổ chức',
-            })
-          }
+          $toast.success('Đã từ chối yêu cầu gia nhập', {
+            description: 'Nhân viên đã bị từ chối gia nhập tổ chức',
+          })
         },
         (error) => {
           $toast.error('Thất bại', {
@@ -591,29 +590,22 @@
     }
   }
 
-  const onInvitationSentOrganizationAction = async (aid: number, is_accept: boolean) => {
+  const onCancelInvitationSentOrganizationAction = async (aid: number) => {
     try {
       isInvitationSentLoading.value = aid
-      await organizationHooks.onInvitationSentOrganizationAction(
+      await organizationHooks.onCancelInvitationSentOrganizationAction(
         {
-          aid,
-          is_accept,
-          oid: organizationSelected.value.id,
+          account: aid,
+          organization: organizationSelected.value.id,
         },
         () => {
           invitationSentOrganizations.value = invitationSentOrganizations.value.filter((item) => item.id !== aid)
           if (invitationSentOrganizations.value.length === 0) {
             isInvitationSent.value = false
           }
-          if (is_accept) {
-            $toast.success('Đã xác nhận lời mời gia nhập', {
-              description: 'Nhân viên đã được thêm vào tổ chức',
-            })
-          } else {
-            $toast.success('Đã hủy lời mời gia nhập', {
-              description: 'Đã hủy lời mời gia nhập tổ chức',
-            })
-          }
+          $toast.success('Đã hủy lời mời gia nhập', {
+            description: 'Đã hủy lời mời gia nhập tổ chức',
+          })
         },
         (error) => {
           $toast.error('Thất bại', {

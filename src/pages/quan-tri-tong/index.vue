@@ -15,7 +15,6 @@
   definePageMeta({
     layout: 'default',
     middleware: ['auth'],
-    keepalive: true,
   })
 
   useHead({

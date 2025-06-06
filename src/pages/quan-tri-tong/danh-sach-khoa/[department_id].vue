@@ -396,7 +396,6 @@
   definePageMeta({
     layout: 'default',
     middleware: ['auth'],
-    keepalive: true,
   })
 
   const route = useRoute()

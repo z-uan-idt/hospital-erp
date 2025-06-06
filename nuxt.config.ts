@@ -53,14 +53,28 @@ export default defineNuxtConfig({
         VBtn: {
           class: ['text-none'],
         },
+        VTextField: {
+          bgColor: 'erp-gray-100',
+        },
+        VTextarea: {
+          bgColor: 'erp-gray-100',
+        },
         VSelect: {
           itemTitle: 'label',
           itemValue: 'value',
           noDataText: 'Không có dữ liệu',
+          loadingText: 'Đang tải dữ liệu...',
+          bgColor: 'erp-gray-100',
+        },
+        VAutocomplete: {
+          noDataText: 'Không có dữ liệu',
+          loadingText: 'Đang tải dữ liệu...',
+          bgColor: 'erp-gray-100',
         },
         VDateInput: {
           prependIcon: null,
           appendInnerIcon: 'mdi-calendar',
+          bgColor: 'erp-gray-100',
         },
         VImg: {
           lazy: true,

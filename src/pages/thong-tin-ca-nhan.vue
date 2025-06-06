@@ -371,6 +371,39 @@
               </v-col>
             </v-row>
           </CommonFieldset>
+
+          <template v-if="isUpdate">
+            <v-btn
+              :color="formPayload.is_hidden ? 'erp-brand-100' : 'erp-error-100'"
+              size="large"
+              rounded="pill"
+              elevation="1"
+              class="mt-4"
+              @click="formPayload.is_hidden = !formPayload.is_hidden"
+            >
+              <template #prepend>
+                <Icon
+                  name="custom-eye-slash"
+                  class="me-n1 ml-2"
+                  :class="{
+                    'text-erp-error-600': !formPayload.is_hidden,
+                    'text-erp-brand-600': formPayload.is_hidden,
+                  }"
+                  size="18"
+                />
+              </template>
+              <span
+                class="text-body-1"
+                :class="{
+                  'text-erp-error-600': !formPayload.is_hidden,
+                  'text-erp-brand-600': formPayload.is_hidden,
+                }"
+                style="margin-bottom: -2px"
+              >
+                {{ formPayload.is_hidden ? 'Hiện tài khoản' : 'Ẩn tài khoản' }}
+              </span>
+            </v-btn>
+          </template>
         </v-col>
 
         <template v-if="!isUpdate">
@@ -479,6 +512,7 @@
     nickname: '',
     primary_contact_number: '',
     secondary_contact_number: '',
+    is_hidden: false,
   })
 
   const isUpdate = ref(false)

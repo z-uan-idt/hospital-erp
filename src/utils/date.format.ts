@@ -1,4 +1,12 @@
-import { format, parseISO, isValid, differenceInYears } from 'date-fns'
+import {
+  format,
+  parseISO,
+  isValid,
+  differenceInYears,
+  differenceInDays,
+  differenceInHours,
+  differenceInMonths,
+} from 'date-fns'
 
 export const formatDate = (date: string | Date, formatString = 'dd/MM/yyyy'): string => {
   if (!date) return ''
@@ -20,4 +28,83 @@ export const isValidDate = (date: string | Date): boolean => {
   if (!date) return false
   const parsedDate = typeof date === 'string' ? parseISO(date) : date
   return isValid(parsedDate)
+}
+
+export const calculateDateDifference = (date1: string | Date, date2: string | Date) => {
+  if (!date1 || !date2) return null
+
+  const parsedDate1 = typeof date1 === 'string' ? parseISO(date1) : date1
+  const parsedDate2 = typeof date2 === 'string' ? parseISO(date2) : date2
+
+  if (!isValid(parsedDate1) || !isValid(parsedDate2)) return null
+
+  const [laterDate, earlierDate] = parsedDate1 > parsedDate2 ? [parsedDate1, parsedDate2] : [parsedDate2, parsedDate1]
+
+  // Reset time to start of day for accurate day calculation
+  const startDate = new Date(earlierDate.getFullYear(), earlierDate.getMonth(), earlierDate.getDate(), 0, 0, 0)
+  const endDate = new Date(laterDate.getFullYear(), laterDate.getMonth(), laterDate.getDate(), 23, 59, 59)
+
+  const totalMonths = differenceInMonths(endDate, startDate)
+  const years = Math.floor(totalMonths / 12)
+  const months = totalMonths % 12
+
+  // Tính toán ngày còn lại sau khi trừ năm và tháng
+  const afterMonthsDate = new Date(
+    startDate.getFullYear() + years,
+    startDate.getMonth() + months,
+    startDate.getDate(),
+    0,
+    0,
+    0
+  )
+
+  const remainingDays = differenceInDays(endDate, afterMonthsDate)
+  const totalDays = differenceInDays(endDate, startDate)
+
+  const parts: string[] = []
+  const objs = {
+    years: 0,
+    months: 0,
+    days: 0,
+    hours: 0,
+    decimal: {
+      YEAR: +(totalMonths / 12).toFixed(2),
+      MONTH: totalMonths,
+      DAY: totalDays,
+    },
+  }
+
+  if (years > 0) {
+    objs.years = years
+    parts.push(`${years} năm`)
+  }
+  if (months > 0) {
+    objs.months = months
+    parts.push(`${months} tháng`)
+  }
+  if (remainingDays > 0) {
+    objs.days = remainingDays
+    parts.push(`${remainingDays} ngày`)
+  }
+
+  // Tính giờ chỉ khi không có ngày/tháng/năm
+  if (parts.length === 0) {
+    const hours = differenceInHours(laterDate, earlierDate)
+    if (hours > 0) {
+      objs.hours = hours
+      parts.push(`${hours} giờ`)
+    }
+  }
+
+  if (parts.length === 0) {
+    return {
+      text: 'Cùng thời điểm',
+      item: objs,
+    }
+  }
+
+  return {
+    text: parts.join(' '),
+    item: objs,
+  }
 }

@@ -1,3 +1,4 @@
+import { ITEM_PER_PAGE } from '~/constants/core.constants'
 import type {
   IBasicDepartment,
   IBasicRolePermission,
@@ -16,7 +17,7 @@ export const useDepartment = () => {
 
   const fetchApi = usePrivateApi()
   const page = ref(1)
-  const limit = ref(10)
+  const limit = ref(ITEM_PER_PAGE)
   const search = ref('')
   const count = ref(0)
   const numPages = ref(0)
@@ -55,7 +56,7 @@ export const useDepartment = () => {
     if (orderBy.value.length > 0) {
       params['order_by'] = orderBy.value.join(',')
     }
-    const { data: response } = await fetchApi.get<IDepartment[], IMetadata>('/api/v1/department', params)
+    const { data: response } = await fetchApi.get<IDepartment[], IMetadata>('/api/v1/organization/department', params)
     if (response.success) {
       const metadata = response.metadata
       departments.value = response.data
@@ -65,7 +66,7 @@ export const useDepartment = () => {
   }
 
   const onFetchDepartmentById = async (departmentId: string | number) => {
-    const { data: response } = await fetchApi.get<IDepartment>(`/api/v1/department/${departmentId}`)
+    const { data: response } = await fetchApi.get<IDepartment>(`/api/v1/organization/department/${departmentId}`)
     if (response.success) {
       department.value = response.data
     }
@@ -76,7 +77,7 @@ export const useDepartment = () => {
     onSuccess: (department: IDepartment) => void,
     onError: (error: string) => void
   ) => {
-    const { data: response } = await fetchApi.post<IDepartment>('/api/v1/department', payload)
+    const { data: response } = await fetchApi.post<IDepartment>('/api/v1/organization/department', payload)
 
     if (response.success) {
       onSuccess(response.data)
@@ -90,7 +91,10 @@ export const useDepartment = () => {
       oid: organizationId,
     }
 
-    const { data: response } = await fetchApi.get<IBasicDepartment[]>('api/v1/department/dropdown', params)
+    const { data: response } = await fetchApi.get<IBasicDepartment[]>(
+      'api/v1/organization/department/departments-dropdown',
+      params
+    )
     if (response.success) {
       return response.data
     }
@@ -103,7 +107,10 @@ export const useDepartment = () => {
       did: departmentId,
     }
 
-    const { data: response } = await fetchApi.get<IBasicRolePermission[]>('api/v1/role-permission/dropdown', params)
+    const { data: response } = await fetchApi.get<IBasicRolePermission[]>(
+      'api/v1/organization/department/roles-dropdown',
+      params
+    )
     if (response.success) {
       return response.data
     }

@@ -241,7 +241,7 @@
           >
             <template #prepend>
               <v-icon
-                size="18"
+                size="20"
                 class="me-n1"
               >
                 mdi-close
@@ -282,13 +282,15 @@
             :loading="isLoading"
           >
             <template #prepend>
-              <Icon
-                name="custom:paper-plane"
-                size="18"
+              <v-icon
+                size="22"
                 class="me-n1"
-              />
+                color="white"
+              >
+                mdi-check
+              </v-icon>
             </template>
-            <span class="text-body-1">Gửi duyệt</span>
+            <span class="text-body-1">Xét duyệt</span>
           </v-btn>
         </div>
       </v-card>

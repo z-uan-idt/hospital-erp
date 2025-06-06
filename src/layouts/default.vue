@@ -159,17 +159,56 @@
 
       <v-spacer />
 
-      <div class="d-flex align-center justify-end ga-3 w-100">
+      <div class="d-flex align-center justify-end w-100">
         <slot name="app-bar-right" />
 
+        <div
+          v-if="isKhoDuoc"
+          class="d-flex align-center"
+        >
+          <v-select
+            v-model="warehouseId"
+            :items="warehouseDropdown"
+            label="Kho"
+            height="40"
+            density="compact"
+            variant="outlined"
+            placeholder="Chọn kho"
+            hide-details
+            elevation="0"
+            rounded="s-lg e-0"
+            style="max-width: max-content; min-width: 300px"
+            item-title="name"
+            item-value="id"
+            :loading="isLoadingWarehouse"
+          />
+          <v-select
+            v-model="departmentId"
+            :items="departmentDropdown"
+            label="Khoa"
+            height="40"
+            density="compact"
+            placeholder="Chọn khoa"
+            variant="outlined"
+            hide-details
+            elevation="0"
+            rounded="0"
+            style="max-width: max-content; min-width: 200px; margin-left: -1px"
+            item-title="name"
+            item-value="id"
+            :loading="isLoading"
+            @update:model-value="onChangeDepartment"
+          />
+        </div>
         <v-list-item
-          class="position-relative d-flex align-center justify-between select-none border pe-0 bg-erp-brand-50"
-          :class="[!mdAndUp ? 'ps-0' : '']"
+          class="position-relative d-flex align-center justify-between select-none border-opacity-25 border pe-0 bg-erp-brand-50"
+          :class="[!mdAndUp ? 'ps-0' : '', isKhoDuoc ? 'border-s-0' : '']"
           elevation="0"
-          rounded="lg"
+          :rounded="isKhoDuoc ? 's-0 e-lg' : 'lg'"
           height="40"
           density="compact"
           exact
+          style="margin-left: -1px"
         >
           <template #prepend>
             <v-icon
@@ -197,6 +236,7 @@
               elevation="0"
               height="40"
               width="48"
+              :rounded="isKhoDuoc ? 's-0 e-lg' : 'lg'"
               :class="[mdAndUp ? 'rounded-e-lg rounded-s-0' : 'rounded-lg']"
               :to="ROUTE_DON_VI_TO_CHUC.path"
               nuxt
@@ -223,6 +263,17 @@
       </v-container>
     </v-main>
   </v-container>
+
+  <v-overlay
+    :model-value="isLoading"
+    class="d-flex justify-center align-center"
+    persistent
+  >
+    <v-progress-circular
+      indeterminate
+      size="80"
+    />
+  </v-overlay>
 </template>
 
 <script setup lang="ts">
@@ -231,7 +282,6 @@
     ROUTE_DON_THUOC,
     ROUTE_DON_VI_TO_CHUC,
     ROUTE_KHO_TRUC_THUOC,
-    ROUTE_LO_HANG,
     ROUTE_NHAN_VIEN,
     ROUTE_PHIEU_CHUYEN_HANG,
     ROUTE_PHIEU_KIEM_KHO,
@@ -242,20 +292,29 @@
     ROUTE_DANH_SACH_KHOA,
     QUAN_TRI_TONG_PREFIX,
     KHO_DUOC_PREFIX,
+    ROUTE_TON_KHO,
+    ROUTE_PHIEU_TRA,
+    KHAM_CHUA_BENH_PREFIX,
   } from '~/constants/route.constants'
+  import type { IDepartment } from '~/types/department.types'
+  import type { IWarehouse } from '~/types/warehouse.types'
 
   const { $vuetify } = useNuxtApp()
   const { userData, onLogout, organizationSelected } = useAuth()
   const sessionCookie = useCookie('session_id')
 
   const router = useRouter()
+  const isLoading = ref(false)
+  const isLoadingWarehouse = ref(false)
   const isRailOpen = ref(true)
   const isDrawerOpen = ref(false)
   const mdAndUp = computed(() => $vuetify.display.mdAndUp.value)
 
+  const isKhamChuaBenh = computed(() => router.currentRoute.value.fullPath.startsWith(KHAM_CHUA_BENH_PREFIX.path))
+
   const isQuanTriTong = computed(() => router.currentRoute.value.fullPath.startsWith(QUAN_TRI_TONG_PREFIX.path))
 
-  const isKhoaDuoc = computed(() => router.currentRoute.value.fullPath.startsWith(KHO_DUOC_PREFIX.path))
+  const isKhoDuoc = computed(() => router.currentRoute.value.fullPath.startsWith(KHO_DUOC_PREFIX.path))
 
   const moduleItems = computed(() => {
     if (isQuanTriTong.value) {
@@ -303,7 +362,7 @@
       ].filter((item) => item.isActive)
     }
 
-    if (isKhoaDuoc.value) {
+    if (isKhoDuoc.value) {
       return [
         {
           iconStyle: 'margin-left: 2px !important',
@@ -314,11 +373,11 @@
           isActive: true,
         },
         {
-          iconStyle: 'margin-left: 3px !important',
-          iconSize: 18,
-          icon: 'custom-list-timeline',
-          name: 'Đơn thuốc',
-          path: ROUTE_DON_THUOC.path,
+          iconStyle: 'margin-top: 1px !important; margin-left: 0px !important',
+          iconSize: 23,
+          icon: 'custom-box-open',
+          name: 'Tồn kho',
+          path: ROUTE_TON_KHO.path,
           isActive: true,
         },
         {
@@ -330,11 +389,11 @@
           isActive: true,
         },
         {
-          iconStyle: 'margin-top: 1px !important; margin-left: 0px !important',
-          iconSize: 23,
-          icon: 'custom-box-open',
-          name: 'Lô hàng',
-          path: ROUTE_LO_HANG.path,
+          iconStyle: 'margin-top: 1px !important; margin-left: 2px !important',
+          iconSize: 19,
+          icon: 'custom-rotate-left',
+          name: 'Phiếu trả',
+          path: ROUTE_PHIEU_TRA.path,
           isActive: true,
         },
         {
@@ -359,7 +418,7 @@
           icon: 'custom-arrow-right-arrow-left',
           name: 'Phiếu chuyển hàng',
           path: ROUTE_PHIEU_CHUYEN_HANG.path,
-          isActive: true,
+          isActive: false,
         },
         {
           iconStyle: 'margin-left: 2px !important;',
@@ -367,6 +426,27 @@
           icon: 'custom-shield-check',
           name: 'Phiếu kiểm kho',
           path: ROUTE_PHIEU_KIEM_KHO.path,
+          isActive: false,
+        },
+      ].filter((item) => item.isActive)
+    }
+
+    if (isKhamChuaBenh.value) {
+      return [
+        {
+          iconStyle: 'margin-left: 2px !important',
+          iconSize: 18,
+          icon: 'custom-chart-simple',
+          name: 'Tổng quan',
+          path: KHAM_CHUA_BENH_PREFIX.path,
+          isActive: true,
+        },
+        {
+          iconStyle: 'margin-left: 3px !important',
+          iconSize: 18,
+          icon: 'custom-list-timeline',
+          name: 'Đơn thuốc',
+          path: ROUTE_DON_THUOC.path,
           isActive: true,
         },
       ].filter((item) => item.isActive)
@@ -375,8 +455,47 @@
     return []
   })
 
+  const departmentHooks = useDepartment()
+  const warehouseHooks = useWarehouse()
+
+  const departmentId = ref<string | number | null>(null)
+  const warehouseId = ref<string | number | null>(null)
+
+  const departmentDropdown = ref<IDepartment[]>([])
+  const warehouseDropdown = ref<IWarehouse[]>([])
+
+  const { setSelectedDepartment, setSelectedWarehouse } = useAuth()
+
   watchEffect(() => {
     isDrawerOpen.value = mdAndUp.value
+    if (isKhoDuoc.value) {
+      setSelectedWarehouse(warehouseId.value)
+      setSelectedDepartment(departmentId.value)
+    }
+  })
+
+  const onChangeDepartment = async (value: string | number) => {
+    warehouseId.value = null
+    warehouseDropdown.value = []
+    isLoadingWarehouse.value = true
+    warehouseDropdown.value = await warehouseHooks.onFetchWarehouseDropdown(value)
+    isLoadingWarehouse.value = false
+    if (warehouseDropdown.value.length > 0) {
+      warehouseId.value = warehouseDropdown.value[0].id
+    }
+  }
+
+  onMounted(async () => {
+    if (isKhoDuoc.value) {
+      isLoading.value = true
+      departmentDropdown.value = await departmentHooks.onFetchDepartmentDropdown(organizationSelected.value?.id)
+      if (departmentDropdown.value.length > 0) {
+        departmentDropdown.value = departmentDropdown.value.reverse()
+        departmentId.value = departmentDropdown.value[0].id
+        await onChangeDepartment(departmentId.value)
+      }
+      isLoading.value = false
+    }
   })
 
   useHead({
