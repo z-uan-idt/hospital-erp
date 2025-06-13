@@ -1,0 +1,181 @@
+.font-playfair {
+  font-family: "Playfair", serif;
+}
+
+.font-roboto {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.select-none {
+  user-select: none !important;
+}
+
+.form-readonly {
+  pointer-events: none !important;
+}
+
+.v-navigation-drawer {
+  &__scrim {
+    position: fixed !important;
+  }
+}
+
+.min-h-screen {
+  min-height: 100vh !important;
+}
+
+.cursor-pointer {
+  cursor: pointer !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px transparent;
+}
+
+.erp-background {
+  background: #f5f5f5 !important;
+  background-image: url("/assets/images/erp-background.png") !important;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.erp-scrollbar *::-webkit-scrollbar,
+.erp-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.erp-scrollbar *::-webkit-scrollbar-track,
+.erp-scrollbar::-webkit-scrollbar-track {
+  border-radius: 8px;
+  background-color: rgb(var(--v-theme-erp-gray-400));
+  border: 1px solid transparent;
+}
+
+.erp-scrollbar *::-webkit-scrollbar-thumb,
+.erp-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: none;
+  background-clip: content-box;
+  background-color: rgb(var(--v-theme-erp-gray-700));
+  cursor: pointer;
+
+  &:active {
+    cursor: grabbing !important;
+    background-color: rgb(var(--v-theme-erp-gray-600)) !important;
+  }
+}
+
+.erp-scrollbar {
+  & .v-table__wrapper {
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+  }
+
+  & .v-navigation-drawer__content {
+    &::-webkit-scrollbar {
+      width: 0;
+    }
+
+    &:hover::-webkit-scrollbar {
+      width: 6px;
+    }
+  }
+}
+
+fieldset {
+  min-inline-size: inherit;
+}
+
+.v-data-table-headers--mobile {
+  display: none;
+}
+
+.custom-input-message {
+  .v-input__details {
+    padding: 0 !important;
+  }
+}
+
+// Ripple Effect
+.ripple {
+  position: relative;
+  overflow: hidden;
+
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+  }
+
+  &-effect {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 215, 215, 0.5);
+    transform: scale(0);
+    animation: ripple-animation 0.6s linear;
+    pointer-events: none;
+  }
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+// Sử dụng cho nhiều vòng tròn
+.ripple-multiple {
+  position: relative;
+  width: max-content;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background-color: var(--v-ripple-color, rgba(255, 176, 176, 0.6));
+    transform: translate(-50%, -50%);
+    animation: ripple-multiple 2s ease-out infinite;
+  }
+
+  &::after {
+    animation-delay: 0.3s;
+  }
+}
+
+@keyframes ripple-multiple {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0.5;
+  }
+  100% {
+    width: calc(100% + 30px);
+    height: calc(100% + 30px);
+    opacity: 0;
+  }
+}

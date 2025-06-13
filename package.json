@@ -1,0 +1,83 @@
+{
+  "name": "hospital-erp",
+  "version": "1.0.0",
+  "description": "Modern Hospital ERP system built with Nuxt 3 and Vuetify 3",
+  "private": true,
+  "type": "module",
+  "author": {
+    "name": "Kieu Van Chuong",
+    "email": "chuong.kv@idtinc.co"
+  },
+  "homepage": "https://github.com/idtinc/hospital-erp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/idtinc/hospital-erp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/idtinc/hospital-erp/issues"
+  },
+  "keywords": [
+    "hospital",
+    "erp",
+    "nuxt",
+    "vuetify",
+    "vue",
+    "typescript"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_NO_WARNINGS=1 nuxt build",
+    "dev": "cross-env NODE_NO_WARNINGS=1 nuxt dev",
+    "dev:preview": "nuxt prepare && cross-env NODE_NO_WARNINGS=1 nuxt generate && nuxt preview",
+    "generate": "cross-env NODE_NO_WARNINGS=1 nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "@nuxt/icon": "^1.13.0",
+    "@nuxt/image": "^1.10.0",
+    "@pinia/nuxt": "^0.11.1",
+    "axios": "^1.9.0",
+    "date-fns": "^4.1.0",
+    "firebase": "^11.8.0",
+    "nuxt": "^3.17.3",
+    "pinia": "^3.0.3",
+    "sass": "^1.89.0",
+    "sass-loader": "^16.0.5",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1",
+    "vue-sonner": "^1.3.2"
+  },
+  "devDependencies": {
+    "@iconify-json/mdi": "^1.2.3",
+    "@types/node": "^22.15.21",
+    "@typescript-eslint/eslint-plugin": "^8.32.0",
+    "@typescript-eslint/parser": "^8.32.0",
+    "@vue/eslint-config-typescript": "^14.5.0",
+    "autoprefixer": "^10.4.21",
+    "cross-env": "^7.0.3",
+    "eslint": "^9.26.0",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-vue": "^10.1.0",
+    "globals": "^16.1.0",
+    "postcss": "^8.5.3",
+    "postcss-html": "^1.8.0",
+    "prettier": "^3.5.3",
+    "sass": "^1.88.0",
+    "sass-loader": "^16.0.5",
+    "vue-tsc": "^2.2.10",
+    "vuetify-nuxt-module": "^0.18.6"
+  },
+  "lint-staged": {
+    "*.{js,ts,vue}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,scss,vue}": [
+      "prettier --write"
+    ]
+  }
+}
